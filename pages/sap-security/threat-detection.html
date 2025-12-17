@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAP Threat Detection - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="sap-security">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                            <span>SAP Security</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="sap-overview.html" class="nav-item">SAP Overview</a>
+                        <a href="architecture.html" class="nav-item">Architecture</a>
+                        <a href="modules-services.html" class="nav-item">Modules & Services</a>
+                        <a href="security-fundamentals.html" class="nav-item">Security Fundamentals</a>
+                        <a href="log-types.html" class="nav-item">Log Types</a>
+                        <a href="threat-detection.html" class="nav-item active">Threat Detection</a>
+                        <a href="siem-integration.html" class="nav-item">SIEM Integration</a>
+                        <a href="compliance.html" class="nav-item">SAP Compliance</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="sap-overview.html">SAP Security</a>
+                    <span class="separator">/</span>
+                    <span class="current">Threat Detection</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>SAP Threat Detection</h1>
+                    <p class="subtitle">Detection use cases for SAP systems—credential attacks, privilege escalation, data exfiltration, and fraud detection.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Detection Categories</h2>
+                    
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Authentication</h4>
+                            <ul>
+                                <li>Brute force attacks</li>
+                                <li>Password spray</li>
+                                <li>Default account usage</li>
+                                <li>After-hours logons</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Privilege Abuse</h4>
+                            <ul>
+                                <li>SAP_ALL assignment</li>
+                                <li>Debug in production</li>
+                                <li>Direct table access</li>
+                                <li>Role escalation</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Data Access</h4>
+                            <ul>
+                                <li>Bulk data extraction</li>
+                                <li>Sensitive table reads</li>
+                                <li>RFC_READ_TABLE abuse</li>
+                                <li>Export to file</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Detection Rules</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - SAP Brute Force Detection</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// SAP Failed Logon Detection
+SAPSecurityAuditLog
+| where EventClass == "AU3"  // Failed logon
+| summarize 
+    FailedAttempts = count(),
+    TargetUsers = make_set(User)
+    by SourceIP, bin(TimeGenerated, 5m)
+| where FailedAttempts > 10
+| extend AttackType = iff(array_length(TargetUsers) > 5, "Password Spray", "Brute Force")</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - SAP_ALL Profile Assignment</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detect assignment of SAP_ALL or SAP_NEW profiles
+SAPChangeDocuments
+| where ObjectClass == "USER"
+| where TableName == "USR04"  // User authorization table
+| where FieldName == "PROFILE"
+| where NewValue has_any ("SAP_ALL", "SAP_NEW")
+| project TimeGenerated, ChangedBy = Username, AffectedUser = ObjectID, Profile = NewValue</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Debug Mode in Production</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detect debugging activation in production
+SAPSecurityAuditLog
+| where EventClass == "AUO"  // Debug event
+| where SystemType == "PRD"
+| project TimeGenerated, User, Terminal, TransactionCode
+| extend Alert = "DEBUG_IN_PRODUCTION"</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Critical Transaction Execution</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Monitor execution of sensitive transactions
+let CriticalTCodes = dynamic(["SU01", "PFCG", "SE38", "SE16", "SM59", "STMS"]);
+SAPSecurityAuditLog
+| where EventClass == "AUC"  // Transaction started
+| where TransactionCode in (CriticalTCodes)
+| summarize ExecutionCount = count() by User, TransactionCode, bin(TimeGenerated, 1h)
+| join kind=leftouter (
+    // Baseline: users authorized for these tcodes
+    SAPUserAuthorizations
+    | where TransactionCode in (CriticalTCodes)
+    | distinct User, TransactionCode
+) on User, TransactionCode
+| where isempty(TransactionCode1)  // Not in authorized list
+| extend Alert = "UNAUTHORIZED_CRITICAL_TCODE"</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Fraud Detection Patterns</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Vendor Master Fraud Detection</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detect: Same user creates vendor AND processes payment
+let VendorCreators = SAPChangeDocuments
+| where ObjectClass == "VENDOR"
+| where ChangeType == "CREATE"
+| project VendorCreator = Username, VendorID = ObjectID, CreateTime = TimeGenerated;
+
+let PaymentProcessors = SAPSecurityAuditLog
+| where TransactionCode == "F110"  // Payment run
+| project PaymentUser = User, PaymentTime = TimeGenerated;
+
+// Find overlap - same user did both
+VendorCreators
+| join kind=inner PaymentProcessors on $left.VendorCreator == $right.PaymentUser
+| where PaymentTime > CreateTime
+| where datetime_diff('day', PaymentTime, CreateTime) < 30
+| extend Alert = "SOD_VIOLATION_VENDOR_PAYMENT"</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What SAP-specific threats would you detect?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <ol>
+                                <li><strong>Credential attacks:</strong> Brute force, default account usage</li>
+                                <li><strong>Privilege escalation:</strong> SAP_ALL assignment, role changes</li>
+                                <li><strong>Code injection:</strong> Unauthorized transport releases, SE38 access</li>
+                                <li><strong>Data theft:</strong> SE16/SE16N bulk access, RFC_READ_TABLE</li>
+                                <li><strong>Fraud:</strong> SoD violations (vendor + payment), ghost employees</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="log-types.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        Log Types
+                    </a>
+                    <a href="siem-integration.html" class="nav-link next">
+                        SIEM Integration
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

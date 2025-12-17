@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Endpoint Logs | Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Detection Engineering</h2>
+            <span class="sidebar-subtitle">Mastery Guide</span>
+        </div>
+        <div class="sidebar-search">
+            <input type="text" id="sidebar-search" placeholder="Search topics...">
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="detection">
+                    <span>Detection Engineering</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="detection-items">
+                    <li><a href="../detection-engineering/fundamentals.html">Detection Fundamentals</a></li>
+                    <li><a href="../detection-engineering/sentinel-deep-dive.html">Microsoft Sentinel Deep Dive</a></li>
+                    <li><a href="../detection-engineering/splunk-comparison.html">Splunk Comparison</a></li>
+                    <li><a href="../detection-engineering/detection-logic.html">Detection Logic Design</a></li>
+                    <li><a href="../detection-engineering/mitre-mapping.html">MITRE ATT&CK Mapping</a></li>
+                    <li><a href="../detection-engineering/use-case-framework.html">Use Case Framework</a></li>
+                    <li><a href="../detection-engineering/metrics-optimization.html">Metrics & Optimization</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="log-analysis">
+                    <span>Log Analysis</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="log-analysis-items">
+                    <li><a href="fundamentals.html">Log Analysis Fundamentals</a></li>
+                    <li><a href="network-logs.html">Network Logs</a></li>
+                    <li><a href="endpoint-logs.html" class="active">Endpoint Logs</a></li>
+                    <li><a href="cloud-logs.html">Cloud Platform Logs</a></li>
+                    <li><a href="regex-mastery.html">Regex Mastery</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="threat-intel">
+                    <span>Threat Intelligence</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="threat-intel-items">
+                    <li><a href="../threat-intel/ti-fundamentals.html">TI Fundamentals</a></li>
+                    <li><a href="../threat-intel/ti-sources.html">Intelligence Sources</a></li>
+                    <li><a href="../threat-intel/ioc-management.html">IOC Management</a></li>
+                    <li><a href="../threat-intel/hunting-methodology.html">Hunting Methodology</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="sap">
+                    <span>SAP Security</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="sap-items">
+                    <li><a href="../sap-security/sap-overview.html">SAP Overview</a></li>
+                    <li><a href="../sap-security/sap-architecture.html">SAP Architecture</a></li>
+                    <li><a href="../sap-security/sap-modules.html">Modules & Services</a></li>
+                    <li><a href="../sap-security/security-fundamentals.html">Security Fundamentals</a></li>
+                    <li><a href="../sap-security/log-types.html">SAP Log Types</a></li>
+                    <li><a href="../sap-security/siem-integration.html">SIEM Integration</a></li>
+                    <li><a href="../sap-security/threat-detection.html">Threat Detection</a></li>
+                    <li><a href="../sap-security/compliance.html">Compliance & Audit</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="vuln">
+                    <span>Vulnerability Management</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="vuln-items">
+                    <li><a href="../vulnerability-mgmt/fundamentals.html">VM Fundamentals</a></li>
+                    <li><a href="../vulnerability-mgmt/qualys-deep-dive.html">Qualys Deep Dive</a></li>
+                    <li><a href="../vulnerability-mgmt/tenable-nessus.html">Tenable & Nessus</a></li>
+                    <li><a href="../vulnerability-mgmt/risk-prioritization.html">Risk Prioritization</a></li>
+                    <li><a href="../vulnerability-mgmt/remediation.html">Remediation Workflows</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="cloud">
+                    <span>Cloud Security</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="cloud-items">
+                    <li><a href="../cloud-security/aws-security.html">AWS Security</a></li>
+                    <li><a href="../cloud-security/azure-security.html">Azure Security</a></li>
+                    <li><a href="../cloud-security/gcp-security.html">GCP Security</a></li>
+                    <li><a href="../cloud-security/multi-cloud.html">Multi-Cloud Strategy</a></li>
+                    <li><a href="../cloud-security/cspm-cwpp.html">CSPM & CWPP</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="automation">
+                    <span>Automation & Scripting</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="automation-items">
+                    <li><a href="../automation/python-security.html">Python for Security</a></li>
+                    <li><a href="../automation/powershell-security.html">PowerShell for Security</a></li>
+                    <li><a href="../automation/bash-security.html">Bash for Security</a></li>
+                    <li><a href="../automation/soar-platforms.html">SOAR Platforms</a></li>
+                    <li><a href="../automation/api-integration.html">API Integration</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="compliance">
+                    <span>Compliance & Frameworks</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="compliance-items">
+                    <li><a href="../compliance/framework-overview.html">Framework Overview</a></li>
+                    <li><a href="../compliance/iso-27001.html">ISO 27001</a></li>
+                    <li><a href="../compliance/nist-csf.html">NIST CSF & 800-53</a></li>
+                    <li><a href="../compliance/gdpr.html">GDPR</a></li>
+                    <li><a href="../compliance/documentation.html">Documentation Standards</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="incident">
+                    <span>Incident Response</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="incident-items">
+                    <li><a href="../incident-response/soc-collaboration.html">SOC Collaboration</a></li>
+                    <li><a href="../incident-response/ir-support.html">IR Support Role</a></li>
+                    <li><a href="../incident-response/forensic-requirements.html">Forensic Requirements</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="references">
+                    <span>References & Cheat Sheets</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="references-items">
+                    <li><a href="../references/kql-cheatsheet.html">KQL Cheat Sheet</a></li>
+                    <li><a href="../references/spl-cheatsheet.html">SPL Cheat Sheet</a></li>
+                    <li><a href="../references/regex-cheatsheet.html">Regex Cheat Sheet</a></li>
+                    <li><a href="../references/windows-events.html">Windows Event IDs</a></li>
+                    <li><a href="../references/mitre-reference.html">MITRE ATT&CK Reference</a></li>
+                    <li><a href="../references/interview-prep.html">Interview Preparation</a></li>
+                </ul>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+        
+        <nav class="breadcrumb">
+            <a href="../../index.html">Home</a> &gt;
+            <a href="fundamentals.html">Log Analysis</a> &gt;
+            <span>Endpoint Logs</span>
+        </nav>
+
+        <header class="page-header">
+            <h1>Endpoint Logs</h1>
+            <p class="page-subtitle">Deep dive into Windows, Linux, and macOS endpoint telemetry</p>
+        </header>
+
+        <section class="content-section">
+            <h2>Endpoint Log Sources Overview</h2>
+            <p>Endpoint logs provide visibility into host-level activity including process execution, file operations, registry changes, and user actions. They're essential for detecting malware, insider threats, and advanced attacks.</p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Log Source</th>
+                        <th>Platform</th>
+                        <th>Key Data</th>
+                        <th>Sentinel Table</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Windows Security Events</strong></td>
+                        <td>Windows</td>
+                        <td>Authentication, process, audit</td>
+                        <td>SecurityEvent</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sysmon</strong></td>
+                        <td>Windows</td>
+                        <td>Enhanced process, network, file</td>
+                        <td>Event (Sysmon channel)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Microsoft Defender for Endpoint</strong></td>
+                        <td>Windows, macOS, Linux</td>
+                        <td>EDR telemetry, alerts</td>
+                        <td>DeviceProcessEvents, DeviceNetworkEvents, etc.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PowerShell Logs</strong></td>
+                        <td>Windows</td>
+                        <td>Script execution, modules</td>
+                        <td>Event (PowerShell channel)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Linux Auditd</strong></td>
+                        <td>Linux</td>
+                        <td>System calls, file access</td>
+                        <td>Syslog, CommonSecurityLog</td>
+                    </tr>
+                    <tr>
+                        <td><strong>macOS Unified Logs</strong></td>
+                        <td>macOS</td>
+                        <td>System events, process</td>
+                        <td>Syslog</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section">
+            <h2>Microsoft Defender for Endpoint Tables</h2>
+            <p>MDE provides rich telemetry through multiple specialized tables in Sentinel.</p>
+
+            <h3>Core Tables</h3>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h4 class="sentinel-color">DeviceProcessEvents</h4>
+                    <p>Process creation and execution</p>
+                    <ul>
+                        <li>Process name, path, command line</li>
+                        <li>Parent process information</li>
+                        <li>Account context</li>
+                        <li>File hashes (SHA1, SHA256, MD5)</li>
+                    </ul>
+                </div>
+                <div class="comparison-card">
+                    <h4 class="sentinel-color">DeviceNetworkEvents</h4>
+                    <p>Network connections</p>
+                    <ul>
+                        <li>Source/destination IP and port</li>
+                        <li>Protocol and action</li>
+                        <li>Initiating process</li>
+                        <li>URL and remote host</li>
+                    </ul>
+                </div>
+                <div class="comparison-card">
+                    <h4 class="sentinel-color">DeviceFileEvents</h4>
+                    <p>File system operations</p>
+                    <ul>
+                        <li>File creation, modification, deletion</li>
+                        <li>File paths and names</li>
+                        <li>File hashes</li>
+                        <li>Initiating process</li>
+                    </ul>
+                </div>
+                <div class="comparison-card">
+                    <h4 class="sentinel-color">DeviceRegistryEvents</h4>
+                    <p>Registry modifications</p>
+                    <ul>
+                        <li>Key and value changes</li>
+                        <li>Registry data</li>
+                        <li>Initiating process</li>
+                        <li>Previous values</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Process Event Analysis</h3>
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">Process Tree Reconstruction</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Reconstruct process execution chain for investigation
+let TargetDevice = "WORKSTATION01";
+let TimeWindow = 1h;
+let SuspiciousProcess = "powershell.exe";
+// Get the suspicious process
+let RootProcess = DeviceProcessEvents
+| where TimeGenerated > ago(TimeWindow)
+| where DeviceName =~ TargetDevice
+| where FileName =~ SuspiciousProcess
+| where ProcessCommandLine has_any ("-enc", "downloadstring", "iex")
+| project 
+    TimeGenerated,
+    DeviceName,
+    ProcessId,
+    FileName,
+    ProcessCommandLine,
+    InitiatingProcessId,
+    InitiatingProcessFileName,
+    AccountName;
+// Get child processes
+let ChildProcesses = DeviceProcessEvents
+| where TimeGenerated > ago(TimeWindow)
+| where DeviceName =~ TargetDevice
+| join kind=inner (
+    RootProcess | project RootPID = ProcessId
+) on $left.InitiatingProcessId == $right.RootPID
+| project 
+    TimeGenerated,
+    ProcessId,
+    FileName,
+    ProcessCommandLine,
+    ParentProcess = InitiatingProcessFileName;
+// Get parent processes
+let ParentProcesses = DeviceProcessEvents
+| where TimeGenerated > ago(TimeWindow)
+| where DeviceName =~ TargetDevice
+| join kind=inner (
+    RootProcess | project ParentPID = InitiatingProcessId
+) on $left.ProcessId == $right.ParentPID
+| project 
+    TimeGenerated,
+    ProcessId,
+    FileName,
+    ProcessCommandLine;
+// Combine for full tree
+union 
+    (RootProcess | extend TreeLevel = "Root"),
+    (ParentProcesses | extend TreeLevel = "Parent"),
+    (ChildProcesses | extend TreeLevel = "Child")
+| order by TimeGenerated asc</code></pre>
+            </div>
+
+            <h3>Network Connection Analysis</h3>
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">Suspicious Outbound Connections</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Identify suspicious outbound network activity
+DeviceNetworkEvents
+| where TimeGenerated > ago(24h)
+| where ActionType == "ConnectionSuccess"
+| where RemoteIPType == "Public"
+// Focus on processes that shouldn't make external connections
+| where InitiatingProcessFileName in~ (
+    "certutil.exe", "bitsadmin.exe", "regsvr32.exe",
+    "rundll32.exe", "mshta.exe", "wscript.exe",
+    "cscript.exe", "msiexec.exe"
+)
+| summarize 
+    ConnectionCount = count(),
+    UniqueDestinations = dcount(RemoteIP),
+    Destinations = make_set(RemoteIP, 10),
+    BytesSent = sum(SentBytes),
+    BytesReceived = sum(ReceivedBytes),
+    Ports = make_set(RemotePort, 10)
+    by DeviceName, InitiatingProcessFileName, 
+       InitiatingProcessCommandLine, bin(TimeGenerated, 1h)
+| extend 
+    SuspicionLevel = case(
+        UniqueDestinations > 10, "High - Many destinations",
+        BytesSent > 10000000, "High - Large data transfer",
+        RemotePort has_any ("4444", "5555", "8080", "8443"), "High - Suspicious port",
+        ConnectionCount > 50, "Medium - High frequency",
+        "Low"
+    )
+| where SuspicionLevel != "Low"</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Sysmon Deep Dive</h2>
+            <p>Sysmon (System Monitor) provides detailed telemetry beyond native Windows logging. It's essential for advanced detection.</p>
+
+            <h3>Sysmon Event IDs</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Event ID</th>
+                        <th>Event Name</th>
+                        <th>Key Fields</th>
+                        <th>Detection Use</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1</strong></td>
+                        <td>Process Create</td>
+                        <td>CommandLine, Hashes, ParentImage</td>
+                        <td>Execution detection</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3</strong></td>
+                        <td>Network Connection</td>
+                        <td>DestinationIP, DestinationPort, Image</td>
+                        <td>C2, exfiltration</td>
+                    </tr>
+                    <tr>
+                        <td><strong>7</strong></td>
+                        <td>Image Loaded</td>
+                        <td>ImageLoaded, Hashes, Signed</td>
+                        <td>DLL injection, sideloading</td>
+                    </tr>
+                    <tr>
+                        <td><strong>8</strong></td>
+                        <td>CreateRemoteThread</td>
+                        <td>SourceImage, TargetImage</td>
+                        <td>Process injection</td>
+                    </tr>
+                    <tr>
+                        <td><strong>10</strong></td>
+                        <td>Process Access</td>
+                        <td>SourceImage, TargetImage, GrantedAccess</td>
+                        <td>Credential dumping</td>
+                    </tr>
+                    <tr>
+                        <td><strong>11</strong></td>
+                        <td>File Create</td>
+                        <td>TargetFilename, Image</td>
+                        <td>Malware drops, staging</td>
+                    </tr>
+                    <tr>
+                        <td><strong>12/13/14</strong></td>
+                        <td>Registry Events</td>
+                        <td>TargetObject, Details</td>
+                        <td>Persistence</td>
+                    </tr>
+                    <tr>
+                        <td><strong>15</strong></td>
+                        <td>FileCreateStreamHash</td>
+                        <td>TargetFilename, Hash</td>
+                        <td>ADS, Mark-of-the-Web</td>
+                    </tr>
+                    <tr>
+                        <td><strong>17/18</strong></td>
+                        <td>Pipe Events</td>
+                        <td>PipeName, Image</td>
+                        <td>Named pipe C2</td>
+                    </tr>
+                    <tr>
+                        <td><strong>22</strong></td>
+                        <td>DNS Query</td>
+                        <td>QueryName, Image</td>
+                        <td>DNS tunneling, C2</td>
+                    </tr>
+                    <tr>
+                        <td><strong>23</strong></td>
+                        <td>File Delete</td>
+                        <td>TargetFilename, Image</td>
+                        <td>Anti-forensics</td>
+                    </tr>
+                    <tr>
+                        <td><strong>25</strong></td>
+                        <td>Process Tampering</td>
+                        <td>Image, Type</td>
+                        <td>Process hollowing</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">Sysmon Process Injection Detection (Event 8)</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Detect CreateRemoteThread injection
+Event
+| where Source == "Microsoft-Windows-Sysmon"
+| where EventID == 8
+| extend EventData = parse_xml(EventData)
+| extend 
+    SourceImage = tostring(EventData.DataItem.EventData.Data[2]["#text"]),
+    TargetImage = tostring(EventData.DataItem.EventData.Data[4]["#text"]),
+    SourceUser = tostring(EventData.DataItem.EventData.Data[7]["#text"]),
+    TargetUser = tostring(EventData.DataItem.EventData.Data[9]["#text"])
+| extend 
+    SourceProcess = tostring(split(SourceImage, "\\")[-1]),
+    TargetProcess = tostring(split(TargetImage, "\\")[-1])
+// Filter common legitimate injection
+| where not(
+    (SourceProcess =~ "csrss.exe") or
+    (SourceProcess =~ "services.exe" and TargetProcess =~ "svchost.exe") or
+    (SourceProcess =~ "explorer.exe" and TargetProcess =~ "consent.exe")
+)
+// Flag high-risk patterns
+| extend 
+    RiskLevel = case(
+        TargetProcess =~ "lsass.exe", "Critical",
+        SourceProcess in~ ("powershell.exe", "pwsh.exe", "cmd.exe"), "High",
+        SourceImage has_any ("\\Temp\\", "\\AppData\\"), "High",
+        "Medium"
+    )
+| project 
+    TimeGenerated,
+    Computer,
+    SourceProcess,
+    TargetProcess,
+    SourceUser,
+    RiskLevel,
+    MITRETechnique = "T1055 - Process Injection"</code></pre>
+            </div>
+
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">Sysmon DNS Query Analysis (Event 22)</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Detect suspicious DNS patterns (potential tunneling/C2)
+Event
+| where Source == "Microsoft-Windows-Sysmon"
+| where EventID == 22
+| extend EventData = parse_xml(EventData)
+| extend 
+    QueryName = tostring(EventData.DataItem.EventData.Data[4]["#text"]),
+    Image = tostring(EventData.DataItem.EventData.Data[5]["#text"])
+| extend 
+    ProcessName = tostring(split(Image, "\\")[-1]),
+    Domain = tostring(split(QueryName, ".")[-2]),
+    TLD = tostring(split(QueryName, ".")[-1]),
+    SubdomainLength = strlen(tostring(split(QueryName, ".")[0])),
+    SubdomainCount = array_length(split(QueryName, "."))
+// Identify suspicious patterns
+| where 
+    SubdomainLength > 30 or  // Long subdomains (potential encoding)
+    SubdomainCount > 5 or    // Many subdomains (tunneling)
+    QueryName matches regex @"[0-9a-f]{32}" or  // Hex strings
+    QueryName matches regex @"[A-Za-z0-9+/=]{20,}"  // Base64-like
+| summarize 
+    QueryCount = count(),
+    UniqueSubdomains = dcount(QueryName),
+    SampleQueries = make_set(QueryName, 5)
+    by Computer, ProcessName, Domain, TLD, bin(TimeGenerated, 1h)
+| where QueryCount > 10 or UniqueSubdomains > 5
+| extend 
+    ThreatIndicator = case(
+        UniqueSubdomains > 50, "High - Likely DNS tunneling",
+        QueryCount > 100, "High - Excessive DNS queries",
+        "Medium - Suspicious DNS pattern"
+    )</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Linux Endpoint Logs</h2>
+            <p>Linux systems use auditd and system logs for security monitoring.</p>
+
+            <h3>Key Linux Log Sources</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Log Source</th>
+                        <th>Location</th>
+                        <th>Content</th>
+                        <th>Detection Use</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>/var/log/auth.log</strong></td>
+                        <td>Debian/Ubuntu</td>
+                        <td>Authentication events</td>
+                        <td>SSH brute force, sudo abuse</td>
+                    </tr>
+                    <tr>
+                        <td><strong>/var/log/secure</strong></td>
+                        <td>RHEL/CentOS</td>
+                        <td>Authentication events</td>
+                        <td>SSH brute force, sudo abuse</td>
+                    </tr>
+                    <tr>
+                        <td><strong>/var/log/audit/audit.log</strong></td>
+                        <td>All (auditd)</td>
+                        <td>System call auditing</td>
+                        <td>Process exec, file access</td>
+                    </tr>
+                    <tr>
+                        <td><strong>/var/log/syslog</strong></td>
+                        <td>All</td>
+                        <td>System messages</td>
+                        <td>Service events, errors</td>
+                    </tr>
+                    <tr>
+                        <td><strong>/var/log/cron</strong></td>
+                        <td>All</td>
+                        <td>Cron job execution</td>
+                        <td>Persistence, scheduled tasks</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Auditd Rules for Detection</h3>
+            <div class="code-block" data-language="bash">
+                <div class="code-header">
+                    <span class="code-lang">Bash</span>
+                    <span class="code-title">Security-Focused Auditd Rules</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code># /etc/audit/rules.d/security.rules
+
+# Monitor process execution
+-a always,exit -F arch=b64 -S execve -k process_exec
+-a always,exit -F arch=b32 -S execve -k process_exec
+
+# Monitor file changes in critical directories
+-w /etc/passwd -p wa -k identity
+-w /etc/shadow -p wa -k identity
+-w /etc/group -p wa -k identity
+-w /etc/sudoers -p wa -k sudo_changes
+-w /etc/sudoers.d/ -p wa -k sudo_changes
+
+# Monitor SSH configuration
+-w /etc/ssh/sshd_config -p wa -k sshd_config
+
+# Monitor cron for persistence
+-w /etc/crontab -p wa -k cron_persistence
+-w /etc/cron.d/ -p wa -k cron_persistence
+-w /var/spool/cron/ -p wa -k cron_persistence
+
+# Monitor network configuration
+-w /etc/hosts -p wa -k network_config
+-w /etc/resolv.conf -p wa -k network_config
+
+# Monitor kernel modules (rootkits)
+-w /sbin/insmod -p x -k kernel_modules
+-w /sbin/rmmod -p x -k kernel_modules
+-w /sbin/modprobe -p x -k kernel_modules
+
+# Monitor privilege escalation
+-a always,exit -F arch=b64 -S setuid -S setgid -k priv_esc
+-a always,exit -F arch=b32 -S setuid -S setgid -k priv_esc</code></pre>
+            </div>
+
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">Linux SSH Brute Force Detection</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Detect SSH brute force from Linux auth logs
+Syslog
+| where TimeGenerated > ago(1h)
+| where Facility == "auth" or Facility == "authpriv"
+| where SyslogMessage has "sshd"
+| where SyslogMessage has_any ("Failed password", "Invalid user", "authentication failure")
+| extend 
+    SourceIP = extract(@"from\s+(\d+\.\d+\.\d+\.\d+)", 1, SyslogMessage),
+    TargetUser = extract(@"for\s+(invalid\s+user\s+)?(\w+)", 2, SyslogMessage),
+    FailureType = case(
+        SyslogMessage has "Invalid user", "Invalid User",
+        SyslogMessage has "Failed password", "Wrong Password",
+        "Other"
+    )
+| where isnotempty(SourceIP)
+| summarize 
+    FailedAttempts = count(),
+    UniqueUsers = dcount(TargetUser),
+    TargetUsers = make_set(TargetUser, 10),
+    FirstAttempt = min(TimeGenerated),
+    LastAttempt = max(TimeGenerated)
+    by SourceIP, Computer, bin(TimeGenerated, 5m)
+| where FailedAttempts > 10
+| extend 
+    AttackType = iff(UniqueUsers > 5, "Password Spray", "Brute Force"),
+    Duration = datetime_diff('minute', LastAttempt, FirstAttempt)</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>EDR Telemetry Comparison</h2>
+            <p>Different EDR solutions provide varying levels of telemetry detail.</p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Capability</th>
+                        <th>MDE</th>
+                        <th>Cortex XDR</th>
+                        <th>CrowdStrike</th>
+                        <th>SentinelOne</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Process Events</strong></td>
+                        <td>✓ Full</td>
+                        <td>✓ Full</td>
+                        <td>✓ Full</td>
+                        <td>✓ Full</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Network Events</strong></td>
+                        <td>✓ Full</td>
+                        <td>✓ Full</td>
+                        <td>✓ DNS focus</td>
+                        <td>✓ Full</td>
+                    </tr>
+                    <tr>
+                        <td><strong>File Events</strong></td>
+                        <td>✓ Full</td>
+                        <td>✓ Full</td>
+                        <td>✓ Write focus</td>
+                        <td>✓ Full</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Registry Events</strong></td>
+                        <td>✓ Full</td>
+                        <td>✓ Key paths</td>
+                        <td>✓ Key paths</td>
+                        <td>✓ Full</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Script Logging</strong></td>
+                        <td>✓ AMSI</td>
+                        <td>✓ Custom</td>
+                        <td>✓ Script Block</td>
+                        <td>✓ AMSI</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Raw Event Export</strong></td>
+                        <td>✓ Advanced Hunting</td>
+                        <td>✓ XQL</td>
+                        <td>✓ CQL + Streaming</td>
+                        <td>✓ Deep Visibility</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box tip">
+                <div class="info-box-header">
+                    <span class="info-icon">💡</span>
+                    <span>EDR Selection Tip</span>
+                </div>
+                <div class="info-box-content">
+                    <p>When evaluating EDRs for detection engineering, prioritize:</p>
+                    <ul>
+                        <li>Raw telemetry access for custom detections</li>
+                        <li>Query language flexibility</li>
+                        <li>SIEM integration capabilities</li>
+                        <li>Retention period for historical hunting</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Interview Preparation</h2>
+            <div class="expandable-section">
+                <button class="expandable-header">
+                    <span>Common Interview Questions</span>
+                    <span class="expand-icon">+</span>
+                </button>
+                <div class="expandable-content">
+                    <div class="qa-item">
+                        <p class="qa-question">Q: What's the difference between Windows Security Events and Sysmon?</p>
+                        <p class="qa-answer">A: Windows Security Events are built-in OS logging focused on security-relevant actions like authentication and audit events. Sysmon is an additional Microsoft tool that provides deeper telemetry including process command lines with hashes, network connections tied to processes, DNS queries, and detailed file/registry operations. Sysmon is configurable and captures data that Security Events miss, like process parent-child relationships, loaded DLLs, and named pipe activity. For comprehensive detection, you typically need both.</p>
+                    </div>
+                    <div class="qa-item">
+                        <p class="qa-question">Q: How do you detect process injection?</p>
+                        <p class="qa-answer">A: I use multiple data sources: Sysmon Event 8 (CreateRemoteThread) to detect cross-process thread creation, Sysmon Event 10 (ProcessAccess) for suspicious memory access patterns, and Sysmon Event 25 (Process Tampering) for hollowing detection. I look for unexpected process relationships - like PowerShell injecting into a system process, or processes from temp folders targeting LSASS. I correlate with network activity to see if injected processes make C2 connections.</p>
+                    </div>
+                    <div class="qa-item">
+                        <p class="qa-question">Q: What endpoint data do you need to detect credential theft?</p>
+                        <p class="qa-answer">A: For credential theft detection, I need process access events showing access to LSASS (Sysmon 10), process creation for known dump tools like mimikatz or procdump, file creation events for .dmp files in suspicious locations, registry access to SAM/SECURITY hives, and network events for NTLM relay or Kerberos attacks. I also monitor for events 4768/4769 for Kerberoasting and 4776 for NTLM authentication anomalies.</p>
+                    </div>
+                    <div class="qa-item">
+                        <p class="qa-question">Q: How do you approach Linux endpoint monitoring?</p>
+                        <p class="qa-answer">A: I configure auditd to capture system calls for process execution, file access to sensitive files (/etc/passwd, /etc/shadow, SSH configs), and privilege escalation attempts. I parse /var/log/auth.log or /var/log/secure for authentication events including SSH and sudo. For containers, I integrate with container runtime logs. Key detections include SSH brute force, unauthorized sudo usage, cron persistence, and suspicious process execution from web server contexts.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="page-navigation">
+            <a href="network-logs.html" class="nav-prev">← Network Logs</a>
+            <a href="cloud-logs.html" class="nav-next">Cloud Platform Logs →</a>
+        </div>
+    </main>
+
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

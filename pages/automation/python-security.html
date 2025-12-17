@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python for Security - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="automation">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                            <span>Automation & Scripting</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item">Automation Fundamentals</a>
+                        <a href="python-security.html" class="nav-item active">Python for Security</a>
+                        <a href="powershell-security.html" class="nav-item">PowerShell for Security</a>
+                        <a href="bash-security.html" class="nav-item">Bash for Security</a>
+                        <a href="soar.html" class="nav-item">SOAR Platforms</a>
+                        <a href="api-integration.html" class="nav-item">API Integration</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="fundamentals.html">Automation</a>
+                    <span class="separator">/</span>
+                    <span class="current">Python for Security</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>Python for Security</h1>
+                    <p class="subtitle">Essential Python skills for security automation, including API integration, log parsing, IOC enrichment, and detection engineering workflows.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Essential Libraries</h2>
+                    
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Library</th>
+                                <th>Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>HTTP/APIs</strong></td>
+                                <td><code>requests</code>, <code>httpx</code>, <code>aiohttp</code></td>
+                                <td>API calls, webhooks</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Data Processing</strong></td>
+                                <td><code>pandas</code>, <code>json</code>, <code>csv</code></td>
+                                <td>Log analysis, data manipulation</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cloud SDKs</strong></td>
+                                <td><code>boto3</code>, <code>azure-*</code>, <code>google-cloud-*</code></td>
+                                <td>Cloud API automation</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Regex/Parsing</strong></td>
+                                <td><code>re</code>, <code>pyparsing</code></td>
+                                <td>Log parsing, pattern matching</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Network</strong></td>
+                                <td><code>socket</code>, <code>scapy</code>, <code>ipaddress</code></td>
+                                <td>Network analysis, packet crafting</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Crypto</strong></td>
+                                <td><code>hashlib</code>, <code>cryptography</code></td>
+                                <td>Hashing, encryption</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Scheduling</strong></td>
+                                <td><code>schedule</code>, <code>apscheduler</code></td>
+                                <td>Periodic tasks</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>requirements.txt for Security Automation</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code># Core
+requests>=2.31.0
+httpx>=0.25.0
+aiohttp>=3.9.0
+
+# Data processing
+pandas>=2.1.0
+pyyaml>=6.0.1
+python-dateutil>=2.8.2
+
+# Cloud SDKs
+boto3>=1.34.0
+azure-identity>=1.15.0
+azure-mgmt-securityinsight>=2.0.0
+google-cloud-securitycenter>=1.25.0
+
+# Security specific
+OTXv2>=1.5.12        # AlienVault OTX
+virustotal-api>=1.1.11
+shodan>=1.30.0
+
+# Utilities
+python-dotenv>=1.0.0
+loguru>=0.7.2</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>IOC Enrichment</h2>
+
+                    <h3>Multi-Source IOC Enricher</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>ioc_enricher.py</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>#!/usr/bin/env python3
+"""Multi-source IOC enrichment tool"""
+
+import requests
+import hashlib
+import re
+from dataclasses import dataclass
+from typing import Optional
+from concurrent.futures import ThreadPoolExecutor
+import os
+
+@dataclass
+class EnrichmentResult:
+    ioc: str
+    ioc_type: str
+    virustotal: Optional[dict] = None
+    abuseipdb: Optional[dict] = None
+    shodan: Optional[dict] = None
+    threat_score: int = 0
+
+class IOCEnricher:
+    def __init__(self):
+        self.vt_api_key = os.getenv('VIRUSTOTAL_API_KEY')
+        self.abuseipdb_key = os.getenv('ABUSEIPDB_API_KEY')
+        self.shodan_key = os.getenv('SHODAN_API_KEY')
+    
+    def detect_ioc_type(self, ioc: str) -> str:
+        """Detect the type of IOC"""
+        # IPv4
+        if re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', ioc):
+            return 'ip'
+        # Domain
+        if re.match(r'^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z]{2,})+$', ioc):
+            return 'domain'
+        # MD5
+        if re.match(r'^[a-fA-F0-9]{32}$', ioc):
+            return 'md5'
+        # SHA256
+        if re.match(r'^[a-fA-F0-9]{64}$', ioc):
+            return 'sha256'
+        # URL
+        if ioc.startswith(('http://', 'https://')):
+            return 'url'
+        return 'unknown'
+    
+    def query_virustotal(self, ioc: str, ioc_type: str) -> dict:
+        """Query VirusTotal API v3"""
+        if not self.vt_api_key:
+            return {'error': 'No API key'}
+        
+        base_url = 'https://www.virustotal.com/api/v3'
+        headers = {'x-apikey': self.vt_api_key}
+        
+        endpoints = {
+            'ip': f'{base_url}/ip_addresses/{ioc}',
+            'domain': f'{base_url}/domains/{ioc}',
+            'md5': f'{base_url}/files/{ioc}',
+            'sha256': f'{base_url}/files/{ioc}',
+            'url': f'{base_url}/urls/{hashlib.sha256(ioc.encode()).hexdigest()}'
+        }
+        
+        try:
+            resp = requests.get(endpoints.get(ioc_type, ''), headers=headers, timeout=10)
+            if resp.status_code == 200:
+                data = resp.json()['data']['attributes']
+                stats = data.get('last_analysis_stats', {})
+                return {
+                    'malicious': stats.get('malicious', 0),
+                    'suspicious': stats.get('suspicious', 0),
+                    'harmless': stats.get('harmless', 0),
+                    'reputation': data.get('reputation', 0)
+                }
+        except Exception as e:
+            return {'error': str(e)}
+        return {}
+    
+    def query_abuseipdb(self, ip: str) -> dict:
+        """Query AbuseIPDB for IP reputation"""
+        if not self.abuseipdb_key:
+            return {'error': 'No API key'}
+        
+        try:
+            resp = requests.get(
+                'https://api.abuseipdb.com/api/v2/check',
+                headers={'Key': self.abuseipdb_key, 'Accept': 'application/json'},
+                params={'ipAddress': ip, 'maxAgeInDays': 90},
+                timeout=10
+            )
+            if resp.status_code == 200:
+                data = resp.json()['data']
+                return {
+                    'abuse_confidence': data.get('abuseConfidenceScore', 0),
+                    'total_reports': data.get('totalReports', 0),
+                    'country': data.get('countryCode'),
+                    'isp': data.get('isp'),
+                    'is_tor': data.get('isTor', False)
+                }
+        except Exception as e:
+            return {'error': str(e)}
+        return {}
+    
+    def query_shodan(self, ip: str) -> dict:
+        """Query Shodan for IP information"""
+        if not self.shodan_key:
+            return {'error': 'No API key'}
+        
+        try:
+            resp = requests.get(
+                f'https://api.shodan.io/shodan/host/{ip}',
+                params={'key': self.shodan_key},
+                timeout=10
+            )
+            if resp.status_code == 200:
+                data = resp.json()
+                return {
+                    'ports': data.get('ports', []),
+                    'vulns': data.get('vulns', []),
+                    'hostnames': data.get('hostnames', []),
+                    'org': data.get('org'),
+                    'os': data.get('os')
+                }
+        except Exception as e:
+            return {'error': str(e)}
+        return {}
+    
+    def calculate_threat_score(self, result: EnrichmentResult) -> int:
+        """Calculate overall threat score (0-100)"""
+        score = 0
+        
+        # VirusTotal scoring
+        if result.virustotal:
+            malicious = result.virustotal.get('malicious', 0)
+            if malicious > 10:
+                score += 50
+            elif malicious > 5:
+                score += 30
+            elif malicious > 0:
+                score += 15
+        
+        # AbuseIPDB scoring
+        if result.abuseipdb:
+            abuse_score = result.abuseipdb.get('abuse_confidence', 0)
+            score += int(abuse_score * 0.3)  # Max 30 points
+            if result.abuseipdb.get('is_tor'):
+                score += 10
+        
+        # Shodan scoring
+        if result.shodan:
+            if result.shodan.get('vulns'):
+                score += 10
+        
+        return min(score, 100)
+    
+    def enrich(self, ioc: str) -> EnrichmentResult:
+        """Enrich a single IOC from all sources"""
+        ioc_type = self.detect_ioc_type(ioc)
+        result = EnrichmentResult(ioc=ioc, ioc_type=ioc_type)
+        
+        # Query sources in parallel
+        with ThreadPoolExecutor(max_workers=3) as executor:
+            vt_future = executor.submit(self.query_virustotal, ioc, ioc_type)
+            
+            if ioc_type == 'ip':
+                abuse_future = executor.submit(self.query_abuseipdb, ioc)
+                shodan_future = executor.submit(self.query_shodan, ioc)
+                result.abuseipdb = abuse_future.result()
+                result.shodan = shodan_future.result()
+            
+            result.virustotal = vt_future.result()
+        
+        result.threat_score = self.calculate_threat_score(result)
+        return result
+    
+    def enrich_batch(self, iocs: list) -> list:
+        """Enrich multiple IOCs"""
+        results = []
+        for ioc in iocs:
+            results.append(self.enrich(ioc))
+        return results
+
+
+if __name__ == '__main__':
+    enricher = IOCEnricher()
+    
+    test_iocs = [
+        '8.8.8.8',
+        'evil.com',
+        'd41d8cd98f00b204e9800998ecf8427e'
+    ]
+    
+    for ioc in test_iocs:
+        result = enricher.enrich(ioc)
+        print(f"\n{result.ioc} ({result.ioc_type})")
+        print(f"  Threat Score: {result.threat_score}/100")
+        print(f"  VirusTotal: {result.virustotal}")
+        if result.abuseipdb:
+            print(f"  AbuseIPDB: {result.abuseipdb}")</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Log Parsing & Analysis</h2>
+
+                    <h3>Windows Event Log Parser</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>windows_event_parser.py</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>#!/usr/bin/env python3
+"""Parse and analyze Windows Security Event Logs"""
+
+import json
+import re
+from datetime import datetime
+from collections import Counter
+from dataclasses import dataclass
+from typing import List, Dict, Optional
+import pandas as pd
+
+@dataclass
+class SecurityEvent:
+    event_id: int
+    timestamp: datetime
+    computer: str
+    user: Optional[str]
+    source_ip: Optional[str]
+    logon_type: Optional[int]
+    status: Optional[str]
+    raw_data: dict
+
+class WindowsEventAnalyzer:
+    # Security-relevant event IDs
+    CRITICAL_EVENTS = {
+        4624: 'Successful Logon',
+        4625: 'Failed Logon',
+        4648: 'Explicit Credential Logon',
+        4672: 'Special Privileges Assigned',
+        4720: 'User Account Created',
+        4722: 'User Account Enabled',
+        4724: 'Password Reset Attempt',
+        4728: 'Member Added to Security Group',
+        4732: 'Member Added to Local Group',
+        4738: 'User Account Changed',
+        4768: 'Kerberos TGT Requested',
+        4769: 'Kerberos Service Ticket Requested',
+        4776: 'NTLM Authentication',
+        1102: 'Audit Log Cleared'
+    }
+    
+    LOGON_TYPES = {
+        2: 'Interactive',
+        3: 'Network',
+        4: 'Batch',
+        5: 'Service',
+        7: 'Unlock',
+        8: 'NetworkCleartext',
+        9: 'NewCredentials',
+        10: 'RemoteInteractive',
+        11: 'CachedInteractive'
+    }
+    
+    def __init__(self):
+        self.events: List[SecurityEvent] = []
+    
+    def parse_evtx_json(self, json_file: str) -> List[SecurityEvent]:
+        """Parse events from JSON export (e.g., from evtx_dump)"""
+        events = []
+        with open(json_file, 'r') as f:
+            for line in f:
+                try:
+                    raw = json.loads(line)
+                    event = self._parse_event(raw)
+                    if event:
+                        events.append(event)
+                except json.JSONDecodeError:
+                    continue
+        self.events = events
+        return events
+    
+    def _parse_event(self, raw: dict) -> Optional[SecurityEvent]:
+        """Parse a single event record"""
+        try:
+            system = raw.get('System', {})
+            event_data = raw.get('EventData', {})
+            
+            event_id = int(system.get('EventID', {}).get('#text', system.get('EventID', 0)))
+            
+            return SecurityEvent(
+                event_id=event_id,
+                timestamp=datetime.fromisoformat(system.get('TimeCreated', {}).get('@SystemTime', '')[:26]),
+                computer=system.get('Computer', ''),
+                user=event_data.get('TargetUserName') or event_data.get('SubjectUserName'),
+                source_ip=event_data.get('IpAddress'),
+                logon_type=int(event_data.get('LogonType', 0)) if event_data.get('LogonType') else None,
+                status=event_data.get('Status'),
+                raw_data=raw
+            )
+        except Exception:
+            return None
+    
+    def detect_brute_force(self, threshold: int = 5, window_minutes: int = 5) -> List[dict]:
+        """Detect brute force attempts (multiple 4625 from same source)"""
+        failed_logons = [e for e in self.events if e.event_id == 4625]
+        
+        # Group by source IP and time window
+        attacks = []
+        df = pd.DataFrame([{
+            'timestamp': e.timestamp,
+            'source_ip': e.source_ip,
+            'user': e.user
+        } for e in failed_logons if e.source_ip])
+        
+        if df.empty:
+            return []
+        
+        df['window'] = df['timestamp'].dt.floor(f'{window_minutes}T')
+        
+        grouped = df.groupby(['source_ip', 'window']).agg({
+            'user': ['count', lambda x: list(set(x))]
+        }).reset_index()
+        
+        grouped.columns = ['source_ip', 'window', 'attempt_count', 'targeted_users']
+        
+        for _, row in grouped[grouped['attempt_count'] >= threshold].iterrows():
+            attacks.append({
+                'type': 'brute_force',
+                'source_ip': row['source_ip'],
+                'time_window': str(row['window']),
+                'attempt_count': row['attempt_count'],
+                'targeted_users': row['targeted_users']
+            })
+        
+        return attacks
+    
+    def detect_password_spray(self, threshold: int = 10) -> List[dict]:
+        """Detect password spray (many users, few attempts each)"""
+        failed_logons = [e for e in self.events if e.event_id == 4625]
+        
+        # Group by source IP
+        by_source = {}
+        for event in failed_logons:
+            if event.source_ip:
+                if event.source_ip not in by_source:
+                    by_source[event.source_ip] = {'users': set(), 'count': 0}
+                by_source[event.source_ip]['users'].add(event.user)
+                by_source[event.source_ip]['count'] += 1
+        
+        attacks = []
+        for ip, data in by_source.items():
+            unique_users = len(data['users'])
+            total_attempts = data['count']
+            
+            # Password spray: many unique users, low attempts per user
+            if unique_users >= threshold and (total_attempts / unique_users) < 3:
+                attacks.append({
+                    'type': 'password_spray',
+                    'source_ip': ip,
+                    'unique_users': unique_users,
+                    'total_attempts': total_attempts,
+                    'avg_per_user': round(total_attempts / unique_users, 2)
+                })
+        
+        return attacks
+    
+    def detect_lateral_movement(self) -> List[dict]:
+        """Detect potential lateral movement (4648, type 3 logons)"""
+        suspicious = []
+        
+        # Explicit credential logons (4648)
+        for event in self.events:
+            if event.event_id == 4648:
+                suspicious.append({
+                    'type': 'explicit_credential',
+                    'timestamp': str(event.timestamp),
+                    'source_user': event.raw_data.get('EventData', {}).get('SubjectUserName'),
+                    'target_user': event.raw_data.get('EventData', {}).get('TargetUserName'),
+                    'target_server': event.raw_data.get('EventData', {}).get('TargetServerName')
+                })
+        
+        return suspicious
+    
+    def get_summary(self) -> dict:
+        """Get summary statistics"""
+        event_counts = Counter(e.event_id for e in self.events)
+        
+        return {
+            'total_events': len(self.events),
+            'time_range': {
+                'start': str(min(e.timestamp for e in self.events)) if self.events else None,
+                'end': str(max(e.timestamp for e in self.events)) if self.events else None
+            },
+            'event_counts': {
+                self.CRITICAL_EVENTS.get(eid, f'Event {eid}'): count 
+                for eid, count in event_counts.most_common(20)
+            },
+            'unique_users': len(set(e.user for e in self.events if e.user)),
+            'unique_sources': len(set(e.source_ip for e in self.events if e.source_ip))
+        }
+
+
+if __name__ == '__main__':
+    analyzer = WindowsEventAnalyzer()
+    
+    # Example usage
+    # events = analyzer.parse_evtx_json('security_events.json')
+    # print(analyzer.get_summary())
+    # print(analyzer.detect_brute_force())
+    # print(analyzer.detect_password_spray())</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>SIEM API Integration</h2>
+
+                    <h3>Microsoft Sentinel Client</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>sentinel_client.py</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>#!/usr/bin/env python3
+"""Microsoft Sentinel API client for automation"""
+
+from azure.identity import DefaultAzureCredential
+from azure.mgmt.securityinsight import SecurityInsights
+from azure.monitor.query import LogsQueryClient
+import pandas as pd
+from datetime import datetime, timedelta
+from typing import List, Optional
+
+class SentinelClient:
+    def __init__(self, subscription_id: str, resource_group: str, workspace_name: str):
+        self.subscription_id = subscription_id
+        self.resource_group = resource_group
+        self.workspace_name = workspace_name
+        
+        self.credential = DefaultAzureCredential()
+        self.sentinel_client = SecurityInsights(self.credential, subscription_id)
+        self.logs_client = LogsQueryClient(self.credential)
+        
+        # Get workspace ID for log queries
+        self.workspace_id = self._get_workspace_id()
+    
+    def _get_workspace_id(self) -> str:
+        """Get Log Analytics workspace ID"""
+        from azure.mgmt.loganalytics import LogAnalyticsManagementClient
+        la_client = LogAnalyticsManagementClient(self.credential, self.subscription_id)
+        workspace = la_client.workspaces.get(self.resource_group, self.workspace_name)
+        return workspace.customer_id
+    
+    def query_logs(self, query: str, timespan: timedelta = timedelta(days=1)) -> pd.DataFrame:
+        """Execute KQL query against Sentinel workspace"""
+        response = self.logs_client.query_workspace(
+            workspace_id=self.workspace_id,
+            query=query,
+            timespan=timespan
+        )
+        
+        if response.tables:
+            table = response.tables[0]
+            return pd.DataFrame(
+                data=table.rows,
+                columns=[col.name for col in table.columns]
+            )
+        return pd.DataFrame()
+    
+    def list_incidents(self, status: str = None, severity: str = None, 
+                       days: int = 7) -> List[dict]:
+        """List Sentinel incidents"""
+        filter_str = f"properties/createdTimeUtc ge {(datetime.utcnow() - timedelta(days=days)).isoformat()}Z"
+        
+        if status:
+            filter_str += f" and properties/status eq '{status}'"
+        if severity:
+            filter_str += f" and properties/severity eq '{severity}'"
+        
+        incidents = self.sentinel_client.incidents.list(
+            resource_group_name=self.resource_group,
+            workspace_name=self.workspace_name,
+            filter=filter_str
+        )
+        
+        return [{
+            'id': inc.name,
+            'title': inc.title,
+            'severity': inc.severity,
+            'status': inc.status,
+            'created': str(inc.created_time_utc),
+            'alerts_count': inc.additional_data.alerts_count if inc.additional_data else 0
+        } for inc in incidents]
+    
+    def get_incident_alerts(self, incident_id: str) -> List[dict]:
+        """Get alerts associated with an incident"""
+        alerts = self.sentinel_client.incidents.list_alerts(
+            resource_group_name=self.resource_group,
+            workspace_name=self.workspace_name,
+            incident_id=incident_id
+        )
+        
+        return [{
+            'id': alert.name,
+            'display_name': alert.properties.alert_display_name,
+            'severity': alert.properties.severity,
+            'tactics': alert.properties.tactics,
+            'time_generated': str(alert.properties.time_generated)
+        } for alert in alerts.value]
+    
+    def update_incident(self, incident_id: str, status: str = None, 
+                        severity: str = None, owner: str = None,
+                        comment: str = None) -> dict:
+        """Update incident status, severity, or add comment"""
+        incident = self.sentinel_client.incidents.get(
+            resource_group_name=self.resource_group,
+            workspace_name=self.workspace_name,
+            incident_id=incident_id
+        )
+        
+        if status:
+            incident.status = status
+        if severity:
+            incident.severity = severity
+        if owner:
+            incident.owner = {'assigned_to': owner}
+        
+        updated = self.sentinel_client.incidents.create_or_update(
+            resource_group_name=self.resource_group,
+            workspace_name=self.workspace_name,
+            incident_id=incident_id,
+            incident=incident
+        )
+        
+        if comment:
+            self.sentinel_client.incident_comments.create_or_update(
+                resource_group_name=self.resource_group,
+                workspace_name=self.workspace_name,
+                incident_id=incident_id,
+                incident_comment_id=f"comment-{datetime.utcnow().timestamp()}",
+                incident_comment={'message': comment}
+            )
+        
+        return {'status': 'updated', 'incident_id': incident_id}
+    
+    def create_watchlist(self, name: str, items: List[dict], 
+                         search_key: str) -> dict:
+        """Create or update a watchlist"""
+        from azure.mgmt.securityinsight.models import Watchlist
+        
+        watchlist = Watchlist(
+            display_name=name,
+            provider='Custom',
+            source='Local file',
+            items_search_key=search_key
+        )
+        
+        result = self.sentinel_client.watchlists.create_or_update(
+            resource_group_name=self.resource_group,
+            workspace_name=self.workspace_name,
+            watchlist_alias=name.lower().replace(' ', '-'),
+            watchlist=watchlist
+        )
+        
+        # Add items
+        for item in items:
+            self.sentinel_client.watchlist_items.create_or_update(
+                resource_group_name=self.resource_group,
+                workspace_name=self.workspace_name,
+                watchlist_alias=name.lower().replace(' ', '-'),
+                watchlist_item_id=str(hash(str(item))),
+                watchlist_item={'items_key_value': item}
+            )
+        
+        return {'watchlist': name, 'items_added': len(items)}
+
+
+# Example usage
+if __name__ == '__main__':
+    client = SentinelClient(
+        subscription_id='your-subscription-id',
+        resource_group='your-rg',
+        workspace_name='your-workspace'
+    )
+    
+    # Query for failed logins
+    df = client.query_logs("""
+        SigninLogs
+        | where ResultType != 0
+        | summarize FailedAttempts = count() by UserPrincipalName, IPAddress
+        | where FailedAttempts > 5
+    """)
+    print(df)
+    
+    # List high severity incidents
+    incidents = client.list_incidents(severity='High', days=1)
+    for inc in incidents:
+        print(f"{inc['title']} - {inc['severity']}")</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Detection Rule Deployment</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>deploy_detection.py</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>#!/usr/bin/env python3
+"""Deploy detection rules to Microsoft Sentinel"""
+
+import yaml
+import os
+from azure.identity import DefaultAzureCredential
+from azure.mgmt.securityinsight import SecurityInsights
+from azure.mgmt.securityinsight.models import ScheduledAlertRule
+from datetime import timedelta
+
+class DetectionDeployer:
+    def __init__(self, subscription_id: str, resource_group: str, workspace_name: str):
+        self.subscription_id = subscription_id
+        self.resource_group = resource_group
+        self.workspace_name = workspace_name
+        
+        credential = DefaultAzureCredential()
+        self.client = SecurityInsights(credential, subscription_id)
+    
+    def load_rule_from_yaml(self, yaml_file: str) -> dict:
+        """Load detection rule from YAML file"""
+        with open(yaml_file, 'r') as f:
+            return yaml.safe_load(f)
+    
+    def deploy_rule(self, rule_config: dict) -> dict:
+        """Deploy a scheduled alert rule to Sentinel"""
+        severity_map = {
+            'critical': 'High',
+            'high': 'High',
+            'medium': 'Medium',
+            'low': 'Low',
+            'informational': 'Informational'
+        }
+        
+        rule = ScheduledAlertRule(
+            display_name=rule_config['name'],
+            description=rule_config.get('description', ''),
+            severity=severity_map.get(rule_config.get('severity', 'medium').lower(), 'Medium'),
+            enabled=rule_config.get('status', 'production') == 'production',
+            query=rule_config['detection']['query'],
+            query_frequency=timedelta(hours=1),  # Default: run every hour
+            query_period=timedelta(hours=1),     # Default: look back 1 hour
+            trigger_operator='GreaterThan',
+            trigger_threshold=0,
+            suppression_duration=timedelta(hours=5),
+            suppression_enabled=False,
+            tactics=rule_config.get('mitre', {}).get('tactics', []),
+            techniques=rule_config.get('mitre', {}).get('techniques', [])
+        )
+        
+        result = self.client.alert_rules.create_or_update(
+            resource_group_name=self.resource_group,
+            workspace_name=self.workspace_name,
+            rule_id=rule_config['id'],
+            alert_rule=rule
+        )
+        
+        return {
+            'rule_id': rule_config['id'],
+            'name': rule_config['name'],
+            'status': 'deployed'
+        }
+    
+    def deploy_from_directory(self, directory: str) -> list:
+        """Deploy all rules from a directory"""
+        results = []
+        
+        for filename in os.listdir(directory):
+            if filename.endswith(('.yaml', '.yml')):
+                filepath = os.path.join(directory, filename)
+                rule_config = self.load_rule_from_yaml(filepath)
+                
+                try:
+                    result = self.deploy_rule(rule_config)
+                    result['file'] = filename
+                    results.append(result)
+                    print(f"✓ Deployed: {rule_config['name']}")
+                except Exception as e:
+                    results.append({
+                        'file': filename,
+                        'status': 'failed',
+                        'error': str(e)
+                    })
+                    print(f"✗ Failed: {filename} - {e}")
+        
+        return results
+    
+    def validate_rule(self, rule_config: dict) -> dict:
+        """Validate rule configuration before deployment"""
+        errors = []
+        warnings = []
+        
+        # Required fields
+        required = ['id', 'name', 'detection']
+        for field in required:
+            if field not in rule_config:
+                errors.append(f"Missing required field: {field}")
+        
+        # Detection must have query
+        if 'detection' in rule_config:
+            if 'query' not in rule_config['detection']:
+                errors.append("Detection must have a query")
+        
+        # MITRE mapping recommended
+        if 'mitre' not in rule_config:
+            warnings.append("No MITRE ATT&CK mapping provided")
+        
+        return {
+            'valid': len(errors) == 0,
+            'errors': errors,
+            'warnings': warnings
+        }
+
+
+if __name__ == '__main__':
+    deployer = DetectionDeployer(
+        subscription_id=os.getenv('AZURE_SUBSCRIPTION_ID'),
+        resource_group=os.getenv('AZURE_RESOURCE_GROUP'),
+        workspace_name=os.getenv('SENTINEL_WORKSPACE')
+    )
+    
+    # Deploy all rules from detections directory
+    results = deployer.deploy_from_directory('./detections/')
+    
+    # Summary
+    deployed = sum(1 for r in results if r['status'] == 'deployed')
+    failed = sum(1 for r in results if r['status'] == 'failed')
+    print(f"\nDeployed: {deployed}, Failed: {failed}")</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Write a Python function to validate an IP address and check if it's in a CIDR range.</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <div class="code-block">
+                                <pre><code>import ipaddress
+
+def validate_ip(ip_string: str) -> bool:
+    """Validate if string is a valid IP address"""
+    try:
+        ipaddress.ip_address(ip_string)
+        return True
+    except ValueError:
+        return False
+
+def ip_in_cidr(ip: str, cidr: str) -> bool:
+    """Check if IP is within a CIDR range"""
+    try:
+        return ipaddress.ip_address(ip) in ipaddress.ip_network(cidr, strict=False)
+    except ValueError:
+        return False
+
+def is_private_ip(ip: str) -> bool:
+    """Check if IP is in private range"""
+    try:
+        return ipaddress.ip_address(ip).is_private
+    except ValueError:
+        return False
+
+# Example usage
+print(validate_ip('192.168.1.1'))  # True
+print(ip_in_cidr('192.168.1.100', '192.168.1.0/24'))  # True
+print(is_private_ip('10.0.0.1'))  # True</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How would you handle rate limiting when calling multiple APIs?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <div class="code-block">
+                                <pre><code>import time
+from functools import wraps
+from collections import deque
+
+class RateLimiter:
+    def __init__(self, calls_per_minute: int):
+        self.calls_per_minute = calls_per_minute
+        self.calls = deque()
+    
+    def wait_if_needed(self):
+        now = time.time()
+        # Remove calls older than 1 minute
+        while self.calls and now - self.calls[0] > 60:
+            self.calls.popleft()
+        
+        if len(self.calls) >= self.calls_per_minute:
+            sleep_time = 60 - (now - self.calls[0])
+            if sleep_time > 0:
+                time.sleep(sleep_time)
+        
+        self.calls.append(time.time())
+
+def rate_limited(calls_per_minute: int):
+    """Decorator for rate limiting"""
+    limiter = RateLimiter(calls_per_minute)
+    
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            limiter.wait_if_needed()
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
+@rate_limited(calls_per_minute=4)  # VT free tier
+def query_virustotal(ioc: str):
+    # API call here
+    pass</code></pre>
+                            </div>
+                            <p>Additional strategies: exponential backoff on 429 errors, concurrent.futures with semaphores, async with aiohttp and asyncio.Semaphore.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="fundamentals.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        Automation Fundamentals
+                    </a>
+                    <a href="powershell-security.html" class="nav-link next">
+                        PowerShell for Security
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

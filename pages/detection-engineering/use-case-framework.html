@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Use Case Framework - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar" id="sidebar"></nav>
+        <main class="main-content">
+            <div class="breadcrumb">
+                <a href="../../index.html">Home</a> <span>/</span>
+                <a href="fundamentals.html">Detection Engineering</a> <span>/</span>
+                <span>Use Case Framework</span>
+            </div>
+
+            <article class="content">
+                <h1>Use Case Framework</h1>
+                <p class="subtitle">Structured methodology for developing, documenting, and managing detection use cases from ideation to production</p>
+
+                <!-- Use Case Lifecycle -->
+                <section class="content-section">
+                    <h2>Detection Use Case Lifecycle</h2>
+                    <p>A systematic approach to building detection capabilities that align with organizational risk, threat landscape, and operational maturity.</p>
+
+                    <div class="lifecycle-flow">
+                        <div class="lifecycle-stage">
+                            <div class="stage-number">1</div>
+                            <h4>Requirements</h4>
+                            <p>Define threat, data sources, success criteria</p>
+                        </div>
+                        <div class="lifecycle-arrow">→</div>
+                        <div class="lifecycle-stage">
+                            <div class="stage-number">2</div>
+                            <h4>Design</h4>
+                            <p>Detection logic, entity mapping, MITRE alignment</p>
+                        </div>
+                        <div class="lifecycle-arrow">→</div>
+                        <div class="lifecycle-stage">
+                            <div class="stage-number">3</div>
+                            <h4>Develop</h4>
+                            <p>Write queries, build analytics, test</p>
+                        </div>
+                        <div class="lifecycle-arrow">→</div>
+                        <div class="lifecycle-stage">
+                            <div class="stage-number">4</div>
+                            <h4>Deploy</h4>
+                            <p>Push to production, enable alerting</p>
+                        </div>
+                        <div class="lifecycle-arrow">→</div>
+                        <div class="lifecycle-stage">
+                            <div class="stage-number">5</div>
+                            <h4>Operate</h4>
+                            <p>Monitor, tune, measure effectiveness</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Use Case Template -->
+                <section class="content-section">
+                    <h2>Use Case Documentation Template</h2>
+                    <p>Standardized documentation ensures consistency, enables knowledge transfer, and supports audit requirements.</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>use-case-template.yaml</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code># Detection Use Case Documentation Template
+# Version: 2.0 | Last Updated: 2024-12
+
+metadata:
+  use_case_id: "UC-2024-0042"
+  name: "Credential Dumping via LSASS Memory Access"
+  version: "1.2"
+  status: "Production"  # Draft, Testing, Production, Deprecated
+  owner: "Detection Engineering Team"
+  created_date: "2024-06-15"
+  last_modified: "2024-11-20"
+  review_date: "2025-06-15"  # Annual review
+
+# Business Context
+business_context:
+  description: |
+    Detects attempts to access LSASS process memory, a common technique
+    used by attackers to extract credentials from Windows systems.
+    Critical for protecting against lateral movement and privilege escalation.
+  
+  risk_category: "Credential Theft"
+  business_impact: "High"  # Critical, High, Medium, Low
+  compliance_requirements:
+    - "PCI-DSS 8.2.1 - Strong Cryptography for Authentication"
+    - "NIST CSF PR.AC-1 - Identity Management"
+    - "SOC 2 CC6.1 - Logical Access Security"
+  
+  stakeholders:
+    - name: "Security Operations"
+      role: "Primary responder"
+    - name: "Identity & Access Management"
+      role: "Remediation support"
+    - name: "IT Operations"
+      role: "System hardening"
+
+# Threat Context
+threat_context:
+  threat_description: |
+    LSASS (Local Security Authority Subsystem Service) stores credentials
+    in memory including NTLM hashes, Kerberos tickets, and plaintext passwords.
+    Attackers use tools like Mimikatz, ProcDump, or direct API calls to
+    extract these credentials for lateral movement.
+  
+  mitre_attack:
+    tactic: "Credential Access"
+    tactic_id: "TA0006"
+    technique: "OS Credential Dumping"
+    technique_id: "T1003"
+    sub_technique: "LSASS Memory"
+    sub_technique_id: "T1003.001"
+  
+  threat_actors:
+    - "APT29 (Cozy Bear)"
+    - "FIN7"
+    - "Lazarus Group"
+    - "Various ransomware operators"
+  
+  attack_tools:
+    - "Mimikatz"
+    - "ProcDump"
+    - "comsvcs.dll (MiniDump)"
+    - "Task Manager"
+    - "Direct API (OpenProcess/ReadProcessMemory)"
+
+# Data Requirements
+data_requirements:
+  primary_data_sources:
+    - source: "Microsoft Defender for Endpoint"
+      table: "DeviceProcessEvents"
+      required_fields:
+        - "ProcessId"
+        - "ProcessCommandLine"
+        - "InitiatingProcessFileName"
+      retention: "90 days"
+      
+    - source: "Sysmon"
+      event_id: "10"
+      description: "ProcessAccess events targeting LSASS"
+      required_fields:
+        - "TargetImage"
+        - "SourceImage"
+        - "GrantedAccess"
+      
+  enrichment_sources:
+    - source: "Asset Inventory"
+      purpose: "Identify critical systems"
+    - source: "User Directory"
+      purpose: "Determine account privileges"
+      
+  data_quality_checks:
+    - check: "Sysmon Event 10 enabled"
+      validation_query: |
+        Sysmon
+        | where EventID == 10
+        | summarize count() by bin(TimeGenerated, 1h)
+        | where count_ == 0
+
+# Detection Logic
+detection_logic:
+  logic_type: "Behavioral"  # Signature, Threshold, Anomaly, Correlation, Behavioral
+  
+  primary_detection:
+    platform: "Microsoft Sentinel"
+    language: "KQL"
+    query: |
+      // LSASS Memory Access Detection
+      // Detects processes accessing LSASS memory with suspicious access rights
+      
+      let SuspiciousAccessMask = dynamic([
+          "0x1010",      // PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_VM_READ
+          "0x1410",      // Above + PROCESS_QUERY_INFORMATION
+          "0x1438",      // Full memory read access
+          "0x1fffff",    // PROCESS_ALL_ACCESS
+          "0x143a"       // Common Mimikatz access pattern
+      ]);
+      
+      let WhitelistedProcesses = dynamic([
+          "MsMpEng.exe",        // Windows Defender
+          "csrss.exe",          // Client Server Runtime
+          "lsass.exe",          // Self-reference
+          "svchost.exe",        // Service Host (needs refinement)
+          "WmiPrvSE.exe"        // WMI Provider
+      ]);
+      
+      Sysmon
+      | where EventID == 10
+      | where TargetImage endswith "\\lsass.exe"
+      | where SourceImage !endswith "\\lsass.exe"
+      | extend SourceProcess = tostring(split(SourceImage, "\\")[-1])
+      | where SourceProcess !in (WhitelistedProcesses)
+      | where GrantedAccess in (SuspiciousAccessMask)
+      | extend 
+          RiskScore = case(
+              GrantedAccess == "0x1fffff", 100,
+              GrantedAccess in ("0x1438", "0x143a"), 90,
+              GrantedAccess in ("0x1010", "0x1410"), 70,
+              50
+          ),
+          SourceDirectory = tostring(split(SourceImage, "\\", -2)[0])
+      | project
+          TimeGenerated,
+          Computer,
+          SourceImage,
+          SourceProcess,
+          TargetImage,
+          GrantedAccess,
+          SourceProcessGuid,
+          RiskScore,
+          SourceDirectory
+      | order by RiskScore desc
+      
+  alternative_detections:
+    - platform: "Splunk"
+      query: |
+        index=sysmon EventCode=10 TargetImage="*\\lsass.exe"
+        | search NOT SourceImage IN ("*\\MsMpEng.exe", "*\\csrss.exe")
+        | eval risk_score=case(
+            GrantedAccess="0x1fffff", 100,
+            GrantedAccess="0x1438", 90,
+            1=1, 50)
+        | table _time, host, SourceImage, TargetImage, GrantedAccess, risk_score
+        | sort -risk_score
+        
+    - platform: "Microsoft Defender XDR"
+      query: |
+        DeviceProcessEvents
+        | where FileName =~ "lsass.exe"
+        | where InitiatingProcessFileName !in~ ("MsMpEng.exe", "csrss.exe")
+        | where ProcessCommandLine has_any ("sekurlsa", "minidump", "comsvcs")
+        
+  detection_gaps:
+    - gap: "Kernel-level memory access bypasses Sysmon"
+      mitigation: "Enable Credential Guard, deploy EDR with kernel telemetry"
+    - gap: "Living-off-the-land tools using signed binaries"
+      mitigation: "Monitor Task Manager, ProcDump usage patterns"
+
+# Response Procedures
+response_procedures:
+  severity: "High"
+  sla_response: "15 minutes"
+  sla_resolution: "4 hours"
+  
+  triage_steps:
+    - step: 1
+      action: "Verify alert is not false positive"
+      details: |
+        - Check if source process is legitimate security software
+        - Verify if this is a known vulnerability scanner
+        - Check if device is used for security research/testing
+        
+    - step: 2
+      action: "Identify scope of compromise"
+      details: |
+        - Query for all LSASS access from source host in last 24h
+        - Check for other credential dumping indicators
+        - Identify accounts logged into the system
+        
+    - step: 3  
+      action: "Assess lateral movement risk"
+      details: |
+        - Identify privileged accounts on compromised system
+        - Check for authentication anomalies from those accounts
+        - Review network connections from source host
+        
+  containment_actions:
+    - priority: "Immediate"
+      action: "Isolate affected endpoint"
+      automation: "SOAR playbook: endpoint_isolation"
+      
+    - priority: "High"  
+      action: "Reset credentials for logged-in accounts"
+      automation: "Manual - coordinate with IAM team"
+      
+    - priority: "Medium"
+      action: "Block source process hash organization-wide"
+      automation: "SOAR playbook: hash_block"
+      
+  escalation_criteria:
+    - condition: "Multiple endpoints affected"
+      escalate_to: "Incident Commander"
+    - condition: "Domain Admin credentials potentially compromised"
+      escalate_to: "CISO"
+    - condition: "Evidence of active lateral movement"
+      escalate_to: "IR Team Lead"
+
+# Tuning & Optimization
+tuning:
+  known_false_positives:
+    - description: "Vulnerability scanners accessing LSASS"
+      exclusion: "SourceImage contains 'Qualys' or 'Tenable'"
+      
+    - description: "Endpoint protection self-defense checks"
+      exclusion: "SourceImage in WhitelistedProcesses"
+      
+    - description: "Windows updates and servicing"
+      exclusion: "SourceImage contains 'TiWorker.exe'"
+      
+  tuning_queries:
+    false_positive_analysis: |
+      // Identify potential false positives for exclusion
+      Sysmon
+      | where EventID == 10
+      | where TargetImage endswith "\\lsass.exe"
+      | summarize 
+          AlertCount = count(),
+          UniqueHosts = dcount(Computer)
+          by SourceImage
+      | where AlertCount > 10 and UniqueHosts > 5
+      | order by AlertCount desc
+      
+  baseline_period: "14 days"
+  review_frequency: "Monthly"
+  last_tuning_date: "2024-11-15"
+
+# Testing & Validation
+testing:
+  test_methodology: "Purple Team Exercise"
+  
+  atomic_tests:
+    - test_id: "T1003.001-1"
+      name: "Mimikatz LSASS Dump"
+      command: "mimikatz.exe sekurlsa::logonpasswords"
+      expected_alert: true
+      
+    - test_id: "T1003.001-2"  
+      name: "ProcDump LSASS"
+      command: "procdump.exe -ma lsass.exe lsass.dmp"
+      expected_alert: true
+      
+    - test_id: "T1003.001-3"
+      name: "comsvcs.dll MiniDump"
+      command: |
+        rundll32.exe C:\Windows\System32\comsvcs.dll, MiniDump 
+        (Get-Process lsass).Id C:\temp\lsass.dmp full
+      expected_alert: true
+      
+  last_test_date: "2024-10-20"
+  test_result: "Pass - All variants detected"
+  
+  validation_metrics:
+    true_positive_rate: 0.95
+    false_positive_rate: 0.02
+    mean_time_to_detect: "45 seconds"
+
+# Metrics & Reporting  
+metrics:
+  kpis:
+    - metric: "Mean Time to Detect (MTTD)"
+      target: "< 1 minute"
+      current: "45 seconds"
+      
+    - metric: "False Positive Rate"
+      target: "< 5%"
+      current: "2%"
+      
+    - metric: "Coverage Score"
+      target: "> 90%"
+      current: "95%"
+      
+  reporting_schedule: "Weekly"
+  dashboard_location: "Sentinel Workbook: Detection Metrics"
+
+# Approval & Sign-off
+approvals:
+  - role: "Detection Engineer"
+    name: "Jane Smith"
+    date: "2024-06-15"
+    
+  - role: "SOC Manager"
+    name: "John Doe"  
+    date: "2024-06-18"
+    
+  - role: "Security Architect"
+    name: "Alice Johnson"
+    date: "2024-06-20"
+
+# Change History
+change_history:
+  - version: "1.0"
+    date: "2024-06-15"
+    author: "Jane Smith"
+    changes: "Initial release"
+    
+  - version: "1.1"
+    date: "2024-09-10"
+    author: "Bob Wilson"
+    changes: "Added comsvcs.dll detection variant"
+    
+  - version: "1.2"
+    date: "2024-11-20"
+    author: "Jane Smith"
+    changes: "Updated whitelist, improved risk scoring"</code></pre>
+                    </div>
+                </section>
+
+                <!-- Requirements Gathering -->
+                <section class="content-section">
+                    <h2>Requirements Gathering Framework</h2>
+                    <p>Systematic approach to identifying detection requirements from multiple inputs.</p>
+
+                    <h3>Input Sources for Detection Requirements</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card sentinel">
+                            <h4>Threat Intelligence</h4>
+                            <ul>
+                                <li>Threat actor reports</li>
+                                <li>Malware analysis</li>
+                                <li>Industry advisories</li>
+                                <li>ISAC/ISAO feeds</li>
+                                <li>Vendor threat briefs</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card splunk">
+                            <h4>Internal Sources</h4>
+                            <ul>
+                                <li>Past incidents</li>
+                                <li>Penetration tests</li>
+                                <li>Red team exercises</li>
+                                <li>Vulnerability assessments</li>
+                                <li>Risk assessments</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card sentinel">
+                            <h4>Compliance & Audit</h4>
+                            <ul>
+                                <li>Regulatory requirements</li>
+                                <li>Audit findings</li>
+                                <li>Framework mappings</li>
+                                <li>Policy requirements</li>
+                                <li>Insurance mandates</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card splunk">
+                            <h4>Operational Feedback</h4>
+                            <ul>
+                                <li>SOC analyst requests</li>
+                                <li>Gap analysis results</li>
+                                <li>Coverage assessments</li>
+                                <li>Tool evaluations</li>
+                                <li>Benchmark comparisons</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>Requirements Prioritization Matrix</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Prioritization Score Calculation</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Use Case Prioritization Scoring Model
+// Score = (Threat_Likelihood × Business_Impact × Data_Availability) / Implementation_Effort
+
+let UseCaseRequirements = datatable(
+    UseCase:string, 
+    ThreatLikelihood:int,    // 1-5: How likely is this attack
+    BusinessImpact:int,       // 1-5: Business damage if successful
+    DataAvailability:int,     // 1-5: Do we have the data
+    ImplementationEffort:int  // 1-5: Complexity to build
+)[
+    "LSASS Credential Dump", 5, 5, 5, 2,
+    "Kerberoasting", 4, 5, 4, 3,
+    "DCSync Attack", 3, 5, 4, 2,
+    "Pass-the-Hash", 4, 4, 3, 4,
+    "Golden Ticket", 2, 5, 3, 4,
+    "AS-REP Roasting", 3, 4, 4, 2,
+    "DCShadow", 1, 5, 2, 5,
+    "Skeleton Key", 1, 5, 2, 5
+];
+UseCaseRequirements
+| extend PriorityScore = round(
+    (toreal(ThreatLikelihood) * BusinessImpact * DataAvailability) / ImplementationEffort,
+    2)
+| extend Priority = case(
+    PriorityScore >= 30, "Critical",
+    PriorityScore >= 20, "High",
+    PriorityScore >= 10, "Medium",
+    "Low"
+)
+| order by PriorityScore desc
+| project UseCase, Priority, PriorityScore, ThreatLikelihood, BusinessImpact, DataAvailability, ImplementationEffort</code></pre>
+                    </div>
+                </section>
+
+                <!-- Use Case Categories -->
+                <section class="content-section">
+                    <h2>Use Case Categories</h2>
+                    <p>Organize detection use cases into logical categories for coverage tracking and gap analysis.</p>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Focus Area</th>
+                                    <th>Example Use Cases</th>
+                                    <th>Primary Data Sources</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Identity & Access</strong></td>
+                                    <td>Authentication, authorization, privilege abuse</td>
+                                    <td>Brute force, credential stuffing, privilege escalation, impossible travel</td>
+                                    <td>Azure AD, Windows Security, VPN, IAM</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Endpoint Security</strong></td>
+                                    <td>Malware, exploitation, persistence</td>
+                                    <td>Process injection, registry persistence, scheduled tasks, LOLBins</td>
+                                    <td>EDR, Sysmon, Windows Events, AV</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Network Security</strong></td>
+                                    <td>Lateral movement, C2, exfiltration</td>
+                                    <td>Beaconing, DNS tunneling, SMB lateral movement, data staging</td>
+                                    <td>Firewall, IDS/IPS, DNS, Proxy, NetFlow</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Email Security</strong></td>
+                                    <td>Phishing, BEC, malicious attachments</td>
+                                    <td>Credential phishing, executive impersonation, macro delivery</td>
+                                    <td>Email gateway, O365, Attachment sandbox</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cloud Security</strong></td>
+                                    <td>Cloud resource abuse, misconfigurations</td>
+                                    <td>Exposed storage, IAM policy changes, resource hijacking</td>
+                                    <td>CloudTrail, Azure Activity, GCP Audit</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Data Protection</strong></td>
+                                    <td>Data theft, insider threats</td>
+                                    <td>Mass file access, USB exfil, cloud upload, print abuse</td>
+                                    <td>DLP, CASB, File servers, USB logs</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Application Security</strong></td>
+                                    <td>Web attacks, API abuse, injection</td>
+                                    <td>SQL injection, XSS, API enumeration, auth bypass</td>
+                                    <td>WAF, App logs, API gateway</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Use Case Library Management -->
+                <section class="content-section">
+                    <h2>Use Case Library Management</h2>
+                    <p>Maintain a structured repository of detection use cases with version control and metadata tracking.</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Use Case Library Dashboard Query</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Use Case Library Tracking via Custom Table
+// Requires: UseCaseLibrary_CL custom log
+
+// Define use case library as datatable for demo
+let UseCaseLibrary = datatable(
+    UseCaseID:string,
+    Name:string,
+    Category:string,
+    MITRETactic:string,
+    MITRETechnique:string,
+    Status:string,
+    Severity:string,
+    Owner:string,
+    LastTested:datetime,
+    AlertsLast30Days:int,
+    TruePositiveRate:real
+)[
+    "UC-001", "LSASS Memory Access", "Endpoint", "Credential Access", "T1003.001", "Production", "High", "Detection Team", datetime(2024-10-20), 45, 0.95,
+    "UC-002", "Kerberoasting Activity", "Identity", "Credential Access", "T1558.003", "Production", "High", "Detection Team", datetime(2024-10-15), 12, 0.88,
+    "UC-003", "Suspicious PowerShell", "Endpoint", "Execution", "T1059.001", "Production", "Medium", "Detection Team", datetime(2024-11-01), 230, 0.72,
+    "UC-004", "DNS Tunneling", "Network", "Exfiltration", "T1048.001", "Testing", "High", "Network Team", datetime(2024-09-30), 0, 0.0,
+    "UC-005", "Azure AD Brute Force", "Identity", "Credential Access", "T1110.001", "Production", "Medium", "Identity Team", datetime(2024-10-25), 89, 0.91,
+    "UC-006", "Ransomware Indicators", "Endpoint", "Impact", "T1486", "Production", "Critical", "Detection Team", datetime(2024-11-05), 3, 1.0,
+    "UC-007", "Data Exfil to Cloud", "Data Protection", "Exfiltration", "T1567", "Draft", "High", "DLP Team", datetime(2024-08-01), 0, 0.0,
+    "UC-008", "Lateral SMB Movement", "Network", "Lateral Movement", "T1021.002", "Production", "High", "Detection Team", datetime(2024-10-28), 67, 0.85
+];
+
+// Library Overview Dashboard
+UseCaseLibrary
+| summarize 
+    TotalUseCases = count(),
+    Production = countif(Status == "Production"),
+    Testing = countif(Status == "Testing"),
+    Draft = countif(Status == "Draft"),
+    CriticalSeverity = countif(Severity == "Critical"),
+    HighSeverity = countif(Severity == "High"),
+    AvgTruePositiveRate = round(avg(TruePositiveRate) * 100, 1),
+    NeedsRetesting = countif(LastTested < ago(90d) and Status == "Production")
+
+// Coverage by MITRE Tactic
+UseCaseLibrary
+| where Status == "Production"
+| summarize UseCases = count() by MITRETactic
+| order by UseCases desc
+
+// Use Cases Needing Attention
+UseCaseLibrary
+| where Status == "Production"
+| where TruePositiveRate < 0.80 or LastTested < ago(90d)
+| project 
+    UseCaseID,
+    Name,
+    Issue = case(
+        TruePositiveRate < 0.80, strcat("Low TP Rate: ", round(TruePositiveRate * 100, 1), "%"),
+        LastTested < ago(90d), strcat("Not tested in ", datetime_diff('day', now(), LastTested), " days"),
+        "Unknown"
+    ),
+    Owner
+| order by Issue</code></pre>
+                    </div>
+                </section>
+
+                <!-- Maturity Assessment -->
+                <section class="content-section">
+                    <h2>Detection Maturity Assessment</h2>
+                    <p>Evaluate and improve detection capabilities using a structured maturity model.</p>
+
+                    <h3>Detection Maturity Levels</h3>
+                    <div class="maturity-levels">
+                        <div class="maturity-level level-1">
+                            <div class="level-header">
+                                <span class="level-badge">Level 1</span>
+                                <h4>Initial</h4>
+                            </div>
+                            <ul>
+                                <li>Vendor-provided rules only</li>
+                                <li>No customization or tuning</li>
+                                <li>Reactive alert triage</li>
+                                <li>No documentation</li>
+                                <li>Ad-hoc processes</li>
+                            </ul>
+                        </div>
+                        <div class="maturity-level level-2">
+                            <div class="level-header">
+                                <span class="level-badge">Level 2</span>
+                                <h4>Developing</h4>
+                            </div>
+                            <ul>
+                                <li>Basic custom detections</li>
+                                <li>Some tuning performed</li>
+                                <li>Informal documentation</li>
+                                <li>Limited MITRE mapping</li>
+                                <li>Manual testing</li>
+                            </ul>
+                        </div>
+                        <div class="maturity-level level-3">
+                            <div class="level-header">
+                                <span class="level-badge">Level 3</span>
+                                <h4>Defined</h4>
+                            </div>
+                            <ul>
+                                <li>Standardized use case framework</li>
+                                <li>Formal documentation</li>
+                                <li>MITRE ATT&CK alignment</li>
+                                <li>Regular testing schedule</li>
+                                <li>Basic metrics tracking</li>
+                            </ul>
+                        </div>
+                        <div class="maturity-level level-4">
+                            <div class="level-header">
+                                <span class="level-badge">Level 4</span>
+                                <h4>Managed</h4>
+                            </div>
+                            <ul>
+                                <li>Threat-informed detections</li>
+                                <li>Automated testing (CI/CD)</li>
+                                <li>Coverage gap analysis</li>
+                                <li>KPI-driven optimization</li>
+                                <li>Proactive threat hunting</li>
+                            </ul>
+                        </div>
+                        <div class="maturity-level level-5">
+                            <div class="level-header">
+                                <span class="level-badge">Level 5</span>
+                                <h4>Optimizing</h4>
+                            </div>
+                            <ul>
+                                <li>ML-enhanced detections</li>
+                                <li>Continuous improvement</li>
+                                <li>Industry benchmarking</li>
+                                <li>Predictive analytics</li>
+                                <li>Detection as Code (DaC)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>Maturity Assessment Query</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Calculate Detection Maturity Score</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detection Capability Maturity Assessment
+// Score each dimension 1-5, calculate weighted average
+
+let MaturityAssessment = datatable(
+    Dimension:string,
+    Weight:real,
+    CurrentScore:int,
+    TargetScore:int,
+    Evidence:string
+)[
+    "Documentation Standards", 0.15, 4, 5, "95% use cases documented per template",
+    "MITRE Coverage", 0.20, 3, 4, "60% technique coverage, gaps in Discovery",
+    "Testing Automation", 0.15, 2, 4, "Manual testing only, no CI/CD",
+    "Tuning Process", 0.10, 4, 5, "Monthly tuning reviews, FP tracking",
+    "Metrics & KPIs", 0.15, 3, 4, "MTTD tracked, limited coverage metrics",
+    "Threat Intelligence Integration", 0.10, 3, 4, "TI feeds ingested, limited operationalization",
+    "Tool Integration", 0.10, 4, 4, "SIEM/SOAR/EDR integrated",
+    "Team Skills", 0.05, 3, 4, "2 detection engineers, need ML expertise"
+];
+
+MaturityAssessment
+| extend 
+    WeightedCurrent = CurrentScore * Weight,
+    WeightedTarget = TargetScore * Weight,
+    Gap = TargetScore - CurrentScore
+| summarize
+    OverallMaturity = round(sum(WeightedCurrent), 2),
+    TargetMaturity = round(sum(WeightedTarget), 2),
+    MaturityGap = round(sum(WeightedTarget) - sum(WeightedCurrent), 2)
+
+// Detail by Dimension
+MaturityAssessment
+| extend 
+    GapPriority = case(
+        (TargetScore - CurrentScore) >= 2 and Weight >= 0.15, "Critical",
+        (TargetScore - CurrentScore) >= 1 and Weight >= 0.15, "High",
+        (TargetScore - CurrentScore) >= 1, "Medium",
+        "Low"
+    )
+| project Dimension, CurrentScore, TargetScore, Gap = TargetScore - CurrentScore, Weight, GapPriority, Evidence
+| order by GapPriority asc, Gap desc</code></pre>
+                    </div>
+                </section>
+
+                <!-- Detection as Code -->
+                <section class="content-section">
+                    <h2>Detection as Code (DaC)</h2>
+                    <p>Apply software engineering practices to detection development for consistency, versioning, and automation.</p>
+
+                    <div class="info-box tip">
+                        <h4>Detection as Code Benefits</h4>
+                        <ul>
+                            <li><strong>Version Control:</strong> Track changes, rollback capabilities, audit trail</li>
+                            <li><strong>Code Review:</strong> Peer review before production deployment</li>
+                            <li><strong>Testing:</strong> Automated validation before deployment</li>
+                            <li><strong>Consistency:</strong> Standardized format across all detections</li>
+                            <li><strong>Portability:</strong> Deploy same logic across multiple platforms</li>
+                        </ul>
+                    </div>
+
+                    <h3>Repository Structure</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection Repository Structure</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>detection-rules/
+├── README.md
+├── .github/
+│   └── workflows/
+│       ├── validate.yml          # Syntax validation on PR
+│       ├── test.yml              # Run atomic tests
+│       └── deploy.yml            # Deploy to SIEM
+├── schema/
+│   └── detection-schema.yaml     # JSON schema for validation
+├── rules/
+│   ├── credential-access/
+│   │   ├── lsass-memory-access.yml
+│   │   ├── kerberoasting.yml
+│   │   └── dcsync-attack.yml
+│   ├── execution/
+│   │   ├── suspicious-powershell.yml
+│   │   └── mshta-execution.yml
+│   ├── persistence/
+│   │   ├── registry-run-keys.yml
+│   │   └── scheduled-task-creation.yml
+│   └── lateral-movement/
+│       ├── smb-admin-share.yml
+│       └── psexec-execution.yml
+├── tests/
+│   ├── atomic-tests/
+│   │   └── T1003.001/
+│   │       ├── test-mimikatz.ps1
+│   │       └── test-procdump.ps1
+│   └── validation/
+│       └── test-queries.py
+├── libraries/
+│   ├── watchlists/
+│   │   ├── known-bad-hashes.csv
+│   │   └── lolbas-binaries.csv
+│   └── functions/
+│       └── risk-scoring.kql
+└── docs/
+    ├── contributing.md
+    ├── testing-guide.md
+    └── deployment-guide.md</code></pre>
+                    </div>
+
+                    <h3>CI/CD Pipeline for Detections</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>.github/workflows/validate.yml</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>name: Validate Detection Rules
+
+on:
+  pull_request:
+    paths:
+      - 'rules/**'
+      
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      - name: Install dependencies
+        run: |
+          pip install pyyaml jsonschema kql-validator
+          
+      - name: Validate YAML Schema
+        run: |
+          python scripts/validate_schema.py rules/ schema/detection-schema.yaml
+          
+      - name: Validate KQL Syntax
+        run: |
+          python scripts/validate_kql.py rules/
+          
+      - name: Check MITRE Mappings
+        run: |
+          python scripts/validate_mitre.py rules/
+          
+      - name: Run Unit Tests
+        run: |
+          pytest tests/validation/ -v
+          
+  security-review:
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Check for sensitive data
+        run: |
+          # Ensure no API keys, passwords, or sensitive data in rules
+          grep -r -E "(password|api_key|secret|token)=" rules/ && exit 1 || exit 0
+          
+      - name: Validate exclusions
+        run: |
+          # Ensure exclusions don't create security gaps
+          python scripts/audit_exclusions.py rules/</code></pre>
+                    </div>
+                </section>
+
+                <!-- Interview Q&A -->
+                <section class="content-section">
+                    <h2>Interview Questions & Answers</h2>
+                    
+                    <div class="qa-section">
+                        <details class="qa-item">
+                            <summary><strong>Q: Walk me through your process for developing a new detection use case.</strong></summary>
+                            <div class="qa-answer">
+                                <p><strong>A:</strong> My use case development follows a structured lifecycle:</p>
+                                <ol>
+                                    <li><strong>Requirements Gathering:</strong> Identify the threat from intelligence reports, incident post-mortems, or gap analysis. Define success criteria and acceptance tests.</li>
+                                    <li><strong>Data Assessment:</strong> Verify required data sources are available and have adequate retention. Run exploratory queries to understand the data.</li>
+                                    <li><strong>Detection Design:</strong> Choose appropriate logic type (signature, threshold, behavioral). Map to MITRE ATT&CK. Define entity mapping and severity.</li>
+                                    <li><strong>Development:</strong> Write the detection query, implement risk scoring, add contextual enrichment.</li>
+                                    <li><strong>Testing:</strong> Execute atomic tests to validate true positive detection. Run against historical data for false positive assessment.</li>
+                                    <li><strong>Documentation:</strong> Complete use case template including response procedures, tuning guidance, and testing results.</li>
+                                    <li><strong>Deployment:</strong> Push to production through our Detection as Code pipeline. Enable alerting with appropriate routing.</li>
+                                    <li><strong>Optimization:</strong> Monitor for 2 weeks, tune exclusions, measure MTTD and false positive rate.</li>
+                                </ol>
+                            </div>
+                        </details>
+
+                        <details class="qa-item">
+                            <summary><strong>Q: How do you prioritize which detection use cases to build?</strong></summary>
+                            <div class="qa-answer">
+                                <p><strong>A:</strong> I use a multi-factor prioritization model:</p>
+                                <ul>
+                                    <li><strong>Threat Likelihood:</strong> How commonly is this technique used by threat actors targeting our industry?</li>
+                                    <li><strong>Business Impact:</strong> What's the potential damage if this attack succeeds?</li>
+                                    <li><strong>Data Availability:</strong> Do we have the telemetry to detect this effectively?</li>
+                                    <li><strong>Implementation Effort:</strong> How complex is the detection to build and maintain?</li>
+                                </ul>
+                                <p>I calculate a priority score: (Likelihood × Impact × Data) / Effort. This ensures we focus on high-value, achievable detections first. I also consider regulatory requirements and any active threat intelligence indicating imminent risk.</p>
+                            </div>
+                        </details>
+
+                        <details class="qa-item">
+                            <summary><strong>Q: What's your approach to managing a detection rule library at scale?</strong></summary>
+                            <div class="qa-answer">
+                                <p><strong>A:</strong> Managing detection at scale requires:</p>
+                                <ul>
+                                    <li><strong>Standardization:</strong> Mandatory use case template for all detections with consistent metadata, MITRE mapping, and documentation.</li>
+                                    <li><strong>Version Control:</strong> All detections stored in Git with proper branching, code review, and change tracking.</li>
+                                    <li><strong>Categorization:</strong> Organize by MITRE tactic, data source, and business function for easy navigation and gap analysis.</li>
+                                    <li><strong>Lifecycle Management:</strong> Track status (Draft/Testing/Production/Deprecated), owners, and review dates.</li>
+                                    <li><strong>Testing Automation:</strong> CI/CD pipeline validates syntax, runs unit tests, and deploys to production.</li>
+                                    <li><strong>Metrics Tracking:</strong> Dashboard showing alert volume, true positive rates, and coverage by category.</li>
+                                    <li><strong>Regular Reviews:</strong> Quarterly reviews of all production rules for continued relevance and effectiveness.</li>
+                                </ul>
+                            </div>
+                        </details>
+
+                        <details class="qa-item">
+                            <summary><strong>Q: How do you measure detection engineering success?</strong></summary>
+                            <div class="qa-answer">
+                                <p><strong>A:</strong> I track multiple KPI categories:</p>
+                                <ul>
+                                    <li><strong>Detection Quality:</strong> True positive rate (target >90%), false positive rate (target <5%), mean time to detect</li>
+                                    <li><strong>Coverage:</strong> Percentage of MITRE techniques covered, gaps by tactic, coverage by critical asset type</li>
+                                    <li><strong>Operational Efficiency:</strong> Alert volume trends, analyst handling time, automation rate</li>
+                                    <li><strong>Program Maturity:</strong> Documentation completeness, testing frequency, Detection as Code adoption</li>
+                                    <li><strong>Business Impact:</strong> Incidents detected before damage, MTTD improvement over time, audit findings</li>
+                                </ul>
+                                <p>I report these weekly to SOC leadership and use trends to identify optimization opportunities and resource needs.</p>
+                            </div>
+                        </details>
+
+                        <details class="qa-item">
+                            <summary><strong>Q: Explain Detection as Code and its benefits.</strong></summary>
+                            <div class="qa-answer">
+                                <p><strong>A:</strong> Detection as Code applies software engineering practices to detection development:</p>
+                                <ul>
+                                    <li><strong>Version Control:</strong> All detections in Git with full change history, rollback capability, and audit trail.</li>
+                                    <li><strong>Code Review:</strong> Pull request process ensures peer review before production deployment.</li>
+                                    <li><strong>Automated Testing:</strong> CI pipeline validates YAML schema, KQL syntax, MITRE mappings, and runs atomic tests.</li>
+                                    <li><strong>Consistent Formatting:</strong> Schema enforcement ensures standardized structure across all detections.</li>
+                                    <li><strong>Multi-Platform Deployment:</strong> Same detection logic can deploy to Sentinel, Splunk, or other platforms through translation.</li>
+                                    <li><strong>Collaboration:</strong> Detection engineers work asynchronously with clear processes and documentation.</li>
+                                </ul>
+                                <p>Benefits include reduced deployment errors, faster development cycles, better knowledge sharing, and compliance audit readiness.</p>
+                            </div>
+                        </details>
+                    </div>
+                </section>
+
+                <!-- Navigation -->
+                <div class="page-navigation">
+                    <a href="mitre-mapping.html" class="nav-link prev">
+                        <span class="arrow">←</span>
+                        <span class="label">Previous: MITRE ATT&CK Mapping</span>
+                    </a>
+                    <a href="metrics-optimization.html" class="nav-link next">
+                        <span class="label">Next: Metrics & Optimization</span>
+                        <span class="arrow">→</span>
+                    </a>
+                </div>
+            </article>
+        </main>
+    </div>
+
+    <script src="../../js/sidebar.js"></script>
+    <script>
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block').querySelector('code');
+            navigator.clipboard.writeText(codeBlock.textContent);
+            button.textContent = 'Copied!';
+            setTimeout(() => button.textContent = 'Copy', 2000);
+        }
+    </script>
+
+    <style>
+        /* Lifecycle Flow */
+        .lifecycle-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(0, 255, 136, 0.05) 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .lifecycle-stage {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            padding: 1rem;
+            background: rgba(10, 14, 20, 0.8);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .stage-number {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #0a0e14;
+            margin: 0 auto 0.75rem;
+        }
+
+        .lifecycle-stage h4 {
+            color: #00d4ff;
+            margin: 0 0 0.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .lifecycle-stage p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #8b949e;
+        }
+
+        .lifecycle-arrow {
+            color: #00ff88;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .lifecycle-arrow {
+                transform: rotate(90deg);
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* Maturity Levels */
+        .maturity-levels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .maturity-level {
+            background: rgba(10, 14, 20, 0.8);
+            border-radius: 8px;
+            padding: 1.25rem;
+            border-left: 4px solid;
+        }
+
+        .level-1 { border-color: #ef4444; }
+        .level-2 { border-color: #f97316; }
+        .level-3 { border-color: #eab308; }
+        .level-4 { border-color: #22c55e; }
+        .level-5 { border-color: #00d4ff; }
+
+        .level-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .level-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .level-1 .level-badge { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .level-2 .level-badge { background: rgba(249, 115, 22, 0.2); color: #f97316; }
+        .level-3 .level-badge { background: rgba(234, 179, 8, 0.2); color: #eab308; }
+        .level-4 .level-badge { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+        .level-5 .level-badge { background: rgba(0, 212, 255, 0.2); color: #00d4ff; }
+
+        .level-header h4 {
+            margin: 0;
+            color: #e6edf3;
+        }
+
+        .maturity-level ul {
+            margin: 0;
+            padding-left: 1.25rem;
+        }
+
+        .maturity-level li {
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+            color: #8b949e;
+        }
+    </style>
+</body>
+</html>

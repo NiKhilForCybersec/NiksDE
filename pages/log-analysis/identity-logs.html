@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identity & Access Logs - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <span class="logo-icon">⚡</span>
+                    <span class="logo-text">Detection<span class="logo-accent">Mastery</span></span>
+                </a>
+                <button class="sidebar-toggle" aria-label="Toggle sidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section expanded" data-section="logs">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                            <span>Log Analysis & Data</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item">Log Fundamentals</a>
+                        <a href="endpoint-logs.html" class="nav-item">Endpoint Logs</a>
+                        <a href="network-logs.html" class="nav-item">Network Logs</a>
+                        <a href="cloud-logs.html" class="nav-item">Cloud Logs</a>
+                        <a href="identity-logs.html" class="nav-item active">Identity & Access Logs</a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+
+            <div class="content-wrapper">
+                <div class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="fundamentals.html">Log Analysis</a>
+                    <span class="separator">/</span>
+                    <span class="current">Identity & Access Logs</span>
+                </div>
+
+                <article class="content">
+                    <header class="content-header">
+                        <h1>Identity & Access Logs</h1>
+                        <p class="content-subtitle">Authentication, authorization, and identity-based threat detection across Active Directory and cloud identity providers</p>
+                    </header>
+
+                    <!-- Identity Log Sources -->
+                    <section class="content-section">
+                        <h2>Identity Log Sources Overview</h2>
+                        
+                        <div class="table-responsive">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Source</th>
+                                        <th>Platform</th>
+                                        <th>Key Events</th>
+                                        <th>Detection Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Windows Security Events</strong></td>
+                                        <td>On-premises AD</td>
+                                        <td>4624, 4625, 4768, 4769, 4776</td>
+                                        <td>Kerberos attacks, lateral movement, credential theft</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Entra ID Sign-in Logs</strong></td>
+                                        <td>Azure/M365</td>
+                                        <td>Sign-ins, MFA, Conditional Access</td>
+                                        <td>Cloud account compromise, impossible travel</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Entra ID Audit Logs</strong></td>
+                                        <td>Azure/M365</td>
+                                        <td>User/group changes, app registrations</td>
+                                        <td>Privilege escalation, persistence</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Okta System Log</strong></td>
+                                        <td>Okta</td>
+                                        <td>Authentication, MFA, policy changes</td>
+                                        <td>SSO abuse, MFA bypass attempts</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>AWS CloudTrail IAM</strong></td>
+                                        <td>AWS</td>
+                                        <td>IAM actions, STS assume role</td>
+                                        <td>Privilege escalation, credential misuse</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>PAM Solutions</strong></td>
+                                        <td>CyberArk, Delinea</td>
+                                        <td>Privileged sessions, checkout</td>
+                                        <td>Privileged access abuse, session hijacking</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Active Directory -->
+                    <section class="content-section">
+                        <h2>Active Directory Authentication Logs</h2>
+                        
+                        <h3>Critical Windows Security Events</h3>
+                        <div class="table-responsive">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Event ID</th>
+                                        <th>Description</th>
+                                        <th>Detection Use Cases</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge badge-cyan">4624</span></td>
+                                        <td>Successful logon</td>
+                                        <td>Lateral movement, service account abuse</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-orange">4625</span></td>
+                                        <td>Failed logon</td>
+                                        <td>Brute force, password spraying</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-cyan">4768</span></td>
+                                        <td>Kerberos TGT request</td>
+                                        <td>AS-REP roasting, credential theft</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-cyan">4769</span></td>
+                                        <td>Kerberos service ticket</td>
+                                        <td>Kerberoasting, lateral movement</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-orange">4771</span></td>
+                                        <td>Kerberos pre-auth failed</td>
+                                        <td>Password attacks, AS-REP roasting</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-cyan">4776</span></td>
+                                        <td>NTLM authentication</td>
+                                        <td>Pass-the-hash, legacy auth</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-red">4672</span></td>
+                                        <td>Special privileges assigned</td>
+                                        <td>Privileged logons, admin activity</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-purple">4720</span></td>
+                                        <td>User account created</td>
+                                        <td>Persistence, rogue accounts</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-purple">4728/4732</span></td>
+                                        <td>Member added to security group</td>
+                                        <td>Privilege escalation</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3>Kerberoasting Detection</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">Detect Kerberoasting Attempts</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// Kerberoasting - Unusual service ticket requests
+// Event 4769 with RC4 encryption (0x17) to service accounts
+SecurityEvent
+| where TimeGenerated > ago(24h)
+| where EventID == 4769
+| where ServiceName !endswith "$"  // Exclude computer accounts
+| where ServiceName !in ("krbtgt", "kadmin")
+| where TicketEncryptionType == "0x17"  // RC4 encryption
+| summarize 
+    RequestCount = count(),
+    UniqueServices = dcount(ServiceName),
+    Services = make_set(ServiceName, 10)
+    by AccountName = TargetUserName, ClientAddress = IpAddress
+| where UniqueServices > 5  // Threshold: multiple service tickets
+| extend AlertSeverity = iff(UniqueServices > 10, "High", "Medium")
+
+// Alternative: Detect via MDE
+DeviceEvents
+| where TimeGenerated > ago(24h)
+| where ActionType == "KerberosCredentialTheft"
+| project TimeGenerated, DeviceName, AccountName, 
+    ActionType, AdditionalFields</code></pre>
+                        </div>
+
+                        <h3>Password Spray Detection</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">Detect Password Spray Attacks</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// Password spray: Same password tried against many accounts
+// Pattern: Many failed logins from same source, low failures per account
+SecurityEvent
+| where TimeGenerated > ago(1h)
+| where EventID == 4625
+| where LogonType in (2, 3, 10)  // Interactive, Network, RemoteInteractive
+| summarize 
+    FailedAccounts = dcount(TargetUserName),
+    TotalFailures = count(),
+    Accounts = make_set(TargetUserName, 50)
+    by SourceIP = IpAddress, bin(TimeGenerated, 10m)
+| where FailedAccounts > 10
+| where TotalFailures / FailedAccounts < 3  // Low failures per account
+| extend 
+    AlertTitle = "Potential Password Spray Attack",
+    AlertSeverity = iff(FailedAccounts > 50, "High", "Medium")
+
+// Cross-platform: Include Entra ID
+let ADFailures = SecurityEvent
+| where TimeGenerated > ago(1h)
+| where EventID == 4625
+| project TimeGenerated, Source = "AD", Account = TargetUserName, 
+    SourceIP = IpAddress;
+let EntraFailures = SigninLogs
+| where TimeGenerated > ago(1h)
+| where ResultType != 0
+| project TimeGenerated, Source = "Entra", Account = UserPrincipalName, 
+    SourceIP = IPAddress;
+union ADFailures, EntraFailures
+| summarize 
+    FailedAccounts = dcount(Account),
+    Sources = make_set(Source)
+    by SourceIP, bin(TimeGenerated, 15m)
+| where FailedAccounts > 15</code></pre>
+                        </div>
+
+                        <h3>DCSync Detection</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">Detect DCSync Attack</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// DCSync: Replication requests from non-DC systems
+// Event 4662 with replication GUIDs
+let ReplicationGUIDs = dynamic([
+    "1131f6aa-9c07-11d1-f79f-00c04fc2dcd2",  // DS-Replication-Get-Changes
+    "1131f6ad-9c07-11d1-f79f-00c04fc2dcd2",  // DS-Replication-Get-Changes-All
+    "89e95b76-444d-4c62-991a-0facbeda640c"   // DS-Replication-Get-Changes-In-Filtered-Set
+]);
+let DomainControllers = dynamic(["DC01", "DC02", "DC03"]);  // Your DC list
+SecurityEvent
+| where TimeGenerated > ago(24h)
+| where EventID == 4662
+| where ObjectType contains "domainDNS"
+| extend AccessedGUID = extract("([0-9a-f-]{36})", 1, Properties)
+| where AccessedGUID in (ReplicationGUIDs)
+| where Computer !in (DomainControllers)
+| project 
+    TimeGenerated,
+    Computer,
+    SubjectUserName,
+    AccessedGUID,
+    ObjectName,
+    AlertTitle = "DCSync Attack Detected",
+    AlertSeverity = "Critical"
+
+// Alternative: MDE detection
+DeviceEvents
+| where ActionType == "DomainReplicationAudit"
+| where AdditionalFields contains "Replication"
+| project TimeGenerated, DeviceName, InitiatingProcessAccountName</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Entra ID -->
+                    <section class="content-section">
+                        <h2>Microsoft Entra ID Logs</h2>
+                        
+                        <h3>Sign-in Log Analysis</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">Entra ID Sign-in Analysis</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// Risky sign-ins requiring investigation
+SigninLogs
+| where TimeGenerated > ago(24h)
+| where RiskLevelDuringSignIn in ("high", "medium")
+| project 
+    TimeGenerated,
+    UserPrincipalName,
+    IPAddress,
+    Location,
+    AppDisplayName,
+    RiskLevelDuringSignIn,
+    RiskState,
+    DeviceDetail,
+    ConditionalAccessStatus,
+    ResultType,
+    ResultDescription
+
+// Failed MFA challenges - potential account takeover attempts
+SigninLogs
+| where TimeGenerated > ago(24h)
+| where ResultType != 0
+| where AuthenticationRequirement == "multiFactorAuthentication"
+| where ResultDescription contains "MFA"
+| summarize 
+    FailedMFA = count(),
+    UniqueIPs = dcount(IPAddress),
+    IPs = make_set(IPAddress, 5)
+    by UserPrincipalName
+| where FailedMFA >= 3
+| extend AlertSeverity = iff(FailedMFA > 10, "High", "Medium")
+
+// Legacy authentication (should be blocked)
+SigninLogs
+| where TimeGenerated > ago(24h)
+| where ClientAppUsed in ("Exchange ActiveSync", "IMAP4", "POP3", 
+    "SMTP", "MAPI Over HTTP", "Autodiscover", "Other clients")
+| where ResultType == 0  // Successful
+| summarize 
+    SuccessfulLegacyAuth = count(),
+    Apps = make_set(ClientAppUsed)
+    by UserPrincipalName, IPAddress
+| order by SuccessfulLegacyAuth desc</code></pre>
+                        </div>
+
+                        <h3>Impossible Travel Detection</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">Detect Impossible Travel</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// Impossible travel: Logins from distant locations too quickly
+let DistanceThresholdKm = 500;
+let TimeThresholdMinutes = 60;
+let MaxPossibleSpeedKmh = 900;  // Approximate commercial flight speed
+SigninLogs
+| where TimeGenerated > ago(7d)
+| where ResultType == 0
+| where isnotempty(LocationDetails)
+| extend 
+    Latitude = toreal(LocationDetails.geoCoordinates.latitude),
+    Longitude = toreal(LocationDetails.geoCoordinates.longitude)
+| where isnotnull(Latitude) and isnotnull(Longitude)
+| sort by UserPrincipalName, TimeGenerated asc
+| serialize
+| extend 
+    PrevTime = prev(TimeGenerated, 1),
+    PrevLat = prev(Latitude, 1),
+    PrevLon = prev(Longitude, 1),
+    PrevUser = prev(UserPrincipalName, 1)
+| where UserPrincipalName == PrevUser
+| extend 
+    TimeDiffMinutes = datetime_diff('minute', TimeGenerated, PrevTime),
+    // Haversine formula for distance
+    DistanceKm = 6371 * acos(
+        cos(radians(Latitude)) * cos(radians(PrevLat)) * 
+        cos(radians(PrevLon) - radians(Longitude)) + 
+        sin(radians(Latitude)) * sin(radians(PrevLat))
+    )
+| where DistanceKm > DistanceThresholdKm
+| where TimeDiffMinutes < TimeThresholdMinutes
+| extend 
+    RequiredSpeedKmh = DistanceKm / (TimeDiffMinutes / 60.0)
+| where RequiredSpeedKmh > MaxPossibleSpeedKmh
+| project 
+    TimeGenerated,
+    UserPrincipalName,
+    CurrentLocation = Location,
+    PreviousTime = PrevTime,
+    DistanceKm = round(DistanceKm, 0),
+    TimeDiffMinutes,
+    RequiredSpeedKmh = round(RequiredSpeedKmh, 0),
+    IPAddress,
+    AppDisplayName</code></pre>
+                        </div>
+
+                        <h3>Privileged Role Changes</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">Monitor Privileged Role Assignments</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// High-privilege role assignments
+let HighPrivRoles = dynamic([
+    "Global Administrator", "Privileged Role Administrator",
+    "Security Administrator", "Exchange Administrator",
+    "SharePoint Administrator", "User Administrator",
+    "Application Administrator", "Cloud Application Administrator"
+]);
+AuditLogs
+| where TimeGenerated > ago(7d)
+| where OperationName has_any ("Add member to role", "Add eligible member to role")
+| where TargetResources[0].displayName in (HighPrivRoles)
+| extend 
+    TargetUser = TargetResources[0].userPrincipalName,
+    RoleName = TargetResources[0].displayName,
+    AssignedBy = InitiatedBy.user.userPrincipalName
+| project 
+    TimeGenerated,
+    TargetUser,
+    RoleName,
+    AssignedBy,
+    OperationName,
+    Result
+
+// Service Principal credential additions (persistence)
+AuditLogs
+| where TimeGenerated > ago(7d)
+| where OperationName in ("Add service principal credentials", 
+    "Update application – Certificates and secrets management")
+| extend 
+    AppName = TargetResources[0].displayName,
+    AppId = TargetResources[0].id,
+    ModifiedBy = InitiatedBy.user.userPrincipalName
+| project 
+    TimeGenerated,
+    AppName,
+    AppId,
+    ModifiedBy,
+    OperationName,
+    AlertSeverity = "High"</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Okta -->
+                    <section class="content-section">
+                        <h2>Okta Identity Logs</h2>
+                        
+                        <h3>Okta System Log Analysis</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">Okta Authentication Analysis (via Sentinel)</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// Failed Okta authentications
+Okta_CL
+| where TimeGenerated > ago(24h)
+| where eventType_s == "user.session.start"
+| where outcome_result_s == "FAILURE"
+| summarize 
+    FailedLogins = count(),
+    FailureReasons = make_set(outcome_reason_s),
+    IPs = make_set(client_ipAddress_s)
+    by actor_alternateId_s
+| where FailedLogins > 5
+| order by FailedLogins desc
+
+// MFA bypass attempts
+Okta_CL
+| where TimeGenerated > ago(24h)
+| where eventType_s has_any ("user.mfa.factor.deactivate", 
+    "user.mfa.factor.reset_all", "system.mfa.factor.deactivate")
+| project 
+    TimeGenerated,
+    Actor = actor_alternateId_s,
+    Target = target_s,
+    EventType = eventType_s,
+    ClientIP = client_ipAddress_s,
+    UserAgent = client_userAgent_rawUserAgent_s
+
+// Admin impersonation / session hijacking
+Okta_CL
+| where TimeGenerated > ago(24h)
+| where eventType_s == "user.session.impersonation.initiate"
+| project 
+    TimeGenerated,
+    Impersonator = actor_alternateId_s,
+    Target = target_s,
+    ClientIP = client_ipAddress_s,
+    Reason = debugContext_debugData_reason_s</code></pre>
+                        </div>
+
+                        <h3>Okta Suspicious Activity</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">Okta Security Events</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// API token creation (persistence mechanism)
+Okta_CL
+| where TimeGenerated > ago(7d)
+| where eventType_s == "system.api_token.create"
+| project 
+    TimeGenerated,
+    Actor = actor_alternateId_s,
+    TokenName = target_s,
+    ClientIP = client_ipAddress_s,
+    AlertSeverity = "High"
+
+// Policy modifications
+Okta_CL
+| where TimeGenerated > ago(7d)
+| where eventType_s has_any (
+    "policy.lifecycle.create",
+    "policy.lifecycle.update",
+    "policy.lifecycle.delete",
+    "policy.rule.create",
+    "policy.rule.update",
+    "policy.rule.delete"
+)
+| project 
+    TimeGenerated,
+    Actor = actor_alternateId_s,
+    EventType = eventType_s,
+    PolicyName = target_s,
+    ClientIP = client_ipAddress_s
+
+// App assignment changes (access control modification)
+Okta_CL
+| where TimeGenerated > ago(7d)
+| where eventType_s has_any (
+    "application.user_membership.add",
+    "group.application_membership.add"
+)
+| project 
+    TimeGenerated,
+    Actor = actor_alternateId_s,
+    Application = target_s,
+    EventType = eventType_s</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- PAM Logs -->
+                    <section class="content-section">
+                        <h2>Privileged Access Management (PAM) Logs</h2>
+                        
+                        <h3>CyberArk Integration</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">CyberArk Session Monitoring</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// CyberArk privileged session analysis (via Syslog or connector)
+CyberArk_CL
+| where TimeGenerated > ago(24h)
+| where EventType_s in ("PSM Connect", "PSM Disconnect", 
+    "Privileged Session Start", "Privileged Session End")
+| project 
+    TimeGenerated,
+    User = SourceUser_s,
+    TargetAccount = TargetUser_s,
+    TargetHost = DestinationHost_s,
+    SessionDuration = SessionDuration_d,
+    EventType = EventType_s
+
+// Failed privilege access requests
+CyberArk_CL
+| where TimeGenerated > ago(24h)
+| where EventType_s == "Retrieve Password" 
+| where Result_s == "Failure"
+| summarize 
+    FailedRequests = count(),
+    TargetAccounts = make_set(TargetUser_s)
+    by SourceUser_s
+| where FailedRequests > 3
+
+// Unusual privileged session times
+CyberArk_CL
+| where TimeGenerated > ago(7d)
+| where EventType_s == "PSM Connect"
+| extend Hour = datetime_part("hour", TimeGenerated)
+| where Hour < 6 or Hour > 22  // Outside business hours
+| project 
+    TimeGenerated,
+    User = SourceUser_s,
+    TargetHost = DestinationHost_s,
+    TargetAccount = TargetUser_s,
+    Hour,
+    AlertTitle = "After-hours privileged access"</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Identity Attack Patterns -->
+                    <section class="content-section">
+                        <h2>Identity-Based Attack Patterns</h2>
+                        
+                        <h3>Attack Chain Detection</h3>
+                        <div class="comparison-grid">
+                            <div class="comparison-card">
+                                <h4>Credential Stuffing</h4>
+                                <div class="card-content">
+                                    <p><strong>Pattern:</strong> High-volume login attempts using breached credentials</p>
+                                    <p><strong>Indicators:</strong></p>
+                                    <ul class="styled-list">
+                                        <li>Many unique accounts, single IP source</li>
+                                        <li>Consistent failure reason (invalid password)</li>
+                                        <li>Automated timing patterns</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="comparison-card">
+                                <h4>MFA Fatigue/Push Spam</h4>
+                                <div class="card-content">
+                                    <p><strong>Pattern:</strong> Repeated MFA prompts to exhaust user</p>
+                                    <p><strong>Indicators:</strong></p>
+                                    <ul class="styled-list">
+                                        <li>Multiple MFA challenges in short window</li>
+                                        <li>Followed by successful auth</li>
+                                        <li>Unusual source location</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="comparison-card">
+                                <h4>Golden Ticket</h4>
+                                <div class="card-content">
+                                    <p><strong>Pattern:</strong> Forged Kerberos TGT using krbtgt hash</p>
+                                    <p><strong>Indicators:</strong></p>
+                                    <ul class="styled-list">
+                                        <li>TGT with unusual lifetime</li>
+                                        <li>Missing AS-REQ for TGT</li>
+                                        <li>RID 500 impersonation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="comparison-card">
+                                <h4>Token Theft/Replay</h4>
+                                <div class="card-content">
+                                    <p><strong>Pattern:</strong> Stolen OAuth/session tokens reused</p>
+                                    <p><strong>Indicators:</strong></p>
+                                    <ul class="styled-list">
+                                        <li>Token used from unusual location</li>
+                                        <li>Simultaneous sessions from different IPs</li>
+                                        <li>Token use after credential change</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3>MFA Fatigue Detection</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">Detect MFA Push Fatigue Attack</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// MFA fatigue: Multiple push notifications followed by approval
+SigninLogs
+| where TimeGenerated > ago(24h)
+| where AuthenticationRequirement == "multiFactorAuthentication"
+| extend MFAMethod = tostring(AuthenticationDetails[0].authenticationMethod)
+| summarize 
+    MFAAttempts = count(),
+    SuccessCount = countif(ResultType == 0),
+    FailCount = countif(ResultType != 0),
+    MinTime = min(TimeGenerated),
+    MaxTime = max(TimeGenerated),
+    UniqueIPs = dcount(IPAddress)
+    by UserPrincipalName, bin(TimeGenerated, 10m)
+| where MFAAttempts > 5
+| where SuccessCount > 0 and FailCount > 3  // Eventually succeeded after failures
+| extend 
+    TimeWindowMinutes = datetime_diff('minute', MaxTime, MinTime),
+    AlertTitle = "Potential MFA Fatigue Attack",
+    AlertSeverity = iff(MFAAttempts > 10, "High", "Medium")
+
+// Correlate with source IPs for attribution
+let MFAFatigue = SigninLogs
+| where TimeGenerated > ago(24h)
+| where AuthenticationRequirement == "multiFactorAuthentication"
+| summarize AttemptCount = count() by UserPrincipalName, IPAddress, bin(TimeGenerated, 10m)
+| where AttemptCount > 5;
+MFAFatigue
+| join kind=inner (
+    SigninLogs
+    | where TimeGenerated > ago(24h)
+    | where ResultType == 0
+) on UserPrincipalName, IPAddress</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Interview Q&A -->
+                    <section class="content-section">
+                        <h2>Interview Preparation</h2>
+                        
+                        <div class="expandable open">
+                            <div class="expandable-header">
+                                <span class="expandable-icon">▶</span>
+                                <h3>Q: How would you detect Kerberoasting attacks?</h3>
+                            </div>
+                            <div class="expandable-content">
+                                <p><strong>Strong Answer:</strong> Kerberoasting targets service accounts by requesting Kerberos service tickets (TGS) that can be cracked offline. I detect this through Windows Event 4769 with several key indicators: First, look for RC4 encryption (type 0x17) which is weaker and preferred by attackers. Second, monitor for unusual volumes of service ticket requests from a single source, especially to multiple service accounts in a short timeframe. Third, exclude normal patterns like machine accounts (ending in $) and legitimate services. In Sentinel, I correlate 4769 events to identify users requesting tickets to many different SPNs - legitimate admin work rarely needs 10+ different service tickets in an hour. I also use MDE's built-in Kerberos credential theft detections. Prevention includes using AES encryption for service accounts and ensuring service account passwords are complex and regularly rotated.</p>
+                            </div>
+                        </div>
+
+                        <div class="expandable">
+                            <div class="expandable-header">
+                                <span class="expandable-icon">▶</span>
+                                <h3>Q: What's the difference between Sign-in logs and Audit logs in Entra ID?</h3>
+                            </div>
+                            <div class="expandable-content">
+                                <p><strong>Strong Answer:</strong> Sign-in logs capture authentication events - who logged in, when, from where, what app they accessed, and whether MFA was required. They include risk levels, conditional access results, and device compliance status. These are essential for detecting account compromise, impossible travel, and suspicious login patterns. Audit logs capture administrative and configuration changes - user creation, group membership changes, role assignments, app registrations, and policy modifications. These detect privilege escalation, persistence mechanisms, and configuration tampering. For comprehensive identity security, you need both: Sign-in logs tell you who's accessing what, Audit logs tell you who's changing what. A complete attack often shows in both - suspicious sign-in followed by privilege escalation attempts visible in audit logs.</p>
+                            </div>
+                        </div>
+
+                        <div class="expandable">
+                            <div class="expandable-header">
+                                <span class="expandable-icon">▶</span>
+                                <h3>Q: How do you detect and respond to MFA fatigue attacks?</h3>
+                            </div>
+                            <div class="expandable-content">
+                                <p><strong>Strong Answer:</strong> MFA fatigue attacks exploit push notification systems by bombarding users with approval requests until they accidentally or frustratedly approve. Detection involves monitoring for unusual MFA challenge volumes - more than 5-10 push notifications to a single user in a short window is suspicious. I look for patterns where multiple failed MFA attempts are followed by a successful one, especially from an unusual IP. In Entra ID, the AuthenticationDetails field shows MFA method and result. For response, immediate actions include blocking the suspicious IP, forcing session revocation for the user, and requiring password reset. Prevention involves implementing number matching or FIDO2 keys instead of simple push notifications, setting up alerts for high MFA challenge volumes, and user education about not approving unexpected prompts.</p>
+                            </div>
+                        </div>
+
+                        <div class="expandable">
+                            <div class="expandable-header">
+                                <span class="expandable-icon">▶</span>
+                                <h3>Q: What identity logs would you prioritize in a hybrid AD environment?</h3>
+                            </div>
+                            <div class="expandable-content">
+                                <p><strong>Strong Answer:</strong> In hybrid environments, I prioritize logs that cover both on-premises and cloud attack surfaces. On the AD side: Domain Controller Security events for 4768/4769 (Kerberos), 4624/4625 (logons), 4672 (privileged logons), and replication events (4662 for DCSync). On the cloud side: Entra ID Sign-in logs for authentication patterns and risk signals, Audit logs for directory changes. Critically, I monitor Azure AD Connect/Entra Connect logs because that's the sync point - attacks often target the sync account or attempt to modify sync configurations. I also watch for lateral movement indicators that cross the boundary, like pass-through authentication anomalies or password hash sync issues. The key is correlating both sides - an on-premises compromise often leads to cloud persistence, so I create detections that track attack chains across both environments.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Navigation -->
+                    <nav class="page-nav">
+                        <a href="cloud-logs.html" class="nav-link prev">
+                            <span class="nav-label">Previous</span>
+                            <span class="nav-title">Cloud Logs</span>
+                        </a>
+                        <a href="../references/kql-cheatsheet.html" class="nav-link next">
+                            <span class="nav-label">Next</span>
+                            <span class="nav-title">KQL Cheat Sheet</span>
+                        </a>
+                    </nav>
+                </article>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

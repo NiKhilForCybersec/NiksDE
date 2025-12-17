@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Framework Overview - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="compliance">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                            <span>Compliance & Frameworks</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="framework-overview.html" class="nav-item active">Framework Overview</a>
+                        <a href="nist-csf.html" class="nav-item">NIST CSF</a>
+                        <a href="nist-800-53.html" class="nav-item">NIST 800-53</a>
+                        <a href="iso-27001.html" class="nav-item">ISO 27001</a>
+                        <a href="gdpr.html" class="nav-item">GDPR & Privacy</a>
+                        <a href="other-frameworks.html" class="nav-item">PCI-DSS, SOC 2, HIPAA</a>
+                        <a href="documentation.html" class="nav-item">Security Documentation</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <span class="current">Compliance Framework Overview</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>Compliance Framework Overview</h1>
+                    <p class="subtitle">Understanding major security frameworks, their relationships, and how detection engineering supports compliance objectives.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Why Frameworks Matter</h2>
+                    
+                    <p>Security frameworks provide structured approaches to managing cybersecurity risk. For detection engineers, frameworks help prioritize detection coverage, justify security investments, and demonstrate due diligence to stakeholders.</p>
+
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Risk Management</h4>
+                            <ul>
+                                <li>Systematic risk identification</li>
+                                <li>Prioritized control implementation</li>
+                                <li>Measurable security posture</li>
+                                <li>Board-level communication</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Regulatory Compliance</h4>
+                            <ul>
+                                <li>Meet legal requirements</li>
+                                <li>Avoid fines and penalties</li>
+                                <li>Enable business operations</li>
+                                <li>Maintain certifications</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Detection Engineering</h4>
+                            <ul>
+                                <li>Coverage gap analysis</li>
+                                <li>Detection prioritization</li>
+                                <li>Audit evidence generation</li>
+                                <li>Control effectiveness metrics</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Framework Landscape</h2>
+
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Framework</th>
+                                <th>Type</th>
+                                <th>Primary Use</th>
+                                <th>Mandatory?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>NIST CSF</strong></td>
+                                <td>Risk Framework</td>
+                                <td>Overall cybersecurity program</td>
+                                <td>Voluntary (US Gov contractors)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>NIST 800-53</strong></td>
+                                <td>Control Catalog</td>
+                                <td>Federal systems, detailed controls</td>
+                                <td>Federal agencies (FISMA)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ISO 27001</strong></td>
+                                <td>ISMS Standard</td>
+                                <td>International certification</td>
+                                <td>Contractual requirement</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CIS Controls</strong></td>
+                                <td>Prioritized Controls</td>
+                                <td>Practical implementation</td>
+                                <td>Voluntary best practice</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PCI DSS</strong></td>
+                                <td>Industry Standard</td>
+                                <td>Payment card security</td>
+                                <td>Yes (card processing)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SOC 2</strong></td>
+                                <td>Audit Standard</td>
+                                <td>Service provider assurance</td>
+                                <td>Contractual requirement</td>
+                            </tr>
+                            <tr>
+                                <td><strong>HIPAA</strong></td>
+                                <td>Regulation</td>
+                                <td>Healthcare data protection</td>
+                                <td>Yes (healthcare)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>GDPR</strong></td>
+                                <td>Regulation</td>
+                                <td>EU data protection</td>
+                                <td>Yes (EU data subjects)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>MITRE ATT&CK</strong></td>
+                                <td>Threat Framework</td>
+                                <td>Detection coverage mapping</td>
+                                <td>Best practice</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Framework Relationships</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Framework Hierarchy</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                    STRATEGIC FRAMEWORKS                          │
+│         (What to protect and why - Risk-based approach)         │
+│                                                                   │
+│   ┌─────────────┐     ┌─────────────┐     ┌─────────────┐      │
+│   │  NIST CSF   │     │  ISO 27001  │     │  COBIT      │      │
+│   │  (Identify, │     │  (ISMS      │     │  (IT Gov)   │      │
+│   │  Protect,   │     │  Certific.) │     │             │      │
+│   │  Detect,    │     │             │     │             │      │
+│   │  Respond,   │     │             │     │             │      │
+│   │  Recover)   │     │             │     │             │      │
+│   └──────┬──────┘     └──────┬──────┘     └─────────────┘      │
+│          │                   │                                   │
+├──────────┼───────────────────┼───────────────────────────────────┤
+│          ▼                   ▼                                   │
+│                    CONTROL FRAMEWORKS                            │
+│            (How to implement security controls)                  │
+│                                                                   │
+│   ┌─────────────┐     ┌─────────────┐     ┌─────────────┐      │
+│   │ NIST 800-53│     │ CIS Controls│     │ ISO 27002   │      │
+│   │ (800+ ctrls)│     │ (18 controls)│    │ (93 controls)│     │
+│   └──────┬──────┘     └──────┬──────┘     └──────┬──────┘      │
+│          │                   │                   │               │
+├──────────┼───────────────────┼───────────────────┼───────────────┤
+│          ▼                   ▼                   ▼               │
+│                    INDUSTRY/REGULATORY                           │
+│              (Specific compliance requirements)                  │
+│                                                                   │
+│   ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐           │
+│   │ PCI DSS │  │  HIPAA  │  │  GDPR   │  │  SOC 2  │           │
+│   │(Payment)│  │(Health) │  │(Privacy)│  │(Service)│           │
+│   └─────────┘  └─────────┘  └─────────┘  └─────────┘           │
+│                                                                   │
+├─────────────────────────────────────────────────────────────────┤
+│                    THREAT FRAMEWORK                              │
+│              (What attacks to detect)                            │
+│                                                                   │
+│                     ┌─────────────────┐                         │
+│                     │  MITRE ATT&CK   │                         │
+│                     │  (Tactics &     │                         │
+│                     │   Techniques)   │                         │
+│                     └─────────────────┘                         │
+└─────────────────────────────────────────────────────────────────┘</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Detection Engineering & Compliance</h2>
+
+                    <h3>How Detection Supports Controls</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Control Area</th>
+                                <th>Detection Contribution</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Access Control</strong></td>
+                                <td>Detect unauthorized access attempts</td>
+                                <td>Failed login alerts, privilege escalation</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Audit & Accountability</strong></td>
+                                <td>Log collection, analysis, alerting</td>
+                                <td>SIEM rules, log retention policies</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Incident Response</strong></td>
+                                <td>Detect incidents, enable investigation</td>
+                                <td>Malware alerts, compromise indicators</td>
+                            </tr>
+                            <tr>
+                                <td><strong>System Integrity</strong></td>
+                                <td>Detect unauthorized changes</td>
+                                <td>File integrity monitoring, config drift</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Data Protection</strong></td>
+                                <td>Detect data exfiltration</td>
+                                <td>DLP alerts, unusual data transfers</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Mapping Detections to Controls</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection Rule with Compliance Mapping</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>id: detect-privilege-escalation
+name: Privileged Role Assignment Detection
+description: Detect when users are assigned high-privilege roles
+
+compliance_mapping:
+  nist_csf:
+    - PR.AC-4  # Access permissions managed
+    - DE.CM-3  # Personnel activity monitored
+  nist_800_53:
+    - AC-2     # Account Management
+    - AC-6     # Least Privilege
+    - AU-6     # Audit Review, Analysis
+  iso_27001:
+    - A.9.2.3  # Privileged access rights
+    - A.12.4.1 # Event logging
+  pci_dss:
+    - 7.1      # Limit access to system components
+    - 10.2.5   # Use of identification and authentication
+  cis_controls:
+    - 5.4      # Restrict Administrator Privileges
+    - 8.5      # Collect Detailed Audit Logs
+  mitre_attack:
+    - T1078    # Valid Accounts
+    - T1098    # Account Manipulation
+
+detection:
+  platform: sentinel
+  query: |
+    AuditLogs
+    | where OperationName has "Add member to role"
+    | where TargetResources[0].modifiedProperties[0].newValue has_any 
+        ("Global Administrator", "Security Administrator", "Privileged Role Administrator")
+    | project TimeGenerated, InitiatedBy, TargetUser, Role</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Selecting Frameworks</h2>
+
+                    <div class="info-box tip">
+                        <h4>💡 Framework Selection Guide</h4>
+                        <ul>
+                            <li><strong>Starting out?</strong> → CIS Controls (prioritized, actionable)</li>
+                            <li><strong>US Federal/Government?</strong> → NIST 800-53, FedRAMP</li>
+                            <li><strong>International certification?</strong> → ISO 27001</li>
+                            <li><strong>Processing payments?</strong> → PCI DSS</li>
+                            <li><strong>Healthcare data?</strong> → HIPAA</li>
+                            <li><strong>EU personal data?</strong> → GDPR</li>
+                            <li><strong>SaaS provider?</strong> → SOC 2</li>
+                            <li><strong>Detection coverage?</strong> → MITRE ATT&CK</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box warning">
+                        <h4>⚠️ Common Pitfalls</h4>
+                        <ul>
+                            <li><strong>Checkbox compliance:</strong> Meeting requirements on paper without real security</li>
+                            <li><strong>Framework overload:</strong> Trying to implement too many at once</li>
+                            <li><strong>Point-in-time:</strong> Treating compliance as annual event vs continuous</li>
+                            <li><strong>No risk context:</strong> Implementing controls without understanding risk</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you approach compliance in a detection engineering role?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Key points:</strong></p>
+                            <ul>
+                                <li>Map detections to control requirements (NIST, ISO, PCI)</li>
+                                <li>Ensure detection rules provide audit evidence</li>
+                                <li>Use frameworks to prioritize detection development</li>
+                                <li>Generate compliance reports from SIEM data</li>
+                                <li>Work with GRC team to understand requirements</li>
+                            </ul>
+                            <p><strong>Example:</strong> "I maintain a mapping of our Sentinel analytics rules to NIST 800-53 controls. This helps us identify coverage gaps and provides evidence for AU-6 (Audit Review) during assessments."</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What's the difference between NIST CSF and NIST 800-53?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>NIST CSF:</strong></p>
+                            <ul>
+                                <li>High-level risk management framework</li>
+                                <li>5 functions: Identify, Protect, Detect, Respond, Recover</li>
+                                <li>Flexible, outcome-focused</li>
+                                <li>Good for executive communication</li>
+                            </ul>
+                            <p><strong>NIST 800-53:</strong></p>
+                            <ul>
+                                <li>Detailed control catalog (800+ controls)</li>
+                                <li>20 control families (AC, AU, CM, etc.)</li>
+                                <li>Prescriptive implementation guidance</li>
+                                <li>Required for federal systems (FISMA)</li>
+                            </ul>
+                            <p><strong>Relationship:</strong> CSF provides the "what" (outcomes), 800-53 provides the "how" (specific controls). CSF references 800-53 controls.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="../automation/api-integration.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        API Integration
+                    </a>
+                    <a href="nist-csf.html" class="nav-link next">
+                        NIST CSF
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

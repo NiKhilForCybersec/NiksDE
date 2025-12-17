@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Security - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span>Detection Engineering</span>
+                </a>
+                <button class="sidebar-toggle" aria-label="Toggle sidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="nav-sections">
+                <!-- Module 1: Detection Fundamentals -->
+                <div class="nav-section" data-section="fundamentals">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                            <span>Detection Fundamentals</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../detection-engineering/fundamentals.html" class="nav-item">Core Concepts</a>
+                        <a href="../detection-engineering/sentinel-deep-dive.html" class="nav-item">Microsoft Sentinel Deep Dive</a>
+                        <a href="../detection-engineering/splunk-comparison.html" class="nav-item">Splunk Comparison</a>
+                        <a href="../detection-engineering/use-case-framework.html" class="nav-item">Use Case Framework</a>
+                        <a href="../detection-engineering/detection-logic.html" class="nav-item">Detection Logic Design</a>
+                        <a href="../detection-engineering/mitre-mapping.html" class="nav-item">MITRE ATT&CK Mapping</a>
+                        <a href="../detection-engineering/metrics.html" class="nav-item">Detection Metrics & Optimization</a>
+                    </div>
+                </div>
+
+                <!-- Module 2: Log Analysis -->
+                <div class="nav-section" data-section="log-analysis">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                            <span>Log Analysis</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../log-analysis/fundamentals.html" class="nav-item">Log Analysis Fundamentals</a>
+                        <a href="../log-analysis/endpoint-logs.html" class="nav-item">Endpoint Logs</a>
+                        <a href="../log-analysis/network-logs.html" class="nav-item">Network Logs</a>
+                        <a href="../log-analysis/cloud-logs.html" class="nav-item">Cloud Logs</a>
+                        <a href="../log-analysis/identity-logs.html" class="nav-item">Identity & Access Logs</a>
+                    </div>
+                </div>
+
+                <!-- Module 3: Threat Intelligence -->
+                <div class="nav-section" data-section="threat-intel">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                            <span>Threat Intelligence</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../threat-intel/fundamentals.html" class="nav-item">Threat Intel Fundamentals</a>
+                        <a href="../threat-intel/sources.html" class="nav-item">Intelligence Sources</a>
+                        <a href="../threat-intel/ioc-management.html" class="nav-item">IOC Management</a>
+                    </div>
+                </div>
+
+                <!-- Module 6: Cloud Security -->
+                <div class="nav-section expanded" data-section="cloud">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                            </svg>
+                            <span>Cloud Security</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item">Cloud Security Fundamentals</a>
+                        <a href="aws-security.html" class="nav-item">AWS Security</a>
+                        <a href="azure-security.html" class="nav-item active">Azure Security</a>
+                        <a href="gcp-security.html" class="nav-item">GCP Security</a>
+                        <a href="multi-cloud.html" class="nav-item">Multi-Cloud Strategy</a>
+                        <a href="cspm.html" class="nav-item">CSPM & CWPP</a>
+                    </div>
+                </div>
+
+                <!-- Module: References -->
+                <div class="nav-section" data-section="references">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                            <span>References</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../references/kql-cheatsheet.html" class="nav-item">KQL Cheat Sheet</a>
+                        <a href="../references/regex-patterns.html" class="nav-item">Regex Mastery</a>
+                        <a href="../references/windows-events.html" class="nav-item">Windows Event IDs</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <button class="mobile-menu-btn" aria-label="Toggle navigation">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="fundamentals.html">Cloud Security</a>
+                    <span class="separator">/</span>
+                    <span class="current">Azure Security</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>Azure Security</h1>
+                    <p class="subtitle">Comprehensive Azure security monitoring with Entra ID, Activity Logs, Defender for Cloud, and detection engineering for Microsoft cloud environments.</p>
+                </header>
+
+                <!-- Azure Security Architecture -->
+                <section class="content-section">
+                    <h2>Azure Security Architecture</h2>
+                    
+                    <p>Microsoft Azure provides an integrated security ecosystem centered around Entra ID (formerly Azure AD) for identity. Understanding the relationships between logging sources and security services is critical for effective detection.</p>
+
+                    <div class="grid-2">
+                        <div class="info-box">
+                            <h4>📊 Detection & Monitoring</h4>
+                            <ul>
+                                <li><strong>Azure Monitor</strong> - Centralized logging</li>
+                                <li><strong>Microsoft Sentinel</strong> - Cloud-native SIEM</li>
+                                <li><strong>Defender for Cloud</strong> - CSPM & CWPP</li>
+                                <li><strong>Entra ID Protection</strong> - Identity threats</li>
+                                <li><strong>Defender XDR</strong> - Extended detection</li>
+                                <li><strong>Network Watcher</strong> - Network monitoring</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4>🛡️ Preventive Controls</h4>
+                            <ul>
+                                <li><strong>Entra ID</strong> - Identity & access</li>
+                                <li><strong>Conditional Access</strong> - Adaptive policies</li>
+                                <li><strong>PIM</strong> - Privileged identity management</li>
+                                <li><strong>Key Vault</strong> - Secrets management</li>
+                                <li><strong>Azure Policy</strong> - Governance guardrails</li>
+                                <li><strong>NSGs / Azure Firewall</strong> - Network security</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>Azure Security Data Flow</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Azure Security Logging Architecture</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│                      Azure Security Architecture                          │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐                │
+│  │   Entra ID    │  │    Azure      │  │   Microsoft   │                │
+│  │   (Identity)  │  │   Resources   │  │     365       │                │
+│  └───────┬───────┘  └───────┬───────┘  └───────┬───────┘                │
+│          │                  │                  │                         │
+│          ▼                  ▼                  ▼                         │
+│  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐                │
+│  │  Sign-in Logs │  │ Activity Log  │  │ Unified Audit │                │
+│  │  Audit Logs   │  │ Resource Logs │  │    Logs       │                │
+│  │  Risky Users  │  │               │  │               │                │
+│  └───────┬───────┘  └───────┬───────┘  └───────┬───────┘                │
+│          │                  │                  │                         │
+│          └──────────────────┼──────────────────┘                        │
+│                             ▼                                            │
+│  ┌─────────────────────────────────────────────────────┐                │
+│  │                 Log Analytics Workspace              │                │
+│  │               (Azure Monitor / Sentinel)             │                │
+│  └────────────────────────┬────────────────────────────┘                │
+│                           │                                              │
+│          ┌────────────────┼────────────────┐                            │
+│          ▼                ▼                ▼                            │
+│  ┌───────────────┐ ┌───────────────┐ ┌───────────────┐                 │
+│  │   Microsoft   │ │  Defender for │ │  Defender XDR │                 │
+│  │   Sentinel    │ │    Cloud      │ │   (M365D)     │                 │
+│  │   (SIEM)      │ │  (CSPM/CWPP)  │ │               │                 │
+│  └───────────────┘ └───────────────┘ └───────────────┘                 │
+│                                                                           │
+└─────────────────────────────────────────────────────────────────────────┘</code></pre>
+                    </div>
+                </section>
+
+                <!-- Azure Log Sources -->
+                <section class="content-section">
+                    <h2>Azure Log Sources Deep Dive</h2>
+
+                    <h3>Entra ID Logs</h3>
+                    <p>Entra ID (Azure AD) logs are the cornerstone of Azure security monitoring. They capture all identity-related events across the Microsoft cloud ecosystem.</p>
+
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Log Type</th>
+                                <th>Sentinel Table</th>
+                                <th>Key Contents</th>
+                                <th>Retention</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Sign-in Logs</strong></td>
+                                <td><code>SigninLogs</code></td>
+                                <td>Interactive user sign-ins, MFA status, CA policies</td>
+                                <td>30 days (free) / 2 years (paid)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Non-Interactive Sign-ins</strong></td>
+                                <td><code>AADNonInteractiveUserSignInLogs</code></td>
+                                <td>Token refresh, background auth, APIs</td>
+                                <td>30 days (free) / 2 years (paid)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Service Principal Sign-ins</strong></td>
+                                <td><code>AADServicePrincipalSignInLogs</code></td>
+                                <td>App/service authentication</td>
+                                <td>30 days (free) / 2 years (paid)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Managed Identity Sign-ins</strong></td>
+                                <td><code>AADManagedIdentitySignInLogs</code></td>
+                                <td>Azure resource identity auth</td>
+                                <td>30 days (free) / 2 years (paid)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Audit Logs</strong></td>
+                                <td><code>AuditLogs</code></td>
+                                <td>Directory changes, user/group/app modifications</td>
+                                <td>30 days (free) / 2 years (paid)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Risky Users</strong></td>
+                                <td><code>AADRiskyUsers</code></td>
+                                <td>Identity Protection risk detections</td>
+                                <td>Depends on license</td>
+                            </tr>
+                            <tr>
+                                <td><strong>User Risk Events</strong></td>
+                                <td><code>AADUserRiskEvents</code></td>
+                                <td>Specific risk event details</td>
+                                <td>Depends on license</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Azure Activity Log</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Activity Log Event Structure</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>{
+    "time": "2024-01-15T10:30:00.0000000Z",
+    "resourceId": "/subscriptions/xxx/resourceGroups/prod-rg/providers/...",
+    "operationName": "Microsoft.Compute/virtualMachines/write",
+    "category": "Administrative",
+    "resultType": "Success",
+    "resultSignature": "Succeeded",
+    "callerIpAddress": "198.51.100.50",
+    "correlationId": "abc123-...",
+    "identity": {
+        "authorization": {
+            "scope": "/subscriptions/xxx/resourceGroups/prod-rg",
+            "action": "Microsoft.Compute/virtualMachines/write",
+            "evidence": {
+                "role": "Contributor",
+                "roleAssignmentScope": "/subscriptions/xxx",
+                "principalId": "user-guid",
+                "principalType": "User"
+            }
+        },
+        "claims": {
+            "name": "admin@contoso.com",
+            "ipaddr": "198.51.100.50",
+            "oid": "user-guid"
+        }
+    },
+    "level": "Information",
+    "properties": {
+        "statusCode": "Created",
+        "serviceRequestId": "request-id"
+    }
+}</code></pre>
+                    </div>
+
+                    <h3>Activity Log Categories</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Administrative</h4>
+                            <p>Resource management operations via ARM.</p>
+                            <ul>
+                                <li>Create/Update/Delete resources</li>
+                                <li>Role assignments</li>
+                                <li>Policy assignments</li>
+                                <li>Management group changes</li>
+                            </ul>
+                            <span class="badge badge-green">Detection Priority: High</span>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Security</h4>
+                            <p>Defender for Cloud alerts and recommendations.</p>
+                            <ul>
+                                <li>Security alerts</li>
+                                <li>Recommendation changes</li>
+                                <li>Secure score changes</li>
+                                <li>Compliance updates</li>
+                            </ul>
+                            <span class="badge badge-green">Detection Priority: High</span>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Service Health</h4>
+                            <p>Azure platform health events.</p>
+                            <ul>
+                                <li>Service incidents</li>
+                                <li>Planned maintenance</li>
+                                <li>Health advisories</li>
+                                <li>Security advisories</li>
+                            </ul>
+                            <span class="badge badge-yellow">Detection Priority: Medium</span>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Resource Health</h4>
+                            <p>Individual resource health status.</p>
+                            <ul>
+                                <li>Availability changes</li>
+                                <li>Resource degradation</li>
+                                <li>Platform events</li>
+                                <li>User-initiated events</li>
+                            </ul>
+                            <span class="badge badge-yellow">Detection Priority: Medium</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Critical Azure Detections -->
+                <section class="content-section">
+                    <h2>Critical Azure Detections</h2>
+
+                    <h3>Identity-Based Attacks</h3>
+                    <div class="info-box warning">
+                        <h4>⚠️ MITRE ATT&CK: T1078.004 - Valid Accounts: Cloud Accounts</h4>
+                        <p>Identity compromise is the primary attack vector in Azure environments. Effective detection requires monitoring sign-ins, audit events, and Identity Protection signals.</p>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: Suspicious Sign-in from New Location</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detect sign-ins from new countries for users
+let LookbackPeriod = 14d;
+let NewLocationThreshold = 1d;
+// Build baseline of known locations per user
+let UserLocationBaseline = SigninLogs
+| where TimeGenerated between (ago(LookbackPeriod) .. ago(NewLocationThreshold))
+| where ResultType == 0  // Successful sign-ins only
+| summarize KnownCountries = make_set(LocationDetails.countryOrRegion) by UserPrincipalName;
+// Find sign-ins from new locations
+SigninLogs
+| where TimeGenerated > ago(NewLocationThreshold)
+| where ResultType == 0
+| extend Country = tostring(LocationDetails.countryOrRegion)
+| join kind=leftouter UserLocationBaseline on UserPrincipalName
+| where not(Country in (KnownCountries)) or isempty(KnownCountries)
+| project 
+    TimeGenerated,
+    UserPrincipalName,
+    Country,
+    City = tostring(LocationDetails.city),
+    IPAddress,
+    AppDisplayName,
+    DeviceDetail,
+    RiskLevelDuringSignIn,
+    ConditionalAccessStatus
+| extend AlertSeverity = case(
+    RiskLevelDuringSignIn in ("high", "medium"), "High",
+    "Medium"
+)</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: Password Spray Attack</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detect password spray: many users, few failures per user
+let TimeWindow = 1h;
+let FailureThreshold = 3;
+let UserThreshold = 10;
+SigninLogs
+| where TimeGenerated > ago(TimeWindow)
+| where ResultType != 0  // Failed sign-ins
+| where ResultDescription has_any ("Invalid username or password", "AADSTS50126")
+| summarize 
+    FailureCount = count(),
+    UniqueUsers = dcount(UserPrincipalName),
+    Users = make_set(UserPrincipalName, 100),
+    FirstSeen = min(TimeGenerated),
+    LastSeen = max(TimeGenerated)
+    by IPAddress, bin(TimeGenerated, 15m)
+| where UniqueUsers >= UserThreshold
+// Low failures per user indicates spray (vs brute force)
+| extend AvgFailuresPerUser = FailureCount / UniqueUsers
+| where AvgFailuresPerUser <= FailureThreshold
+| extend 
+    AttackDuration = datetime_diff('minute', LastSeen, FirstSeen),
+    AlertSeverity = "High"
+| project 
+    TimeGenerated,
+    IPAddress,
+    UniqueUsers,
+    FailureCount,
+    AvgFailuresPerUser,
+    AttackDuration,
+    Users,
+    AlertSeverity
+| extend MITRE = "T1110.003 - Brute Force: Password Spraying"</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: MFA Fatigue / Push Spam Attack</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detect MFA fatigue: multiple MFA prompts followed by approval
+let TimeWindow = 30m;
+let MFADenialThreshold = 5;
+SigninLogs
+| where TimeGenerated > ago(24h)
+// MFA denied events
+| where ResultType != 0
+| where ResultDescription has_any ("MFA denied", "50074", "500121", "MFA requirement not satisfied")
+| summarize 
+    MFADenials = count(),
+    DenialTimes = make_list(TimeGenerated)
+    by UserPrincipalName, IPAddress, CorrelationId, bin(TimeGenerated, TimeWindow)
+| where MFADenials >= MFADenialThreshold
+// Check for subsequent successful authentication
+| join kind=inner (
+    SigninLogs
+    | where TimeGenerated > ago(24h)
+    | where ResultType == 0
+    | where AuthenticationRequirement == "multiFactorAuthentication"
+    | project SuccessTime = TimeGenerated, UserPrincipalName, IPAddress, AppDisplayName
+) on UserPrincipalName
+| where SuccessTime between (TimeGenerated .. TimeGenerated + TimeWindow)
+| project 
+    TimeGenerated,
+    UserPrincipalName,
+    IPAddress,
+    MFADenials,
+    SuccessTime,
+    AppDisplayName,
+    AlertSeverity = "Critical"
+| extend MITRE = "T1621 - Multi-Factor Authentication Request Generation"</code></pre>
+                    </div>
+
+                    <h3>Privileged Role Abuse</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: High-Privilege Role Assignment</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Monitor assignment of high-privilege Entra ID roles
+let HighPrivilegeRoles = dynamic([
+    "Global Administrator",
+    "Privileged Role Administrator",
+    "Privileged Authentication Administrator",
+    "Security Administrator",
+    "Exchange Administrator",
+    "SharePoint Administrator",
+    "Application Administrator",
+    "Cloud Application Administrator",
+    "Authentication Administrator",
+    "Conditional Access Administrator"
+]);
+AuditLogs
+| where OperationName has_any ("Add member to role", "Add eligible member to role")
+| where Result == "success"
+| extend 
+    TargetUser = tostring(TargetResources[0].userPrincipalName),
+    RoleName = tostring(TargetResources[0].displayName),
+    InitiatedBy = tostring(InitiatedBy.user.userPrincipalName),
+    InitiatedByIP = tostring(InitiatedBy.user.ipAddress)
+| where RoleName in (HighPrivilegeRoles)
+| project 
+    TimeGenerated,
+    OperationName,
+    RoleName,
+    TargetUser,
+    InitiatedBy,
+    InitiatedByIP,
+    CorrelationId
+| extend AlertSeverity = case(
+    RoleName == "Global Administrator", "Critical",
+    RoleName has "Privileged", "Critical",
+    "High"
+)
+| extend MITRE = "T1098.003 - Account Manipulation: Additional Cloud Roles"</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: PIM Role Activation Anomalies</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detect unusual PIM role activations
+AuditLogs
+| where LoggedByService == "PIM"
+| where OperationName == "Add member to role completed (PIM activation)"
+| where Result == "success"
+| extend 
+    User = tostring(InitiatedBy.user.userPrincipalName),
+    Role = tostring(TargetResources[0].displayName),
+    IPAddress = tostring(InitiatedBy.user.ipAddress)
+| summarize 
+    ActivationCount = count(),
+    UniqueRoles = dcount(Role),
+    Roles = make_set(Role),
+    IPs = make_set(IPAddress)
+    by User, bin(TimeGenerated, 1h)
+// Anomaly: multiple role activations or unusual patterns
+| where ActivationCount > 3 or UniqueRoles > 2
+| extend AlertSeverity = case(
+    Roles has "Global Administrator", "Critical",
+    ActivationCount > 5, "High",
+    "Medium"
+)</code></pre>
+                    </div>
+
+                    <h3>Application & Service Principal Attacks</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: Service Principal Credential Addition</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detect new credentials added to service principals (app persistence)
+AuditLogs
+| where OperationName has_any (
+    "Add service principal credentials",
+    "Update application – Certificates and secrets management"
+)
+| where Result == "success"
+| extend 
+    AppName = tostring(TargetResources[0].displayName),
+    AppId = tostring(TargetResources[0].id),
+    InitiatedBy = tostring(InitiatedBy.user.userPrincipalName),
+    InitiatedByIP = tostring(InitiatedBy.user.ipAddress),
+    CredentialType = tostring(parse_json(tostring(TargetResources[0].modifiedProperties))[0].displayName)
+| project 
+    TimeGenerated,
+    OperationName,
+    AppName,
+    AppId,
+    CredentialType,
+    InitiatedBy,
+    InitiatedByIP,
+    CorrelationId
+| extend AlertSeverity = "High"
+| extend MITRE = "T1098.001 - Account Manipulation: Additional Cloud Credentials"</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: OAuth Application Consent Grant</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detect risky OAuth application consent (illicit consent grant)
+AuditLogs
+| where OperationName == "Consent to application"
+| where Result == "success"
+| extend 
+    AppName = tostring(TargetResources[0].displayName),
+    AppId = tostring(TargetResources[0].id),
+    ConsentingUser = tostring(InitiatedBy.user.userPrincipalName),
+    Permissions = tostring(TargetResources[0].modifiedProperties)
+// Parse granted permissions
+| extend PermissionsList = parse_json(Permissions)
+| mv-expand Permission = PermissionsList
+| extend PermissionName = tostring(Permission.newValue)
+// Flag high-risk permissions
+| where PermissionName has_any (
+    "Mail.Read",
+    "Mail.ReadWrite",
+    "Files.Read.All",
+    "Files.ReadWrite.All",
+    "User.Read.All",
+    "Directory.Read.All"
+)
+| project 
+    TimeGenerated,
+    AppName,
+    AppId,
+    ConsentingUser,
+    PermissionName,
+    CorrelationId
+| extend AlertSeverity = "High"
+| extend MITRE = "T1550.001 - Application Access Token"</code></pre>
+                    </div>
+
+                    <h3>Azure Resource Attacks</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: Diagnostic Settings Deleted (Logging Tampering)</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detect deletion of diagnostic settings (logging evasion)
+AzureActivity
+| where OperationNameValue has_any (
+    "Microsoft.Insights/diagnosticSettings/delete",
+    "Microsoft.Insights/diagnosticSettings/write"
+)
+| where ActivityStatusValue == "Success"
+// Deletion is always suspicious; creation might be legitimate
+| where OperationNameValue contains "delete" 
+    or (
+        OperationNameValue contains "write" 
+        and Properties has '"enabled":false'
+    )
+| extend 
+    Caller = tostring(Caller),
+    CallerIP = tostring(CallerIpAddress),
+    ResourceId = tostring(ResourceId),
+    ResourceGroup = tostring(ResourceGroup)
+| project 
+    TimeGenerated,
+    OperationNameValue,
+    Caller,
+    CallerIP,
+    ResourceId,
+    ResourceGroup,
+    SubscriptionId,
+    CorrelationId
+| extend AlertSeverity = "Critical"
+| extend MITRE = "T1562.008 - Impair Defenses: Disable Cloud Logs"</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: Storage Account Public Access Enabled</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detect storage account made public
+AzureActivity
+| where OperationNameValue == "Microsoft.Storage/storageAccounts/write"
+| where ActivityStatusValue == "Success"
+| extend Properties_d = parse_json(Properties)
+| extend RequestBody = parse_json(tostring(Properties_d.requestbody))
+| extend AllowBlobPublicAccess = tostring(RequestBody.properties.allowBlobPublicAccess)
+| where AllowBlobPublicAccess == "true"
+| extend 
+    Caller = tostring(Caller),
+    CallerIP = tostring(CallerIpAddress),
+    StorageAccount = tostring(parse_json(tostring(Properties_d.resource)).name)
+| project 
+    TimeGenerated,
+    Caller,
+    CallerIP,
+    StorageAccount,
+    ResourceGroup,
+    SubscriptionId,
+    AllowBlobPublicAccess
+| extend AlertSeverity = "Critical"
+| extend MITRE = "T1530 - Data from Cloud Storage Object"</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: VM Disk Snapshot Exported</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detect disk snapshot creation and export (data theft)
+AzureActivity
+| where OperationNameValue has_any (
+    "Microsoft.Compute/snapshots/write",
+    "Microsoft.Compute/snapshots/beginGetAccess/action"
+)
+| where ActivityStatusValue == "Success"
+| extend 
+    Caller = tostring(Caller),
+    CallerIP = tostring(CallerIpAddress),
+    SnapshotName = tostring(parse_json(Properties).resource)
+// Alert on beginGetAccess which generates SAS URL for download
+| extend IsExport = OperationNameValue contains "beginGetAccess"
+| project 
+    TimeGenerated,
+    OperationNameValue,
+    Caller,
+    CallerIP,
+    SnapshotName,
+    ResourceGroup,
+    SubscriptionId,
+    IsExport
+| where IsExport == true
+| extend AlertSeverity = "High"
+| extend MITRE = "T1530 - Data from Cloud Storage Object"</code></pre>
+                    </div>
+                </section>
+
+                <!-- Defender for Cloud -->
+                <section class="content-section">
+                    <h2>Defender for Cloud Integration</h2>
+
+                    <p>Microsoft Defender for Cloud provides Cloud Security Posture Management (CSPM) and Cloud Workload Protection (CWPP). Its alerts and recommendations feed directly into Sentinel for correlation and response.</p>
+
+                    <h3>Defender for Cloud Plans</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Plan</th>
+                                <th>Protection Scope</th>
+                                <th>Key Capabilities</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>CSPM (Free)</strong></td>
+                                <td>All Azure resources</td>
+                                <td>Secure score, recommendations, compliance</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Defender for Servers</strong></td>
+                                <td>VMs, Arc servers</td>
+                                <td>EDR, vulnerability assessment, adaptive controls</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Defender for Storage</strong></td>
+                                <td>Storage accounts</td>
+                                <td>Malware scanning, anomaly detection</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Defender for SQL</strong></td>
+                                <td>Azure SQL, SQL Server</td>
+                                <td>Vulnerability assessment, threat detection</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Defender for Containers</strong></td>
+                                <td>AKS, container registries</td>
+                                <td>Image scanning, runtime protection</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Defender for Key Vault</strong></td>
+                                <td>Key vaults</td>
+                                <td>Access anomaly detection</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Defender for Resource Manager</strong></td>
+                                <td>ARM operations</td>
+                                <td>Suspicious operations detection</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Defender for DNS</strong></td>
+                                <td>Azure DNS</td>
+                                <td>Malicious domain detection</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Processing Defender Alerts in Sentinel</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Sentinel KQL - High Severity Defender Alerts</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Query Defender for Cloud alerts
+SecurityAlert
+| where ProviderName == "Azure Security Center"
+| where AlertSeverity in ("High", "Critical")
+| extend 
+    ExtendedProperties = parse_json(ExtendedProperties),
+    Entities = parse_json(Entities)
+| extend 
+    ResourceId = tostring(ExtendedProperties["Compromised Host"]),
+    AttackTactic = tostring(ExtendedProperties["Attack Tactic"]),
+    AttackTechnique = tostring(ExtendedProperties["Attack Technique"])
+| project 
+    TimeGenerated,
+    AlertName,
+    AlertSeverity,
+    Description,
+    ResourceId,
+    AttackTactic,
+    AttackTechnique,
+    RemediationSteps,
+    Entities
+| extend AlertSeverity = case(
+    AlertSeverity == "Critical", "Critical",
+    AlertSeverity == "High", "High",
+    "Medium"
+)</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Correlate Defender Alerts with Sign-in Activity</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Enrich Defender alerts with identity context
+let DefenderAlerts = SecurityAlert
+| where ProviderName == "Azure Security Center"
+| where TimeGenerated > ago(24h)
+| extend Entities = parse_json(Entities)
+| mv-expand Entity = Entities
+| where Entity.Type == "account"
+| extend AlertUser = tostring(Entity.Name)
+| project AlertTime = TimeGenerated, AlertName, AlertSeverity, AlertUser, Description;
+//
+SigninLogs
+| where TimeGenerated > ago(24h)
+| where ResultType == 0
+| join kind=inner DefenderAlerts on $left.UserPrincipalName == $right.AlertUser
+| where TimeGenerated between (AlertTime - 1h .. AlertTime + 1h)
+| project 
+    AlertTime,
+    AlertName,
+    AlertSeverity,
+    AlertUser,
+    SigninTime = TimeGenerated,
+    IPAddress,
+    Location = LocationDetails.countryOrRegion,
+    AppDisplayName,
+    DeviceDetail
+| extend Context = strcat("User signed in from ", Location, " via ", AppDisplayName, " around alert time")</code></pre>
+                    </div>
+
+                    <h3>Critical Defender Alert Categories</h3>
+                    <div class="info-box danger">
+                        <h4>🚨 High-Priority Defender Alerts</h4>
+                        <ul>
+                            <li><strong>Suspicious process executed</strong> - Potential malware on VM</li>
+                            <li><strong>Communication with suspicious IP</strong> - C2 activity</li>
+                            <li><strong>Unusual Azure resource deployment</strong> - Cryptomining</li>
+                            <li><strong>Access from Tor exit node</strong> - Anonymous access</li>
+                            <li><strong>Potential SQL injection</strong> - Database attack</li>
+                            <li><strong>Anomalous Key Vault access</strong> - Secrets theft</li>
+                            <li><strong>Exposed management ports</strong> - Configuration risk</li>
+                            <li><strong>Just-in-time network access abuse</strong> - JIT bypass</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Azure Security Best Practices -->
+                <section class="content-section">
+                    <h2>Azure Detection Best Practices</h2>
+
+                    <div class="info-box tip">
+                        <h4>💡 Logging Configuration Checklist</h4>
+                        <ul>
+                            <li>Enable Entra ID logs export to Log Analytics (P1/P2 license recommended)</li>
+                            <li>Create Activity Log diagnostic setting for all subscriptions</li>
+                            <li>Enable resource logs for critical services (Key Vault, Storage, SQL)</li>
+                            <li>Configure NSG flow logs for network visibility</li>
+                            <li>Enable Defender for Cloud on all subscriptions</li>
+                            <li>Connect Defender XDR (M365) to Sentinel for unified alerts</li>
+                        </ul>
+                    </div>
+
+                    <h3>Azure Detection Coverage Matrix</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Must-Have Detections</h4>
+                            <ul>
+                                <li>✅ High-privilege role assignments</li>
+                                <li>✅ Password spray detection</li>
+                                <li>✅ MFA bypass / fatigue attacks</li>
+                                <li>✅ Service principal credential adds</li>
+                                <li>✅ Diagnostic settings deletion</li>
+                                <li>✅ Public storage exposure</li>
+                                <li>✅ Risky sign-ins (Identity Protection)</li>
+                                <li>✅ Defender critical alerts</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Advanced Detections</h4>
+                            <ul>
+                                <li>🔍 Illicit consent grants</li>
+                                <li>🔍 Impossible travel detection</li>
+                                <li>🔍 PIM activation anomalies</li>
+                                <li>🔍 Cross-tenant access</li>
+                                <li>🔍 VM disk export</li>
+                                <li>🔍 Key Vault access anomalies</li>
+                                <li>🔍 Conditional Access bypass</li>
+                                <li>🔍 Legacy authentication usage</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Compliance Monitoring</h4>
+                            <ul>
+                                <li>📋 CIS Azure Benchmarks</li>
+                                <li>📋 Azure Security Benchmark</li>
+                                <li>📋 PCI DSS</li>
+                                <li>📋 ISO 27001</li>
+                                <li>📋 SOC 2</li>
+                                <li>📋 NIST 800-53</li>
+                                <li>📋 GDPR</li>
+                                <li>📋 HIPAA</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>PowerShell: Azure Security Assessment</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Azure Security Configuration Scanner</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code># Azure Security Configuration Assessment
+# Requires: Az PowerShell module, appropriate RBAC permissions
+
+param(
+    [string]$SubscriptionId
+)
+
+# Connect and set context
+Connect-AzAccount
+if ($SubscriptionId) {
+    Set-AzContext -SubscriptionId $SubscriptionId
+}
+
+$findings = @()
+
+# Check 1: Diagnostic settings on subscriptions
+Write-Host "Checking Activity Log diagnostic settings..." -ForegroundColor Cyan
+$subscriptions = Get-AzSubscription
+foreach ($sub in $subscriptions) {
+    Set-AzContext -SubscriptionId $sub.Id | Out-Null
+    $diagSettings = Get-AzDiagnosticSetting -ResourceId "/subscriptions/$($sub.Id)"
+    if (-not $diagSettings) {
+        $findings += [PSCustomObject]@{
+            Severity = "HIGH"
+            Control = "Logging"
+            Finding = "No diagnostic settings for subscription: $($sub.Name)"
+            Recommendation = "Enable Activity Log export to Log Analytics"
+        }
+    }
+}
+
+# Check 2: Storage accounts with public access
+Write-Host "Checking storage account public access..." -ForegroundColor Cyan
+$storageAccounts = Get-AzStorageAccount
+foreach ($storage in $storageAccounts) {
+    if ($storage.AllowBlobPublicAccess -eq $true) {
+        $findings += [PSCustomObject]@{
+            Severity = "HIGH"
+            Control = "CIS 3.7"
+            Finding = "Storage account allows public blob access: $($storage.StorageAccountName)"
+            Recommendation = "Disable AllowBlobPublicAccess"
+        }
+    }
+    if ($storage.EnableHttpsTrafficOnly -eq $false) {
+        $findings += [PSCustomObject]@{
+            Severity = "HIGH"
+            Control = "CIS 3.1"
+            Finding = "Storage account allows HTTP: $($storage.StorageAccountName)"
+            Recommendation = "Enable HTTPS-only traffic"
+        }
+    }
+}
+
+# Check 3: Network Security Groups with unrestricted access
+Write-Host "Checking NSG rules..." -ForegroundColor Cyan
+$nsgs = Get-AzNetworkSecurityGroup
+foreach ($nsg in $nsgs) {
+    foreach ($rule in $nsg.SecurityRules) {
+        if ($rule.Direction -eq "Inbound" -and 
+            $rule.Access -eq "Allow" -and
+            ($rule.SourceAddressPrefix -eq "*" -or $rule.SourceAddressPrefix -eq "0.0.0.0/0" -or $rule.SourceAddressPrefix -eq "Internet")) {
+            
+            if ($rule.DestinationPortRange -in @("22", "3389", "*") -or
+                ($rule.DestinationPortRange -match "^\d+-\d+$" -and 
+                 ([int]$rule.DestinationPortRange.Split("-")[0] -le 22 -and [int]$rule.DestinationPortRange.Split("-")[1] -ge 22))) {
+                $findings += [PSCustomObject]@{
+                    Severity = "HIGH"
+                    Control = "CIS 6.1/6.2"
+                    Finding = "NSG $($nsg.Name) allows unrestricted access to port $($rule.DestinationPortRange)"
+                    Recommendation = "Restrict inbound access to specific IPs"
+                }
+            }
+        }
+    }
+}
+
+# Check 4: Key Vaults without soft delete
+Write-Host "Checking Key Vault configurations..." -ForegroundColor Cyan
+$keyVaults = Get-AzKeyVault
+foreach ($kv in $keyVaults) {
+    $kvDetails = Get-AzKeyVault -VaultName $kv.VaultName
+    if ($kvDetails.EnableSoftDelete -eq $false) {
+        $findings += [PSCustomObject]@{
+            Severity = "MEDIUM"
+            Control = "CIS 8.4"
+            Finding = "Key Vault without soft delete: $($kv.VaultName)"
+            Recommendation = "Enable soft delete for key vault"
+        }
+    }
+    if ($kvDetails.EnablePurgeProtection -eq $false) {
+        $findings += [PSCustomObject]@{
+            Severity = "MEDIUM"
+            Control = "CIS 8.5"
+            Finding = "Key Vault without purge protection: $($kv.VaultName)"
+            Recommendation = "Enable purge protection for key vault"
+        }
+    }
+}
+
+# Check 5: SQL Servers without auditing
+Write-Host "Checking SQL Server auditing..." -ForegroundColor Cyan
+$sqlServers = Get-AzSqlServer
+foreach ($server in $sqlServers) {
+    $audit = Get-AzSqlServerAudit -ServerName $server.ServerName -ResourceGroupName $server.ResourceGroupName -ErrorAction SilentlyContinue
+    if (-not $audit -or $audit.BlobStorageTargetState -ne "Enabled") {
+        $findings += [PSCustomObject]@{
+            Severity = "HIGH"
+            Control = "CIS 4.1.1"
+            Finding = "SQL Server without auditing enabled: $($server.ServerName)"
+            Recommendation = "Enable SQL Server auditing to storage or Log Analytics"
+        }
+    }
+}
+
+# Output findings
+Write-Host "`n=== Security Assessment Results ===" -ForegroundColor Yellow
+Write-Host "Total Findings: $($findings.Count)" -ForegroundColor White
+
+$findings | Group-Object Severity | ForEach-Object {
+    Write-Host "$($_.Name): $($_.Count)" -ForegroundColor $(
+        switch ($_.Name) {
+            "CRITICAL" { "Red" }
+            "HIGH" { "Red" }
+            "MEDIUM" { "Yellow" }
+            "LOW" { "Green" }
+        }
+    )
+}
+
+# Export to JSON
+$report = @{
+    ScanTime = Get-Date -Format "o"
+    TotalFindings = $findings.Count
+    Findings = $findings
+}
+$report | ConvertTo-Json -Depth 10 | Out-File "azure-security-assessment.json"
+Write-Host "`nReport saved to: azure-security-assessment.json" -ForegroundColor Green</code></pre>
+                    </div>
+                </section>
+
+                <!-- Interview Q&A -->
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What's the difference between SigninLogs and AuditLogs in Entra ID?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>SigninLogs</strong> capture authentication events—every time someone or something authenticates to Entra ID. This includes interactive user logins, non-interactive token refreshes, service principal authentications, and managed identity sign-ins. Key fields include IP address, location, device details, conditional access results, and risk levels.</p>
+                            <p><strong>AuditLogs</strong> capture directory change events—modifications to the tenant configuration. This includes user/group creation and deletion, role assignments, application registrations, conditional access policy changes, and password resets. The focus is on "what changed" rather than "who authenticated."</p>
+                            <p><strong>For detection:</strong> Use SigninLogs for detecting compromised credentials, password spray, impossible travel, and authentication anomalies. Use AuditLogs for detecting privilege escalation, persistence mechanisms, and unauthorized configuration changes. Both are essential for comprehensive identity threat detection.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How would you detect and respond to an illicit consent grant attack?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Attack overview:</strong> Attackers create malicious OAuth applications and trick users into granting consent, allowing the attacker's app to access the user's data (mail, files, etc.) without needing credentials.</p>
+                            <p><strong>Detection signals:</strong></p>
+                            <ul>
+                                <li>AuditLogs: "Consent to application" operations</li>
+                                <li>Applications requesting high-risk permissions (Mail.Read, Files.ReadWrite.All)</li>
+                                <li>Applications from unverified publishers</li>
+                                <li>Sign-ins from service principals to sensitive APIs</li>
+                            </ul>
+                            <p><strong>Response steps:</strong></p>
+                            <ol>
+                                <li>Revoke the malicious application's permissions in Entra ID</li>
+                                <li>Delete the enterprise application and app registration</li>
+                                <li>Review SigninLogs for the app's access patterns</li>
+                                <li>Identify all users who consented and assess data exposure</li>
+                                <li>Check unified audit logs for data access (mail, files)</li>
+                                <li>Consider user password reset if phishing was involved</li>
+                            </ol>
+                            <p><strong>Prevention:</strong> Configure user consent settings to require admin approval for apps, enable Defender for Cloud Apps to detect risky OAuth apps.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Explain Conditional Access and how it factors into detection.</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Conditional Access</strong> is Azure's adaptive access control system. It evaluates signals (user, device, location, app, risk) and enforces controls (allow, block, require MFA, require compliant device).</p>
+                            <p><strong>Detection relevance:</strong></p>
+                            <ul>
+                                <li><strong>ConditionalAccessStatus</strong> in SigninLogs shows if CA was applied</li>
+                                <li><strong>ConditionalAccessPolicies</strong> array shows which policies evaluated and their results</li>
+                                <li>CA "failures" might indicate attacker blocked by policy</li>
+                                <li>CA "not applied" might indicate gaps in coverage</li>
+                            </ul>
+                            <p><strong>Detection scenarios:</strong></p>
+                            <ul>
+                                <li>Sign-ins that bypassed CA (no policies applied)</li>
+                                <li>Legacy authentication bypassing MFA requirements</li>
+                                <li>CA policy changes in AuditLogs</li>
+                                <li>Named location additions (attacker adding their IP)</li>
+                                <li>Sign-ins blocked by CA followed by attempts from different conditions</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you architect Entra ID logging for a large enterprise?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Architecture considerations:</strong></p>
+                            <ul>
+                                <li><strong>License requirements:</strong> Entra ID P1/P2 for full sign-in logs retention and Identity Protection</li>
+                                <li><strong>Central workspace:</strong> Send all Entra ID logs to a central Log Analytics workspace</li>
+                                <li><strong>Multi-tenant:</strong> Each tenant needs separate diagnostic settings; consider Lighthouse for management</li>
+                                <li><strong>Retention:</strong> Default 30 days free; configure workspace retention for compliance (often 1-2 years)</li>
+                            </ul>
+                            <p><strong>Log types to enable:</strong></p>
+                            <ul>
+                                <li>Sign-in logs (interactive and non-interactive)</li>
+                                <li>Service principal sign-in logs</li>
+                                <li>Managed identity sign-in logs</li>
+                                <li>Audit logs</li>
+                                <li>Provisioning logs</li>
+                                <li>Risky users and risk events (P2)</li>
+                            </ul>
+                            <p><strong>Integration points:</strong></p>
+                            <ul>
+                                <li>Connect to Sentinel for correlation and automated response</li>
+                                <li>Enable Identity Protection and configure policies</li>
+                                <li>Connect Defender for Cloud Apps for OAuth app monitoring</li>
+                                <li>Consider Microsoft Graph activity logs for API-level visibility</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Navigation -->
+                <nav class="page-nav">
+                    <a href="aws-security.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                        AWS Security
+                    </a>
+                    <a href="gcp-security.html" class="nav-link next">
+                        GCP Security
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

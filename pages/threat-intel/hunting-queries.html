@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hunting Queries - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="threat-intel">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                            <span>Threat Intelligence</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item">TI Fundamentals</a>
+                        <a href="sources.html" class="nav-item">Intelligence Sources</a>
+                        <a href="ioc-management.html" class="nav-item">IOC Management</a>
+                        <a href="threat-hunting.html" class="nav-item">Threat Hunting Intro</a>
+                        <a href="hunting-methodology.html" class="nav-item">Hunting Methodology</a>
+                        <a href="hunting-techniques.html" class="nav-item">Hunting Techniques</a>
+                        <a href="hunting-queries.html" class="nav-item active">Hunting Queries</a>
+                        <a href="mitre-framework.html" class="nav-item">MITRE ATT&CK Deep Dive</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="fundamentals.html">Threat Intelligence</a>
+                    <span class="separator">/</span>
+                    <span class="current">Hunting Queries</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>Threat Hunting Queries</h1>
+                    <p class="subtitle">Ready-to-use KQL hunting queries organized by MITRE ATT&CK tactic for Microsoft Sentinel and Defender.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Initial Access Hunts</h2>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>T1566 - Phishing</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Hunt: Email attachments leading to process execution
+EmailAttachmentInfo
+| where TimeGenerated > ago(7d)
+| where FileType in ("exe", "dll", "scr", "bat", "ps1", "vbs", "js")
+| join kind=inner (
+    DeviceProcessEvents
+    | where TimeGenerated > ago(7d)
+    | where InitiatingProcessFileName in~ ("outlook.exe", "winword.exe", "excel.exe")
+) on $left.SHA256 == $right.SHA256
+| project TimeGenerated, RecipientEmailAddress, FileName, FileType, 
+          DeviceName, ProcessCommandLine</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>T1078 - Valid Accounts (Anomalous Logons)</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Hunt: First-time logon from new country
+let UserCountryHistory = SigninLogs
+| where TimeGenerated > ago(90d) and TimeGenerated < ago(1d)
+| summarize Countries = make_set(LocationDetails.countryOrRegion) by UserPrincipalName;
+
+SigninLogs
+| where TimeGenerated > ago(1d)
+| where ResultType == 0  // Successful
+| extend Country = tostring(LocationDetails.countryOrRegion)
+| join kind=inner UserCountryHistory on UserPrincipalName
+| where Country !in (Countries)
+| project TimeGenerated, UserPrincipalName, Country, Countries, IPAddress, AppDisplayName</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Execution Hunts</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>T1059.001 - PowerShell</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Hunt: Suspicious PowerShell patterns
+DeviceProcessEvents
+| where TimeGenerated > ago(24h)
+| where FileName in~ ("powershell.exe", "pwsh.exe")
+| where ProcessCommandLine has_any (
+    "-nop", "-noni", "-ep bypass", "-exec bypass",
+    "IEX", "Invoke-Expression", "Invoke-WebRequest",
+    "DownloadString", "DownloadFile", "FromBase64String",
+    "Net.WebClient", "Start-BitsTransfer", "Invoke-Mimikatz"
+)
+| project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
+| extend ThreatIndicator = case(
+    ProcessCommandLine has "Mimikatz", "Credential Theft",
+    ProcessCommandLine has "DownloadString", "Download Cradle",
+    ProcessCommandLine has "FromBase64String", "Encoded Payload",
+    "Suspicious Execution"
+)</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>T1204 - User Execution (Office Macros)</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Hunt: Office applications spawning suspicious children
+DeviceProcessEvents
+| where TimeGenerated > ago(24h)
+| where InitiatingProcessFileName in~ ("winword.exe", "excel.exe", "powerpnt.exe", "outlook.exe")
+| where FileName in~ ("cmd.exe", "powershell.exe", "wscript.exe", "cscript.exe", 
+                       "mshta.exe", "certutil.exe", "regsvr32.exe", "rundll32.exe")
+| project TimeGenerated, DeviceName, InitiatingProcessFileName, FileName, 
+          ProcessCommandLine, AccountName</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Persistence Hunts</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>T1053.005 - Scheduled Tasks</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Hunt: Suspicious scheduled task creation
+SecurityEvent
+| where TimeGenerated > ago(7d)
+| where EventID == 4698  // Scheduled task created
+| parse EventData with * '<Data Name="TaskName">' TaskName '</Data>' *
+| parse EventData with * '<Data Name="TaskContent">' TaskContent '</Data>' *
+| where TaskName !startswith "\\Microsoft\\"  // Exclude Microsoft tasks
+| where TaskContent has_any ("powershell", "cmd", "wscript", "http", "ftp", ".exe")
+| project TimeGenerated, Computer, SubjectUserName, TaskName
+| summarize Count = count() by TaskName
+| where Count < 5  // Rare tasks</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>T1547.001 - Registry Run Keys</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Hunt: New registry persistence
+DeviceRegistryEvents
+| where TimeGenerated > ago(24h)
+| where ActionType == "RegistryValueSet"
+| where RegistryKey has_any (
+    "CurrentVersion\\Run",
+    "CurrentVersion\\RunOnce",
+    "CurrentVersion\\RunServices",
+    "CurrentVersion\\Policies\\Explorer\\Run"
+)
+| where RegistryValueData has_any (".exe", ".dll", ".bat", ".ps1", ".vbs")
+| where RegistryValueData !has "Microsoft"  // Exclude common Microsoft entries
+| project TimeGenerated, DeviceName, RegistryKey, RegistryValueName, RegistryValueData</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Credential Access Hunts</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>T1003 - OS Credential Dumping</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Hunt: LSASS access from unusual processes
+DeviceEvents
+| where TimeGenerated > ago(24h)
+| where ActionType == "OpenProcessApiCall"
+| where TargetProcessName =~ "lsass.exe"
+| where InitiatingProcessFileName !in~ (
+    "csrss.exe", "services.exe", "svchost.exe", "wininit.exe",
+    "MsMpEng.exe", "MsSense.exe", "taskmgr.exe", "procexp.exe"
+)
+| project TimeGenerated, DeviceName, InitiatingProcessFileName, 
+          InitiatingProcessCommandLine, AccountName
+| summarize Count = count() by InitiatingProcessFileName
+| order by Count asc</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>T1558.003 - Kerberoasting</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Hunt: Kerberoasting activity
+SecurityEvent
+| where TimeGenerated > ago(24h)
+| where EventID == 4769
+| where TicketEncryptionType == "0x17"  // RC4
+| where ServiceName !endswith "$"  // Exclude machine accounts
+| where ServiceName != "krbtgt"
+| summarize 
+    RequestCount = count(),
+    UniqueServices = dcount(ServiceName),
+    Services = make_set(ServiceName)
+    by IpAddress, AccountName, bin(TimeGenerated, 1h)
+| where RequestCount > 10 or UniqueServices > 5</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Lateral Movement Hunts</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>T1021 - Remote Services</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Hunt: Unusual lateral movement patterns
+SecurityEvent
+| where TimeGenerated > ago(24h)
+| where EventID == 4624
+| where LogonType in (3, 10)  // Network and RDP
+| where AccountName !endswith "$"  // Exclude machine accounts
+| where IpAddress != "-" and IpAddress != "127.0.0.1"
+| summarize 
+    TargetCount = dcount(Computer),
+    Targets = make_set(Computer),
+    LogonTypes = make_set(LogonType)
+    by AccountName, IpAddress, bin(TimeGenerated, 1h)
+| where TargetCount > 5  // User accessing many systems</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>T1021.002 - SMB/Windows Admin Shares</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Hunt: Admin share access
+SecurityEvent
+| where TimeGenerated > ago(24h)
+| where EventID == 5140  // Network share accessed
+| where ShareName in ("\\\\*\\ADMIN$", "\\\\*\\C$", "\\\\*\\IPC$")
+| where SubjectUserName !endswith "$"
+| summarize AccessCount = count(), UniqueShares = dcount(ShareName) 
+    by SubjectUserName, IpAddress, Computer
+| where AccessCount > 10</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Command and Control Hunts</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>T1071 - Application Layer Protocol (Beaconing)</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Hunt: Potential beaconing activity
+DeviceNetworkEvents
+| where TimeGenerated > ago(24h)
+| where RemotePort in (80, 443)
+| summarize 
+    ConnectionCount = count(),
+    BytesSent = sum(SentBytes),
+    AvgTimeBetween = avg(datetime_diff('second', TimeGenerated, prev(TimeGenerated)))
+    by DeviceName, RemoteUrl, bin(TimeGenerated, 1h)
+| where ConnectionCount > 50  // High frequency
+| where AvgTimeBetween between (55 .. 65) or  // ~60 second intervals
+        AvgTimeBetween between (295 .. 305) or  // ~5 minute intervals  
+        AvgTimeBetween between (895 .. 905)     // ~15 minute intervals
+| project DeviceName, RemoteUrl, ConnectionCount, AvgTimeBetween</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>T1071.004 - DNS Tunneling</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Hunt: DNS tunneling indicators
+DnsEvents
+| where TimeGenerated > ago(24h)
+| extend SubdomainLength = strlen(tostring(split(Name, ".")[0]))
+| where SubdomainLength > 30  // Unusually long subdomain
+| summarize 
+    QueryCount = count(),
+    UniqueSubdomains = dcount(Name),
+    AvgSubdomainLength = avg(SubdomainLength)
+    by ClientIP, tostring(split(Name, ".")[-2]) // Group by domain
+| where UniqueSubdomains > 100 or AvgSubdomainLength > 40</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What's your go-to hunting query?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Example answer:</strong> "I often start with process stacking - grouping processes by name across the environment and looking at the long tail. Malware is typically rare - it won't appear on thousands of systems like legitimate software. This quickly surfaces unusual executables for investigation."</p>
+                            <p>Have 2-3 hunting queries you can explain in detail, including why they work and what you're looking for.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="hunting-techniques.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        Hunting Techniques
+                    </a>
+                    <a href="mitre-framework.html" class="nav-link next">
+                        MITRE ATT&CK Deep Dive
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

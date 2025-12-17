@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Analysis Fundamentals | Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">◈</span>
+                    <span class="logo-text">Detection Engineering</span>
+                </div>
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+            
+            <div class="sidebar-search">
+                <input type="text" placeholder="Search topics..." id="searchInput">
+                <span class="search-icon">⌘K</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-section">
+                        <span class="section-title">Detection Engineering</span>
+                        <ul class="section-items">
+                            <li><a href="../detection-engineering/fundamentals.html"><span class="nav-icon">◆</span> Detection Fundamentals</a></li>
+                            <li><a href="../detection-engineering/sentinel-deep-dive.html"><span class="nav-icon azure">●</span> Microsoft Sentinel Deep Dive</a></li>
+                            <li><a href="../detection-engineering/splunk-comparison.html"><span class="nav-icon splunk">●</span> Splunk Comparison</a></li>
+                            <li><a href="../detection-engineering/mitre-mapping.html"><span class="nav-icon">◇</span> MITRE ATT&CK Mapping</a></li>
+                            <li><a href="../detection-engineering/use-case-framework.html"><span class="nav-icon">▣</span> Use Case Framework</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section">
+                        <span class="section-title">Log Analysis</span>
+                        <ul class="section-items">
+                            <li><a href="fundamentals.html" class="active"><span class="nav-icon">◆</span> Log Analysis Fundamentals</a></li>
+                            <li><a href="windows-logs.html"><span class="nav-icon windows">●</span> Windows Event Logs</a></li>
+                            <li><a href="linux-logs.html"><span class="nav-icon linux">●</span> Linux System Logs</a></li>
+                            <li><a href="network-logs.html"><span class="nav-icon">◇</span> Network & Firewall Logs</a></li>
+                            <li><a href="cloud-logs.html"><span class="nav-icon cloud">●</span> Cloud Platform Logs</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section">
+                        <span class="section-title">Threat Intelligence</span>
+                        <ul class="section-items">
+                            <li><a href="../threat-intel/fundamentals.html"><span class="nav-icon">◆</span> TI Fundamentals</a></li>
+                            <li><a href="../threat-intel/ioc-management.html"><span class="nav-icon">◇</span> IOC Management</a></li>
+                            <li><a href="../threat-intel/hunting.html"><span class="nav-icon">▣</span> Threat Hunting</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section">
+                        <span class="section-title">SAP Security</span>
+                        <ul class="section-items">
+                            <li><a href="../sap-security/sap-overview.html"><span class="nav-icon sap">●</span> SAP Overview</a></li>
+                            <li><a href="../sap-security/sap-architecture.html"><span class="nav-icon">◇</span> SAP Architecture</a></li>
+                            <li><a href="../sap-security/sap-logs.html"><span class="nav-icon">▣</span> SAP Log Types</a></li>
+                            <li><a href="../sap-security/sap-siem.html"><span class="nav-icon">◈</span> SAP SIEM Integration</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section">
+                        <span class="section-title">Vulnerability Management</span>
+                        <ul class="section-items">
+                            <li><a href="../vulnerability-mgmt/fundamentals.html"><span class="nav-icon">◆</span> VM Fundamentals</a></li>
+                            <li><a href="../vulnerability-mgmt/qualys-deep-dive.html"><span class="nav-icon qualys">●</span> Qualys Deep Dive</a></li>
+                            <li><a href="../vulnerability-mgmt/tenable-nessus.html"><span class="nav-icon tenable">●</span> Tenable/Nessus</a></li>
+                            <li><a href="../vulnerability-mgmt/prioritization.html"><span class="nav-icon">◇</span> Risk Prioritization</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section">
+                        <span class="section-title">Cloud Security</span>
+                        <ul class="section-items">
+                            <li><a href="../cloud-security/azure-security.html"><span class="nav-icon azure">●</span> Azure Security</a></li>
+                            <li><a href="../cloud-security/aws-security.html"><span class="nav-icon aws">●</span> AWS Security</a></li>
+                            <li><a href="../cloud-security/gcp-security.html"><span class="nav-icon gcp">●</span> GCP Security</a></li>
+                            <li><a href="../cloud-security/cspm-cwpp.html"><span class="nav-icon">◇</span> CSPM & CWPP</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section">
+                        <span class="section-title">Automation & SOAR</span>
+                        <ul class="section-items">
+                            <li><a href="../automation/python-security.html"><span class="nav-icon python">●</span> Python for Security</a></li>
+                            <li><a href="../automation/powershell-security.html"><span class="nav-icon ps">●</span> PowerShell for Security</a></li>
+                            <li><a href="../automation/soar-platforms.html"><span class="nav-icon">◇</span> SOAR Platforms</a></li>
+                            <li><a href="../automation/api-integration.html"><span class="nav-icon">▣</span> API Integration</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section">
+                        <span class="section-title">Compliance & Frameworks</span>
+                        <ul class="section-items">
+                            <li><a href="../compliance/frameworks-overview.html"><span class="nav-icon">◆</span> Frameworks Overview</a></li>
+                            <li><a href="../compliance/nist-csf.html"><span class="nav-icon">◇</span> NIST CSF & 800-53</a></li>
+                            <li><a href="../compliance/iso27001.html"><span class="nav-icon">▣</span> ISO 27001</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section">
+                        <span class="section-title">Reference Sheets</span>
+                        <ul class="section-items">
+                            <li><a href="../references/kql-cheatsheet.html"><span class="nav-icon azure">●</span> KQL Cheat Sheet</a></li>
+                            <li><a href="../references/spl-cheatsheet.html"><span class="nav-icon splunk">●</span> SPL Cheat Sheet</a></li>
+                            <li><a href="../references/regex-cheatsheet.html"><span class="nav-icon">◇</span> Regex Cheat Sheet</a></li>
+                            <li><a href="../references/windows-events.html"><span class="nav-icon windows">●</span> Windows Event IDs</a></li>
+                            <li><a href="../references/mitre-quickref.html"><span class="nav-icon">▣</span> MITRE Quick Reference</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="../../index.html" class="back-to-home">
+                    <span>←</span> Back to Home
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="content-header">
+                <div class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span>/</span>
+                    <a href="#">Log Analysis</a>
+                    <span>/</span>
+                    <span>Fundamentals</span>
+                </div>
+                <div class="reading-time">~25 min read</div>
+            </header>
+
+            <article class="content-body">
+                <div class="hero-section">
+                    <div class="hero-badge">LOG ANALYSIS</div>
+                    <h1>Log Analysis Fundamentals</h1>
+                    <p class="hero-subtitle">Master the art of extracting security insights from log data. Learn log formats, parsing techniques, correlation strategies, and how to build effective detection from raw telemetry.</p>
+                </div>
+
+                <!-- Why Log Analysis Matters -->
+                <section class="content-section">
+                    <h2>Why Log Analysis Matters</h2>
+                    <p>Log analysis is the foundation of security operations. Every security tool, detection rule, threat hunt, and incident investigation ultimately depends on the quality and depth of log analysis. Without proper understanding of log data, detection engineering becomes guesswork.</p>
+                    
+                    <div class="info-box info">
+                        <div class="info-icon">ℹ️</div>
+                        <div class="info-content">
+                            <strong>Core Principle</strong>
+                            <p>Logs are the forensic evidence of your environment. They tell you what happened, when it happened, who did it, and from where. Your ability to detect threats is directly proportional to your ability to understand logs.</p>
+                        </div>
+                    </div>
+
+                    <h3>The Security Value Chain</h3>
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Collection</h4>
+                                <p>Gather logs from endpoints, networks, cloud, and applications</p>
+                            </div>
+                        </div>
+                        <div class="process-arrow">→</div>
+                        <div class="process-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Normalization</h4>
+                                <p>Parse and structure raw data into consistent formats</p>
+                            </div>
+                        </div>
+                        <div class="process-arrow">→</div>
+                        <div class="process-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Enrichment</h4>
+                                <p>Add context: geo-IP, threat intel, asset data</p>
+                            </div>
+                        </div>
+                        <div class="process-arrow">→</div>
+                        <div class="process-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Analysis</h4>
+                                <p>Correlate, detect patterns, identify anomalies</p>
+                            </div>
+                        </div>
+                        <div class="process-arrow">→</div>
+                        <div class="process-step">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h4>Action</h4>
+                                <p>Alert, investigate, respond, automate</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Log Formats -->
+                <section class="content-section">
+                    <h2>Common Log Formats</h2>
+                    <p>Understanding log formats is essential for effective parsing and analysis. Different systems generate different formats, and modern SIEMs must handle all of them.</p>
+
+                    <h3>Syslog (RFC 5424)</h3>
+                    <p>The universal standard for system logging, used by Linux/Unix systems, network devices, and many applications.</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">SYSLOG</span>
+                            <span class="code-title">RFC 5424 Format</span>
+                        </div>
+                        <pre><code>&lt;PRI&gt;VERSION TIMESTAMP HOSTNAME APP-NAME PROCID MSGID [STRUCTURED-DATA] MSG
+
+Example:
+&lt;34&gt;1 2024-03-15T10:30:00.000Z firewall-01 sshd 12345 - [meta sequenceId="1"] Failed password for admin from 192.168.1.100 port 52345 ssh2
+
+Breaking it down:
+├── &lt;34&gt;      = Priority (Facility * 8 + Severity) → Facility=4 (auth), Severity=2 (critical)
+├── 1         = Syslog version
+├── 2024-03-15T10:30:00.000Z = ISO 8601 timestamp
+├── firewall-01 = Hostname
+├── sshd      = Application name
+├── 12345     = Process ID
+├── -         = Message ID (not used)
+├── [meta...] = Structured data
+└── Failed... = Message content</code></pre>
+                    </div>
+
+                    <h4>Syslog Severity Levels</h4>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Level</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Security Relevance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="severity-badge critical">0</span></td>
+                                <td>Emergency</td>
+                                <td>System is unusable</td>
+                                <td>Catastrophic security breach</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity-badge critical">1</span></td>
+                                <td>Alert</td>
+                                <td>Immediate action needed</td>
+                                <td>Active compromise detected</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity-badge high">2</span></td>
+                                <td>Critical</td>
+                                <td>Critical conditions</td>
+                                <td>Security control failure</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity-badge high">3</span></td>
+                                <td>Error</td>
+                                <td>Error conditions</td>
+                                <td>Authentication failures</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity-badge medium">4</span></td>
+                                <td>Warning</td>
+                                <td>Warning conditions</td>
+                                <td>Policy violations</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity-badge medium">5</span></td>
+                                <td>Notice</td>
+                                <td>Normal but significant</td>
+                                <td>Privileged operations</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity-badge low">6</span></td>
+                                <td>Informational</td>
+                                <td>Informational messages</td>
+                                <td>Normal activity baseline</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity-badge info">7</span></td>
+                                <td>Debug</td>
+                                <td>Debug-level messages</td>
+                                <td>Detailed troubleshooting</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>CEF (Common Event Format)</h3>
+                    <p>ArcSight-developed format widely used for security products. Provides structured key-value pairs for easy parsing.</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">CEF</span>
+                            <span class="code-title">Common Event Format</span>
+                        </div>
+                        <pre><code>CEF:Version|Device Vendor|Device Product|Device Version|Signature ID|Name|Severity|Extension
+
+Example:
+CEF:0|Palo Alto Networks|PAN-OS|10.1|12345|Threat Detected|8|src=192.168.1.100 dst=10.0.0.50 spt=52345 dpt=443 act=block cat=malware deviceExternalId=PA-3260
+
+Standard CEF Fields:
+├── src     = Source IP address
+├── dst     = Destination IP address
+├── spt     = Source port
+├── dpt     = Destination port
+├── act     = Action taken
+├── cat     = Category
+├── suser   = Source user
+├── duser   = Destination user
+├── fname   = Filename
+├── fsize   = File size
+├── request = URL requested
+├── msg     = Message/description
+└── cn1-cn3 = Custom numeric fields</code></pre>
+                    </div>
+
+                    <h3>LEEF (Log Event Extended Format)</h3>
+                    <p>IBM's format used by QRadar. Similar to CEF but with different field naming conventions.</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">LEEF</span>
+                            <span class="code-title">QRadar LEEF Format</span>
+                        </div>
+                        <pre><code>LEEF:Version|Vendor|Product|Version|EventID|Key=Value pairs
+
+Example:
+LEEF:2.0|Microsoft|Windows|10.0|4625|devTime=Mar 15 2024 10:30:00 GMT devTimeFormat=MMM dd yyyy HH:mm:ss z usrName=admin src=192.168.1.100 cat=Authentication</code></pre>
+                    </div>
+
+                    <h3>JSON Logs</h3>
+                    <p>Modern applications and cloud services increasingly use JSON format for logs. Flexible, hierarchical, and easily parsed.</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">JSON</span>
+                            <span class="code-title">Cloud Service Log Example</span>
+                        </div>
+                        <pre><code>{
+  "timestamp": "2024-03-15T10:30:00.000Z",
+  "level": "WARNING",
+  "service": "authentication",
+  "event": {
+    "type": "login_failure",
+    "user": "admin@company.com",
+    "source_ip": "192.168.1.100",
+    "user_agent": "Mozilla/5.0...",
+    "failure_reason": "invalid_password",
+    "attempt_count": 5
+  },
+  "metadata": {
+    "tenant_id": "abc123",
+    "correlation_id": "xyz789",
+    "geo": {
+      "country": "US",
+      "city": "New York"
+    }
+  }
+}</code></pre>
+                    </div>
+
+                    <h3>Windows Event Log (EVTX)</h3>
+                    <p>Windows Event Log format uses XML structure with standard fields. Critical for endpoint detection.</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">XML</span>
+                            <span class="code-title">Windows Event Log Structure</span>
+                        </div>
+                        <pre><code>&lt;Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event"&gt;
+  &lt;System&gt;
+    &lt;Provider Name="Microsoft-Windows-Security-Auditing" Guid="{...}"/&gt;
+    &lt;EventID&gt;4625&lt;/EventID&gt;
+    &lt;Version&gt;0&lt;/Version&gt;
+    &lt;Level&gt;0&lt;/Level&gt;
+    &lt;Task&gt;12544&lt;/Task&gt;
+    &lt;Opcode&gt;0&lt;/Opcode&gt;
+    &lt;Keywords&gt;0x8010000000000000&lt;/Keywords&gt;
+    &lt;TimeCreated SystemTime="2024-03-15T10:30:00.000000000Z"/&gt;
+    &lt;EventRecordID&gt;123456789&lt;/EventRecordID&gt;
+    &lt;Computer&gt;DC01.corp.local&lt;/Computer&gt;
+    &lt;Security/&gt;
+  &lt;/System&gt;
+  &lt;EventData&gt;
+    &lt;Data Name="SubjectUserSid"&gt;S-1-0-0&lt;/Data&gt;
+    &lt;Data Name="SubjectUserName"&gt;-&lt;/Data&gt;
+    &lt;Data Name="TargetUserName"&gt;Administrator&lt;/Data&gt;
+    &lt;Data Name="TargetDomainName"&gt;CORP&lt;/Data&gt;
+    &lt;Data Name="Status"&gt;0xC000006D&lt;/Data&gt;
+    &lt;Data Name="FailureReason"&gt;%%2313&lt;/Data&gt;
+    &lt;Data Name="LogonType"&gt;10&lt;/Data&gt;
+    &lt;Data Name="IpAddress"&gt;192.168.1.100&lt;/Data&gt;
+    &lt;Data Name="IpPort"&gt;52345&lt;/Data&gt;
+  &lt;/EventData&gt;
+&lt;/Event&gt;</code></pre>
+                    </div>
+                </section>
+
+                <!-- Log Parsing -->
+                <section class="content-section">
+                    <h2>Log Parsing Techniques</h2>
+                    <p>Parsing transforms unstructured or semi-structured logs into queryable fields. Master these techniques for effective analysis.</p>
+
+                    <h3>Regex Parsing Fundamentals</h3>
+                    <p>Regular expressions are the backbone of log parsing. Understanding key patterns enables extraction from any format.</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">REGEX</span>
+                            <span class="code-title">Common Parsing Patterns</span>
+                        </div>
+                        <pre><code># IP Address
+\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b
+
+# IPv6 Address (simplified)
+(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}
+
+# Timestamp Patterns
+# ISO 8601: 2024-03-15T10:30:00.000Z
+\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z?
+
+# Common log: Mar 15 10:30:00
+[A-Za-z]{3}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}
+
+# Windows: 03/15/2024 10:30:00 AM
+\d{2}/\d{2}/\d{4}\s+\d{2}:\d{2}:\d{2}\s+[AP]M
+
+# Email Address
+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}
+
+# Domain Name
+(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}
+
+# URL
+https?://[^\s"'&lt;&gt;]+
+
+# Windows SID
+S-1-5-21-\d+-\d+-\d+-\d+
+
+# File Path
+# Windows: C:\Users\admin\file.exe
+[A-Za-z]:\\(?:[^\\/:*?"&lt;&gt;|\r\n]+\\)*[^\\/:*?"&lt;&gt;|\r\n]*
+
+# Linux: /var/log/auth.log
+/(?:[^/\0]+/)*[^/\0]+
+
+# Hash Values
+# MD5
+[a-fA-F0-9]{32}
+# SHA1
+[a-fA-F0-9]{40}
+# SHA256
+[a-fA-F0-9]{64}</code></pre>
+                    </div>
+
+                    <h3>KQL Parsing (Microsoft Sentinel)</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">KQL</span>
+                            <span class="code-title">Parse Operators</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// parse - Pattern-based extraction
+Syslog
+| parse SyslogMessage with * "Failed password for " Username:string " from " SourceIP:string " port " *
+
+// parse-regex - Regex extraction with named groups
+Syslog
+| extend parsed = extract_all(@"user=(?P<user>\w+).*src=(?P<src>[\d\.]+)", dynamic(['user','src']), SyslogMessage)
+| mv-expand parsed
+| extend User = tostring(parsed[0]), SourceIP = tostring(parsed[1])
+
+// parse_json - JSON parsing
+AzureActivity
+| extend Claims = parse_json(Claims_d)
+| extend UPN = tostring(Claims.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn"])
+
+// parse_url - URL component extraction
+CommonSecurityLog
+| extend URLParts = parse_url(RequestURL)
+| extend Domain = tostring(URLParts.Host)
+| extend Path = tostring(URLParts.Path)
+| extend QueryString = tostring(URLParts.Query)
+
+// parse_path - File path extraction
+SecurityEvent
+| extend PathParts = parse_path(ProcessPath)
+| extend FileName = tostring(PathParts.Filename)
+| extend Directory = tostring(PathParts.DirectoryPath)
+
+// parse_user_agent - User agent parsing
+SigninLogs
+| extend UA = parse_user_agent(UserAgent, dynamic(['os','browser']))
+| extend OS = UA.OperatingSystem.Family
+| extend Browser = UA.Browser.Family</code></pre>
+                    </div>
+
+                    <h3>SPL Parsing (Splunk)</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">SPL</span>
+                            <span class="code-title">Field Extraction</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>| rex - Regular expression extraction
+index=security sourcetype=linux:auth
+| rex "Failed password for (?<username>\w+) from (?<src_ip>[\d\.]+) port (?<src_port>\d+)"
+
+| rex field - Extract from specific field
+index=web sourcetype=access_combined
+| rex field=request "(?<method>\w+)\s+(?<uri>[^\s]+)\s+HTTP"
+
+| extract - Auto-extraction with delimiters
+index=firewall
+| extract kvdelim="=" pairdelim=" "
+
+| xpath - XML parsing
+index=windows sourcetype=WinEventLog
+| xpath outfield=user "//Data[@Name='TargetUserName']/text()"
+
+| spath - JSON and XML parsing
+index=cloud sourcetype=aws:cloudtrail
+| spath input=_raw
+| spath path=userIdentity.userName output=user
+| spath path=sourceIPAddress output=src_ip
+
+| kv - Key-value extraction
+index=application sourcetype=app_logs
+| kv</code></pre>
+                    </div>
+                </section>
+
+                <!-- Log Correlation -->
+                <section class="content-section">
+                    <h2>Log Correlation Strategies</h2>
+                    <p>Correlation combines data from multiple sources to provide complete attack visibility. Single log sources rarely tell the full story.</p>
+
+                    <h3>Correlation Approaches</h3>
+                    <div class="comparison-grid">
+                        <div class="grid-item">
+                            <h4>Temporal Correlation</h4>
+                            <p>Events occurring within a time window</p>
+                            <ul>
+                                <li>Brute force followed by success</li>
+                                <li>Malware download then execution</li>
+                                <li>Reconnaissance then exploitation</li>
+                            </ul>
+                        </div>
+                        <div class="grid-item">
+                            <h4>Spatial Correlation</h4>
+                            <p>Events linked by common entity</p>
+                            <ul>
+                                <li>Same IP across multiple systems</li>
+                                <li>Same user on different hosts</li>
+                                <li>Same hash in multiple locations</li>
+                            </ul>
+                        </div>
+                        <div class="grid-item">
+                            <h4>Behavioral Correlation</h4>
+                            <p>Patterns matching known attack chains</p>
+                            <ul>
+                                <li>MITRE ATT&CK technique sequences</li>
+                                <li>Lateral movement patterns</li>
+                                <li>Data exfiltration indicators</li>
+                            </ul>
+                        </div>
+                        <div class="grid-item">
+                            <h4>Statistical Correlation</h4>
+                            <p>Anomalies from baseline behavior</p>
+                            <ul>
+                                <li>Unusual login times</li>
+                                <li>Abnormal data volumes</li>
+                                <li>New process executions</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>Multi-Source Correlation Example</h3>
+                    <p>Detecting credential theft and lateral movement by correlating endpoint, authentication, and network logs:</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">KQL</span>
+                            <span class="code-title">Multi-Source Credential Theft Detection</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Step 1: Find LSASS access (credential dumping indicator)
+let LSASSAccess = 
+    SecurityEvent
+    | where EventID == 4663
+    | where ObjectName contains "lsass"
+    | where AccessMask in ("0x1010", "0x1410", "0x143A")  // Read access patterns
+    | project LSASSTime = TimeGenerated, SourceHost = Computer, SourceAccount = SubjectUserName;
+
+// Step 2: Find subsequent authentication to other hosts
+let LateralAuth =
+    SecurityEvent
+    | where EventID == 4624
+    | where LogonType in (3, 10)  // Network and RemoteInteractive
+    | project AuthTime = TimeGenerated, TargetHost = Computer, AuthAccount = TargetUserName, SourceIP = IpAddress;
+
+// Step 3: Find network connections between hosts
+let NetworkFlow =
+    CommonSecurityLog
+    | where DeviceVendor == "Palo Alto Networks"
+    | where Activity == "TRAFFIC"
+    | project FlowTime = TimeGenerated, SrcIP = SourceIP, DstIP = DestinationIP, DstPort = DestinationPort;
+
+// Correlate: LSASS access → Authentication → Network traffic
+LSASSAccess
+| join kind=inner (
+    LateralAuth
+    | where AuthTime between (LSASSTime .. datetime_add('hour', 2, LSASSTime))
+) on $left.SourceAccount == $right.AuthAccount
+| join kind=inner (
+    NetworkFlow
+    | where DstPort in (445, 3389, 5985, 5986)  // SMB, RDP, WinRM
+) on $left.SourceHost == $right.SrcIP, $left.TargetHost == $right.DstIP
+| where FlowTime between (LSASSTime .. AuthTime)
+| project 
+    CredentialDumpTime = LSASSTime,
+    AttackerHost = SourceHost,
+    CompromisedAccount = SourceAccount,
+    LateralTarget = TargetHost,
+    AuthenticationTime = AuthTime,
+    Protocol = case(DstPort == 445, "SMB", DstPort == 3389, "RDP", "WinRM")</code></pre>
+                    </div>
+                </section>
+
+                <!-- Data Quality -->
+                <section class="content-section">
+                    <h2>Log Data Quality</h2>
+                    <p>Detection effectiveness depends on log data quality. Poor logging creates blind spots that attackers exploit.</p>
+
+                    <h3>The Four Pillars of Log Quality</h3>
+                    <div class="comparison-grid">
+                        <div class="grid-item">
+                            <h4>Completeness</h4>
+                            <p>All relevant events are captured</p>
+                            <ul>
+                                <li>Audit policy coverage</li>
+                                <li>Log source enrollment</li>
+                                <li>No sampling or filtering</li>
+                            </ul>
+                        </div>
+                        <div class="grid-item">
+                            <h4>Accuracy</h4>
+                            <p>Logged data reflects reality</p>
+                            <ul>
+                                <li>Correct timestamps</li>
+                                <li>Valid field mappings</li>
+                                <li>No corruption</li>
+                            </ul>
+                        </div>
+                        <div class="grid-item">
+                            <h4>Timeliness</h4>
+                            <p>Events arrive promptly for analysis</p>
+                            <ul>
+                                <li>Low ingestion latency</li>
+                                <li>Real-time streaming</li>
+                                <li>No batching delays</li>
+                            </ul>
+                        </div>
+                        <div class="grid-item">
+                            <h4>Consistency</h4>
+                            <p>Standardized formats and fields</p>
+                            <ul>
+                                <li>Normalized schemas</li>
+                                <li>Consistent naming</li>
+                                <li>Uniform time zones</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>Log Health Monitoring</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">KQL</span>
+                            <span class="code-title">Data Quality Checks</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Check for data ingestion gaps (hourly)
+let TimeGranularity = 1h;
+union withsource=TableName *
+| where TimeGenerated > ago(24h)
+| summarize Count = count() by TableName, bin(TimeGenerated, TimeGranularity)
+| summarize 
+    TotalHours = dcount(TimeGenerated),
+    AvgEventsPerHour = avg(Count),
+    MinEventsPerHour = min(Count),
+    MaxEventsPerHour = max(Count)
+    by TableName
+| where TotalHours < 24  // Missing hours
+| project TableName, MissingHours = 24 - TotalHours, AvgEventsPerHour
+
+// Detect timestamp anomalies (future dates, old dates)
+SecurityEvent
+| where TimeGenerated > ago(1d)
+| extend TimeDrift = datetime_diff('second', TimeGenerated, ingestion_time())
+| where abs(TimeDrift) > 300  // More than 5 minutes drift
+| summarize 
+    Count = count(),
+    AvgDrift = avg(TimeDrift),
+    MaxDrift = max(abs(TimeDrift))
+    by Computer
+| where Count > 100
+
+// Check for expected log sources reporting
+let ExpectedSources = datatable(SourceType:string, ExpectedCount:long) [
+    "SecurityEvent", 10000,
+    "Syslog", 5000,
+    "CommonSecurityLog", 1000,
+    "AzureActivity", 100
+];
+union withsource=TableName *
+| where TimeGenerated > ago(1h)
+| summarize ActualCount = count() by TableName
+| join kind=rightouter ExpectedSources on $left.TableName == $right.SourceType
+| extend HealthStatus = case(
+    isnull(ActualCount), "MISSING",
+    ActualCount < ExpectedCount * 0.5, "LOW",
+    ActualCount > ExpectedCount * 2, "HIGH",
+    "NORMAL"
+)
+| where HealthStatus != "NORMAL"</code></pre>
+                    </div>
+
+                    <div class="info-box warning">
+                        <div class="info-icon">⚠️</div>
+                        <div class="info-content">
+                            <strong>Common Data Quality Issues</strong>
+                            <ul>
+                                <li><strong>Time zone mismatches</strong>: Systems logging in local time vs UTC cause correlation failures</li>
+                                <li><strong>Missing fields</strong>: Default audit policies often exclude critical fields like command lines</li>
+                                <li><strong>Truncation</strong>: Long fields (URLs, command lines) truncated by log agents</li>
+                                <li><strong>Sampling</strong>: High-volume logs sampled to reduce cost, missing rare events</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Normalization -->
+                <section class="content-section">
+                    <h2>Log Normalization</h2>
+                    <p>Normalization standardizes field names and values across different log sources, enabling vendor-agnostic detection rules.</p>
+
+                    <h3>ASIM (Advanced Security Information Model)</h3>
+                    <p>Microsoft Sentinel's normalization framework provides unified schemas for common security data types.</p>
+                    
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>ASIM Schema</th>
+                                <th>Covers</th>
+                                <th>Key Fields</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Authentication</td>
+                                <td>Login events from all sources</td>
+                                <td>TargetUsername, SrcIpAddr, LogonType, EventResult</td>
+                            </tr>
+                            <tr>
+                                <td>Process</td>
+                                <td>Process creation/termination</td>
+                                <td>ActingProcessName, TargetProcessCommandLine, User</td>
+                            </tr>
+                            <tr>
+                                <td>Network Session</td>
+                                <td>Network connections</td>
+                                <td>SrcIpAddr, DstIpAddr, DstPortNumber, NetworkProtocol</td>
+                            </tr>
+                            <tr>
+                                <td>DNS</td>
+                                <td>DNS queries and responses</td>
+                                <td>DnsQuery, DnsResponseCode, SrcIpAddr</td>
+                            </tr>
+                            <tr>
+                                <td>Web Session</td>
+                                <td>HTTP/HTTPS traffic</td>
+                                <td>Url, HttpRequestMethod, HttpStatusCode, SrcIpAddr</td>
+                            </tr>
+                            <tr>
+                                <td>File</td>
+                                <td>File operations</td>
+                                <td>TargetFileName, TargetFilePath, ActorUsername</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">KQL</span>
+                            <span class="code-title">Using ASIM Parsers</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Vendor-agnostic authentication failure detection
+// Works across Windows, Linux, Azure AD, Okta, etc.
+imAuthentication
+| where EventResult == "Failure"
+| where TimeGenerated > ago(1h)
+| summarize 
+    FailureCount = count(),
+    DistinctUsers = dcount(TargetUsername),
+    SourceIPs = make_set(SrcIpAddr)
+    by SrcIpAddr, bin(TimeGenerated, 5m)
+| where FailureCount > 10
+
+// Vendor-agnostic suspicious process detection
+imProcessCreate
+| where TimeGenerated > ago(1h)
+| where TargetProcessName has_any ("mimikatz", "procdump", "psexec")
+    or TargetProcessCommandLine has_any ("-ma lsass", "sekurlsa", "kerberos::list")
+| project 
+    TimeGenerated,
+    Device = DvcHostname,
+    User = ActorUsername,
+    Process = TargetProcessName,
+    CommandLine = TargetProcessCommandLine</code></pre>
+                    </div>
+
+                    <h3>Splunk CIM (Common Information Model)</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">SPL</span>
+                            <span class="code-title">CIM Data Models</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>| Authentication data model
+| datamodel Authentication Authentication search
+| search action=failure
+| stats count by src, user, app
+| where count > 10
+
+| Endpoint processes data model
+| datamodel Endpoint Processes search
+| search process_name IN ("mimikatz.exe", "procdump.exe")
+| table _time, dest, user, process, process_command_line
+
+| Network traffic data model
+| datamodel Network_Traffic All_Traffic search
+| search dest_port=445 action=allowed
+| stats sum(bytes) as total_bytes by src, dest</code></pre>
+                    </div>
+                </section>
+
+                <!-- Key Security Log Sources -->
+                <section class="content-section">
+                    <h2>Essential Security Log Sources</h2>
+                    <p>A comprehensive security monitoring program requires visibility across multiple log sources.</p>
+
+                    <h3>Log Source Priority Matrix</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Priority</th>
+                                <th>Log Source</th>
+                                <th>Detection Value</th>
+                                <th>Key Events</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="severity-badge critical">P1</span></td>
+                                <td>Endpoint (EDR)</td>
+                                <td>Process execution, file changes, network</td>
+                                <td>Process create, DLL load, network connect</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity-badge critical">P1</span></td>
+                                <td>Authentication</td>
+                                <td>Identity compromise, lateral movement</td>
+                                <td>Logon success/failure, privilege use</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity-badge high">P2</span></td>
+                                <td>DNS</td>
+                                <td>C2 communication, data exfiltration</td>
+                                <td>Query/response, NXDOMAIN</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity-badge high">P2</span></td>
+                                <td>Firewall/Proxy</td>
+                                <td>Network-based attacks, policy violations</td>
+                                <td>Allow/deny, URL category</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity-badge high">P2</span></td>
+                                <td>Cloud Audit</td>
+                                <td>Cloud resource manipulation</td>
+                                <td>API calls, config changes</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity-badge medium">P3</span></td>
+                                <td>Email Security</td>
+                                <td>Phishing, BEC, malware delivery</td>
+                                <td>Attachment, URL, sender reputation</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity-badge medium">P3</span></td>
+                                <td>DLP</td>
+                                <td>Data exfiltration, policy violations</td>
+                                <td>Match events, block actions</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity-badge low">P4</span></td>
+                                <td>Application Logs</td>
+                                <td>Application-specific attacks</td>
+                                <td>Errors, access patterns</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="info-box tip">
+                        <div class="info-icon">💡</div>
+                        <div class="info-content">
+                            <strong>80/20 Rule for Log Analysis</strong>
+                            <p>80% of security detections come from 20% of log sources. Focus on endpoint (process execution) and authentication logs first - they provide the highest detection value per dollar invested.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Interview Q&A -->
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    <div class="expandable-section">
+                        <button class="expandable-header">
+                            <span>Common Interview Questions</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <div class="qa-item">
+                                <h4>Q: What's the difference between Syslog and CEF?</h4>
+                                <p><strong>A:</strong> Syslog (RFC 5424) is a general-purpose logging protocol with priority, timestamp, hostname, and free-form message. CEF (Common Event Format) is a structured security-specific format with predefined fields (vendor, product, severity, event ID) plus standardized key-value extensions (src, dst, act, etc.). CEF is designed for security products and enables easier parsing and correlation, while Syslog is more universal but requires custom parsing.</p>
+                            </div>
+                            <div class="qa-item">
+                                <h4>Q: How would you troubleshoot missing log data?</h4>
+                                <p><strong>A:</strong> Systematic approach: 1) Verify source is generating logs locally (check local log files). 2) Check network connectivity to SIEM (firewall rules, routing). 3) Verify log collector/forwarder is running and configured. 4) Check for parsing errors in SIEM (rejected events). 5) Verify timestamp alignment (time zone issues). 6) Check retention policies haven't deleted data. 7) Review ingestion quotas/limits. 8) Compare expected vs actual event counts over time.</p>
+                            </div>
+                            <div class="qa-item">
+                                <h4>Q: Explain log correlation with a practical example.</h4>
+                                <p><strong>A:</strong> Detecting credential theft: Correlate LSASS access events (4663 with specific access masks) with subsequent network authentication (4624 type 3) to new hosts, then correlate with firewall logs showing SMB/RDP connections. Single events are normal - admin tools access LSASS, users authenticate. The correlation of all three within a time window indicates credential harvesting followed by lateral movement.</p>
+                            </div>
+                            <div class="qa-item">
+                                <h4>Q: What is ASIM and why is it important?</h4>
+                                <p><strong>A:</strong> ASIM (Advanced Security Information Model) is Microsoft Sentinel's normalization framework. It provides unified schemas for common security events (authentication, process, network, DNS, etc.) with standardized field names. Importance: Write detection rules once that work across all vendors (Windows, Linux, cloud, third-party). Without normalization, you'd write separate rules for each log source, multiplying maintenance effort and risking coverage gaps.</p>
+                            </div>
+                            <div class="qa-item">
+                                <h4>Q: How do you ensure log data quality?</h4>
+                                <p><strong>A:</strong> Four pillars: 1) Completeness - audit policies capture all security events, all sources enrolled. 2) Accuracy - correct timestamps (NTP sync), valid field mappings. 3) Timeliness - low latency ingestion, no batching delays. 4) Consistency - normalized schemas, standard field names. Implement health monitoring: check for gaps, timestamp drift, expected event counts. Alert on deviations from baseline.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="../detection-engineering/splunk-comparison.html" class="nav-prev">
+                        <span class="nav-direction">Previous</span>
+                        <span class="nav-title">Splunk Comparison</span>
+                    </a>
+                    <a href="windows-logs.html" class="nav-next">
+                        <span class="nav-direction">Next</span>
+                        <span class="nav-title">Windows Event Logs</span>
+                    </a>
+                </nav>
+            </article>
+        </main>
+    </div>
+
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detection Engineering for IR - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="ir">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                            <span>Incident Response</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="ir-support.html" class="nav-item active">Detection Engineering for IR</a>
+                        <a href="forensics.html" class="nav-item">Forensic Artifacts</a>
+                        <a href="soc-collaboration.html" class="nav-item">SOC Collaboration</a>
+                        <a href="communication.html" class="nav-item">IR Communication</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <span class="current">Detection Engineering for IR</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>Detection Engineering for Incident Response</h1>
+                    <p class="subtitle">How detection engineers support incident response with rapid query development, threat hunting, and post-incident detection improvements.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Detection Engineer's Role in IR</h2>
+                    
+                    <p>Detection engineers play a critical role during incidents—rapidly developing queries, hunting for lateral movement, and creating detections to prevent recurrence.</p>
+
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>During Incident</h4>
+                            <ul>
+                                <li>Develop ad-hoc hunting queries</li>
+                                <li>Scope compromise across environment</li>
+                                <li>Identify affected systems/users</li>
+                                <li>Track attacker movement</li>
+                                <li>Create IOC watchlists</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Post-Incident</h4>
+                            <ul>
+                                <li>Build detections for observed TTPs</li>
+                                <li>Gap analysis on missed activity</li>
+                                <li>Tune existing rules</li>
+                                <li>Document lessons learned</li>
+                                <li>Update detection coverage</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Rapid Query Development</h2>
+
+                    <h3>Scoping Compromise</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Find All Activity from Compromised Account</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Scope all activity from compromised user
+let CompromisedUser = "john.doe@company.com";
+let IncidentStart = datetime(2024-01-15T08:00:00Z);
+let IncidentEnd = datetime(2024-01-15T18:00:00Z);
+//
+// Sign-in activity
+let SignIns = SigninLogs
+| where TimeGenerated between (IncidentStart .. IncidentEnd)
+| where UserPrincipalName =~ CompromisedUser
+| project TimeGenerated, Activity="SignIn", Details=strcat(AppDisplayName, " from ", IPAddress, " (", Location, ")"), Result=ResultType;
+//
+// Azure activity
+let AzureActivity = AzureActivity
+| where TimeGenerated between (IncidentStart .. IncidentEnd)
+| where Caller =~ CompromisedUser
+| project TimeGenerated, Activity="AzureAPI", Details=OperationNameValue, Result=ActivityStatusValue;
+//
+// Office 365 activity
+let O365 = OfficeActivity
+| where TimeGenerated between (IncidentStart .. IncidentEnd)
+| where UserId =~ CompromisedUser
+| project TimeGenerated, Activity="Office365", Details=Operation, Result=ResultStatus;
+//
+// Endpoint activity
+let Endpoint = DeviceLogonEvents
+| where TimeGenerated between (IncidentStart .. IncidentEnd)
+| where AccountName has CompromisedUser
+| project TimeGenerated, Activity="EndpointLogon", Details=strcat(DeviceName, " - ", LogonType), Result=ActionType;
+//
+union SignIns, AzureActivity, O365, Endpoint
+| sort by TimeGenerated asc
+| project TimeGenerated, Activity, Details, Result</code></pre>
+                    </div>
+
+                    <h3>Find Lateral Movement</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Track Lateral Movement from Initial Host</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Track lateral movement from patient zero
+let PatientZero = "WORKSTATION01";
+let IncidentStart = datetime(2024-01-15T08:00:00Z);
+//
+// Network connections from compromised host
+let OutboundConnections = DeviceNetworkEvents
+| where TimeGenerated > IncidentStart
+| where DeviceName =~ PatientZero
+| where RemoteIPType == "Private"
+| summarize 
+    FirstSeen = min(TimeGenerated),
+    LastSeen = max(TimeGenerated),
+    Connections = count()
+    by RemoteIP, RemotePort
+| extend TargetHost = RemoteIP;
+//
+// Logon events TO other systems FROM compromised user
+let LateralLogons = DeviceLogonEvents
+| where TimeGenerated > IncidentStart
+| where LogonType in ("Network", "RemoteInteractive", "NewCredentials")
+| where InitiatingProcessAccountName != "-"
+| join kind=inner (
+    DeviceLogonEvents
+    | where DeviceName =~ PatientZero
+    | distinct AccountName
+) on $left.AccountName == $right.AccountName
+| where DeviceName != PatientZero
+| summarize 
+    FirstLogon = min(TimeGenerated),
+    LogonCount = count()
+    by DeviceName, AccountName, LogonType;
+//
+// Visualize spread
+LateralLogons
+| project TimeGenerated=FirstLogon, TargetHost=DeviceName, User=AccountName, Method=LogonType
+| sort by TimeGenerated asc</code></pre>
+                    </div>
+
+                    <h3>Hunt for Specific IOCs</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Search for IOCs Across Data Sources</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Hunt for known IOCs across all data
+let MaliciousIPs = dynamic(["198.51.100.1", "203.0.113.50", "192.0.2.100"]);
+let MaliciousDomains = dynamic(["evil.com", "malware.net", "c2server.xyz"]);
+let MaliciousHashes = dynamic(["d41d8cd98f00b204e9800998ecf8427e", "e3b0c44298fc1c149afbf4c8996fb924"]);
+//
+// Network IOCs
+let NetworkHits = DeviceNetworkEvents
+| where RemoteIP in (MaliciousIPs) or RemoteUrl has_any (MaliciousDomains)
+| project TimeGenerated, Source="Network", Device=DeviceName, IOC=coalesce(RemoteIP, RemoteUrl), Details=strcat(InitiatingProcessFileName, " -> ", RemotePort);
+//
+// DNS IOCs
+let DNSHits = DnsEvents
+| where Name has_any (MaliciousDomains)
+| project TimeGenerated, Source="DNS", Device=Computer, IOC=Name, Details=strcat("Query from ", ClientIP);
+//
+// File Hash IOCs
+let FileHits = DeviceFileEvents
+| where SHA256 in (MaliciousHashes) or MD5 in (MaliciousHashes)
+| project TimeGenerated, Source="FileHash", Device=DeviceName, IOC=coalesce(SHA256, MD5), Details=FileName;
+//
+// Process IOCs
+let ProcessHits = DeviceProcessEvents
+| where SHA256 in (MaliciousHashes) or MD5 in (MaliciousHashes)
+| project TimeGenerated, Source="Process", Device=DeviceName, IOC=coalesce(SHA256, MD5), Details=strcat(FileName, " - ", ProcessCommandLine);
+//
+union NetworkHits, DNSHits, FileHits, ProcessHits
+| sort by TimeGenerated desc</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Timeline Construction</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Build Attack Timeline</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Construct incident timeline from multiple sources
+let IncidentStart = datetime(2024-01-15T00:00:00Z);
+let IncidentEnd = datetime(2024-01-16T00:00:00Z);
+let SuspiciousEntities = dynamic(["john.doe@company.com", "WORKSTATION01", "198.51.100.1"]);
+//
+// Collect events from all sources
+let Timeline = union
+    // Sign-ins
+    (SigninLogs
+    | where TimeGenerated between (IncidentStart .. IncidentEnd)
+    | where UserPrincipalName in (SuspiciousEntities) or IPAddress in (SuspiciousEntities)
+    | extend EventType = "Authentication", 
+             Source = "EntraID",
+             Actor = UserPrincipalName,
+             Target = AppDisplayName,
+             Details = strcat("From ", IPAddress, " - ", ResultType)),
+    // Endpoint processes
+    (DeviceProcessEvents
+    | where TimeGenerated between (IncidentStart .. IncidentEnd)
+    | where DeviceName in (SuspiciousEntities) or InitiatingProcessAccountName has_any (SuspiciousEntities)
+    | extend EventType = "ProcessExecution",
+             Source = "MDE",
+             Actor = InitiatingProcessAccountName,
+             Target = DeviceName,
+             Details = strcat(FileName, " - ", ProcessCommandLine)),
+    // File events
+    (DeviceFileEvents
+    | where TimeGenerated between (IncidentStart .. IncidentEnd)
+    | where DeviceName in (SuspiciousEntities)
+    | where ActionType in ("FileCreated", "FileModified")
+    | extend EventType = "FileActivity",
+             Source = "MDE",
+             Actor = InitiatingProcessAccountName,
+             Target = DeviceName,
+             Details = strcat(ActionType, ": ", FolderPath, "\\", FileName)),
+    // Network connections
+    (DeviceNetworkEvents
+    | where TimeGenerated between (IncidentStart .. IncidentEnd)
+    | where DeviceName in (SuspiciousEntities) or RemoteIP in (SuspiciousEntities)
+    | extend EventType = "NetworkConnection",
+             Source = "MDE",
+             Actor = DeviceName,
+             Target = RemoteIP,
+             Details = strcat(InitiatingProcessFileName, " -> ", RemoteIP, ":", RemotePort))
+| project TimeGenerated, EventType, Source, Actor, Target, Details
+| sort by TimeGenerated asc;
+//
+Timeline</code></pre>
+                    </div>
+
+                    <div class="info-box tip">
+                        <h4>💡 Timeline Best Practices</h4>
+                        <ul>
+                            <li>Normalize timestamps to UTC</li>
+                            <li>Include source system for each event</li>
+                            <li>Add context (success/failure, severity)</li>
+                            <li>Export to CSV for IR team and legal</li>
+                            <li>Highlight key attacker actions</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Post-Incident Detection Development</h2>
+
+                    <h3>Gap Analysis Process</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>1. Map Attacker TTPs</h4>
+                            <ul>
+                                <li>Document observed techniques</li>
+                                <li>Map to MITRE ATT&CK</li>
+                                <li>Identify kill chain stages</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>2. Review Detection Coverage</h4>
+                            <ul>
+                                <li>Which TTPs were detected?</li>
+                                <li>Which were missed?</li>
+                                <li>What was detection latency?</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>3. Build New Detections</h4>
+                            <ul>
+                                <li>Create rules for missed TTPs</li>
+                                <li>Tune existing rules</li>
+                                <li>Add IOC-based detections</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>Example: Post-Incident Detection</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection Built from IR Findings</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detection: Attacker used certutil for download (observed in incident)
+// MITRE: T1105 - Ingress Tool Transfer
+DeviceProcessEvents
+| where FileName =~ "certutil.exe"
+| where ProcessCommandLine has_any ("-urlcache", "-split", "-f", "http://", "https://")
+| where ProcessCommandLine !has "Microsoft"  // Exclude legit Windows Update
+| project 
+    TimeGenerated,
+    DeviceName,
+    AccountName = InitiatingProcessAccountName,
+    CommandLine = ProcessCommandLine,
+    ParentProcess = InitiatingProcessFileName
+| extend AlertTitle = "Certutil Used for File Download"
+| extend AlertSeverity = "High"
+| extend MITRE = "T1105"
+| extend IncidentReference = "INC-2024-0115"  // Link to originating incident</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you support an active incident as a detection engineer?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Immediate actions:</strong></p>
+                            <ol>
+                                <li><strong>Scope the compromise:</strong> Build queries to find all affected systems and users</li>
+                                <li><strong>Hunt for IOCs:</strong> Search for known malicious IPs, domains, hashes across all data sources</li>
+                                <li><strong>Track lateral movement:</strong> Query authentication and network logs to map attacker path</li>
+                                <li><strong>Create watchlists:</strong> Add IOCs to real-time alerting</li>
+                                <li><strong>Build timeline:</strong> Construct chronological view for IR team</li>
+                            </ol>
+                            <p><strong>Post-incident:</strong> Document TTPs, perform gap analysis, build new detections for missed activity.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What's your process for improving detections after an incident?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Process:</strong></p>
+                            <ol>
+                                <li><strong>Debrief with IR:</strong> Understand full attack chain and TTPs used</li>
+                                <li><strong>Map to MITRE:</strong> Document each technique observed</li>
+                                <li><strong>Review existing rules:</strong> Did we have coverage? Why didn't it alert?</li>
+                                <li><strong>Root cause:</strong> Missing log source? Rule too specific? Threshold too high?</li>
+                                <li><strong>Build detections:</strong> Create rules for each missed TTP</li>
+                                <li><strong>Test with incident data:</strong> Replay attack data to validate detection</li>
+                                <li><strong>Document:</strong> Link new detections to incident for context</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="../automation/api-integration.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        API Integration
+                    </a>
+                    <a href="forensics.html" class="nav-link next">
+                        Forensic Artifacts
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

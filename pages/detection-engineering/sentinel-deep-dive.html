@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Sentinel Deep Dive | Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <div class="logo-icon">DE</div>
+                    <span class="logo-text">Detection Engineering</span>
+                </div>
+                <button class="sidebar-toggle" aria-label="Toggle Sidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="sidebar-search">
+                <input type="text" class="search-input" placeholder="Search topics...">
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section" data-section="home">
+                    <a href="../../index.html" class="nav-section-header" style="text-decoration: none;">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                            <span>Home</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="nav-section active expanded" data-section="detection">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                            <span>Detection Engineering</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item">Detection Fundamentals</a>
+                        <a href="sentinel-deep-dive.html" class="nav-item active">Microsoft Sentinel Deep Dive</a>
+                        <a href="splunk-comparison.html" class="nav-item">Splunk Comparison</a>
+                        <a href="detection-logic.html" class="nav-item">Detection Logic Design</a>
+                        <a href="mitre-attack.html" class="nav-item">MITRE ATT&CK Mapping</a>
+                        <a href="use-case-framework.html" class="nav-item">Use Case Framework</a>
+                        <a href="metrics.html" class="nav-item">Metrics & Optimization</a>
+                    </div>
+                </div>
+
+                <div class="nav-section" data-section="logs">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                            <span>Log Analysis & Data</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../log-analysis/fundamentals.html" class="nav-item">Log Fundamentals</a>
+                        <a href="../log-analysis/network-logs.html" class="nav-item">Network Log Sources</a>
+                        <a href="../log-analysis/endpoint-logs.html" class="nav-item">Endpoint Log Sources</a>
+                        <a href="../log-analysis/cloud-logs.html" class="nav-item">Cloud Log Sources</a>
+                        <a href="../log-analysis/regex.html" class="nav-item">Regex Mastery</a>
+                    </div>
+                </div>
+
+                <div class="nav-section" data-section="sap">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            <span>SAP Security</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../sap-security/sap-overview.html" class="nav-item">What is SAP?</a>
+                        <a href="../sap-security/architecture.html" class="nav-item">SAP Architecture</a>
+                        <a href="../sap-security/threat-detection.html" class="nav-item">Threat Detection</a>
+                    </div>
+                </div>
+
+                <div class="nav-section" data-section="reference">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                            <span>Quick Reference</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../references/kql-cheatsheet.html" class="nav-item">KQL Cheat Sheet</a>
+                        <a href="../references/spl-cheatsheet.html" class="nav-item">SPL Cheat Sheet</a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="breadcrumb">
+                    <a href="../../index.html" class="breadcrumb-item">Home</a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-item">Detection Engineering</span>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-item active">Microsoft Sentinel Deep Dive</span>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <h1>Microsoft Sentinel Deep Dive</h1>
+                <p style="font-size: 1.125rem; color: var(--text-secondary); max-width: 800px;">
+                    Master Microsoft Sentinel - from architecture fundamentals to advanced KQL queries, analytics rules, 
+                    automation playbooks, and enterprise-scale deployment strategies.
+                </p>
+
+                <!-- Sentinel Architecture -->
+                <h2>Sentinel Architecture & Components</h2>
+                
+                <p>Microsoft Sentinel is a cloud-native SIEM and SOAR solution built on Azure. Understanding its architecture is essential for effective detection engineering.</p>
+
+                <div class="info-box info">
+                    <strong>Cloud-Native Advantage:</strong> Unlike traditional SIEMs, Sentinel has no infrastructure to manage. 
+                    It auto-scales based on data volume and provides unlimited query performance through Azure Data Explorer.
+                </div>
+
+                <h3>Core Components</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Purpose</th>
+                            <th>Key Capabilities</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Log Analytics Workspace</strong></td>
+                            <td>Data storage and query engine</td>
+                            <td>KQL queries, data retention (30-730 days), Azure Data Explorer backend</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Data Connectors</strong></td>
+                            <td>Ingest logs from sources</td>
+                            <td>200+ built-in connectors, CEF/Syslog, REST API, Azure Functions</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Analytics Rules</strong></td>
+                            <td>Detection logic</td>
+                            <td>Scheduled queries, NRT rules, Microsoft Security, ML-based, Fusion</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Incidents</strong></td>
+                            <td>Alert aggregation and case management</td>
+                            <td>Alert grouping, entity mapping, investigation graph</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Workbooks</strong></td>
+                            <td>Visualization and dashboards</td>
+                            <td>Interactive reports, custom dashboards, data exploration</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Automation (Playbooks)</strong></td>
+                            <td>SOAR capabilities</td>
+                            <td>Logic Apps integration, automated response, enrichment</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hunting</strong></td>
+                            <td>Proactive threat hunting</td>
+                            <td>Built-in queries, Livestream, bookmarks, notebooks</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Watchlists</strong></td>
+                            <td>Reference data</td>
+                            <td>IOC lists, VIP users, approved applications, IP allowlists</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Threat Intelligence</strong></td>
+                            <td>TI integration</td>
+                            <td>TAXII feeds, TIP platforms, Microsoft TI, custom indicators</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Data Connectors -->
+                <h2>Data Connectors & Ingestion</h2>
+
+                <p>Sentinel offers multiple methods to ingest data. Choosing the right connector impacts data quality, cost, and detection capabilities.</p>
+
+                <h3>Connector Types</h3>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Native Microsoft Connectors</h4>
+                        <p>Direct integration with Microsoft services - zero configuration, automatic schema normalization.</p>
+                        <ul>
+                            <li>Microsoft 365 Defender</li>
+                            <li>Microsoft Entra ID (Azure AD)</li>
+                            <li>Microsoft Defender for Cloud</li>
+                            <li>Azure Activity Logs</li>
+                            <li>Office 365</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Syslog/CEF</h4>
+                        <p>Industry-standard log forwarding for network devices, firewalls, and security appliances.</p>
+                        <ul>
+                            <li>Log Forwarder VM required</li>
+                            <li>rsyslog or syslog-ng</li>
+                            <li>CEF provides structured parsing</li>
+                            <li>Raw Syslog for custom parsing</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>REST API / Custom</h4>
+                        <p>Programmatic data ingestion for custom applications and third-party sources.</p>
+                        <ul>
+                            <li>Data Collector API (legacy)</li>
+                            <li>Logs Ingestion API (modern)</li>
+                            <li>Azure Functions for transformation</li>
+                            <li>Custom tables support</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Data Ingestion Best Practices</h3>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Monitor Data Ingestion Health</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Check data ingestion volume by table (last 24 hours)
+Usage
+| where TimeGenerated > ago(24h)
+| summarize DataIngested_GB = sum(Quantity) / 1024 
+    by DataType
+| sort by DataIngested_GB desc
+
+// Identify ingestion delays
+Heartbeat
+| where TimeGenerated > ago(1h)
+| summarize LastHeartbeat = max(TimeGenerated) by Computer
+| where LastHeartbeat < ago(10m)
+| project Computer, 
+    MinutesSinceLastHeartbeat = datetime_diff('minute', now(), LastHeartbeat)
+
+// Monitor connector health
+SentinelHealth
+| where TimeGenerated > ago(24h)
+| where SentinelResourceType == "Data connector"
+| summarize count() by SentinelResourceName, Status
+| where Status != "Success"</code></pre>
+                </div>
+
+                <!-- Analytics Rules -->
+                <h2>Analytics Rules Deep Dive</h2>
+
+                <p>Analytics rules are the core of detection in Sentinel. Understanding rule types and their trade-offs is critical for effective detection engineering.</p>
+
+                <h3>Rule Types Comparison</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rule Type</th>
+                            <th>Latency</th>
+                            <th>Query Complexity</th>
+                            <th>Best Use Case</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Scheduled</strong></td>
+                            <td>5 min - 14 days</td>
+                            <td>Full KQL support</td>
+                            <td>Complex correlation, historical analysis</td>
+                        </tr>
+                        <tr>
+                            <td><strong>NRT (Near Real-Time)</strong></td>
+                            <td>~1 minute</td>
+                            <td>Limited operators</td>
+                            <td>Critical alerts requiring fast response</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Microsoft Security</strong></td>
+                            <td>Real-time</td>
+                            <td>Pre-built</td>
+                            <td>Ingest alerts from Defender products</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fusion</strong></td>
+                            <td>ML-based</td>
+                            <td>Automatic</td>
+                            <td>Multi-stage attack detection</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Anomaly</strong></td>
+                            <td>ML-based</td>
+                            <td>Template-based</td>
+                            <td>Baseline deviation detection</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Scheduled Rule Configuration</h3>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Brute Force Detection Rule</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Analytics Rule: Brute Force Against Azure AD
+let threshold = 10;
+let timeWindow = 5m;
+SigninLogs
+| where TimeGenerated > ago(timeWindow)
+| where ResultType != "0"  // Failed logins only
+| where ResultType !in ("50126", "50053")  // Exclude lockouts
+| summarize 
+    FailedAttempts = count(),
+    DistinctAccounts = dcount(UserPrincipalName),
+    AttemptedAccounts = make_set(UserPrincipalName, 100),
+    FirstAttempt = min(TimeGenerated),
+    LastAttempt = max(TimeGenerated)
+    by IPAddress, Location
+| where FailedAttempts >= threshold
+| extend 
+    AttackDuration = datetime_diff('minute', LastAttempt, FirstAttempt),
+    AttackDescription = strcat("Brute force attack from ", IPAddress, 
+        " targeting ", DistinctAccounts, " accounts")
+| project-reorder 
+    IPAddress, Location, FailedAttempts, DistinctAccounts, 
+    AttackDuration, AttemptedAccounts</code></pre>
+                </div>
+
+                <div class="info-box tip">
+                    <strong>Rule Configuration Tips:</strong>
+                    <ul>
+                        <li><strong>Query Frequency:</strong> Balance between detection speed and cost (more frequent = more compute)</li>
+                        <li><strong>Lookback Period:</strong> Should be >= Query Frequency to avoid gaps (e.g., 5m frequency needs 5m+ lookback)</li>
+                        <li><strong>Alert Threshold:</strong> Generate alert when query returns more than X results</li>
+                        <li><strong>Event Grouping:</strong> Group all events into single alert OR create alert per row</li>
+                    </ul>
+                </div>
+
+                <h3>NRT Rules</h3>
+
+                <p>Near Real-Time rules run every minute with ~1 minute latency. They have restrictions but are essential for critical detections.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">NRT Rule: Critical Admin Account Login</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// NRT rules have limitations:
+// - No joins with other tables (use lookups or watchlists instead)
+// - No aggregations that span time windows
+// - No external data calls
+// Works with NRT:
+let CriticalAdmins = dynamic(["admin@contoso.com", "globaladmin@contoso.com"]);
+SigninLogs
+| where UserPrincipalName in (CriticalAdmins)
+| where ResultType == "0"  // Successful login
+| where IPAddress != "10.0.0.0/8"  // External only
+| extend 
+    AlertReason = "Critical admin account logged in from external IP",
+    RiskLevel = "High"</code></pre>
+                </div>
+
+                <div class="info-box warning">
+                    <strong>NRT Limitations:</strong> Cannot use joins, union (except SecurityAlert), external data, 
+                    or aggregations spanning multiple time windows. Use Watchlists for reference data lookups.
+                </div>
+
+                <!-- Entity Mapping -->
+                <h2>Entity Mapping & Alert Enrichment</h2>
+
+                <p>Entity mapping connects your detection output to Sentinel's investigation experience. Proper mapping enables the investigation graph, entity pages, and UEBA correlation.</p>
+
+                <h3>Core Entity Types</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Entity Type</th>
+                            <th>Key Identifiers</th>
+                            <th>Example Fields</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Account</strong></td>
+                            <td>Name, UPNSuffix, AadUserId, Sid</td>
+                            <td>UserPrincipalName, AccountName, UserSid</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Host</strong></td>
+                            <td>HostName, DnsDomain, AzureID</td>
+                            <td>Computer, DeviceName, HostName</td>
+                        </tr>
+                        <tr>
+                            <td><strong>IP</strong></td>
+                            <td>Address</td>
+                            <td>IPAddress, SourceIP, DestinationIP</td>
+                        </tr>
+                        <tr>
+                            <td><strong>URL</strong></td>
+                            <td>Url</td>
+                            <td>RequestUrl, TargetUrl</td>
+                        </tr>
+                        <tr>
+                            <td><strong>File</strong></td>
+                            <td>Name, Directory, Hash</td>
+                            <td>FileName, FolderPath, SHA256</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Process</strong></td>
+                            <td>ProcessId, CommandLine, ImageFile</td>
+                            <td>ProcessId, CommandLine, ImageFileName</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MailMessage</strong></td>
+                            <td>Recipient, Sender, Subject</td>
+                            <td>RecipientEmail, SenderIP, Subject</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Properly Structured Query for Entity Mapping</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Structure your query output to support entity mapping
+SecurityEvent
+| where EventID == 4625  // Failed logon
+| where TimeGenerated > ago(1h)
+| summarize 
+    FailedLogons = count(),
+    DistinctAccounts = dcount(TargetUserName),
+    AccountList = make_set(TargetUserName)
+    by IpAddress, Computer
+| where FailedLogons > 10
+// Output fields that map to entities:
+| extend 
+    // Account entity - use consistent naming
+    AccountName = tostring(AccountList[0]),
+    // Host entity
+    HostName = Computer,
+    // IP entity  
+    IPAddress = IpAddress,
+    // Custom fields for context
+    AlertSeverity = case(
+        FailedLogons > 100, "High",
+        FailedLogons > 50, "Medium",
+        "Low"
+    ),
+    Description = strcat(
+        "Multiple failed logon attempts detected. ",
+        FailedLogons, " failures from ", IpAddress,
+        " targeting ", DistinctAccounts, " accounts."
+    )</code></pre>
+                </div>
+
+                <!-- Watchlists -->
+                <h2>Watchlists for Reference Data</h2>
+
+                <p>Watchlists provide a way to bring external reference data into Sentinel for enrichment and filtering in your detection rules.</p>
+
+                <h3>Common Watchlist Use Cases</h3>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Allowlists</h4>
+                        <ul>
+                            <li>Approved applications</li>
+                            <li>Known good IP addresses</li>
+                            <li>Authorized service accounts</li>
+                            <li>Sanctioned cloud services</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>High-Value Assets</h4>
+                        <ul>
+                            <li>VIP users</li>
+                            <li>Critical servers</li>
+                            <li>Crown jewel applications</li>
+                            <li>Sensitive data stores</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Threat Intelligence</h4>
+                        <ul>
+                            <li>Custom IOC lists</li>
+                            <li>Suspicious domains</li>
+                            <li>Known bad file hashes</li>
+                            <li>C2 IP addresses</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Using Watchlists in Detection Rules</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Method 1: _GetWatchlist function (recommended)
+let VIPUsers = _GetWatchlist('VIP_Users')
+    | project UserPrincipalName = SearchKey;
+SigninLogs
+| where UserPrincipalName in (VIPUsers)
+| where RiskLevelDuringSignIn in ("medium", "high")
+| project TimeGenerated, UserPrincipalName, IPAddress, 
+    RiskLevelDuringSignIn, Location
+
+// Method 2: Join with watchlist for enrichment
+let AssetCriticality = _GetWatchlist('Critical_Assets');
+SecurityEvent
+| where EventID == 4624
+| where TimeGenerated > ago(1h)
+| join kind=inner (AssetCriticality) on $left.Computer == $right.SearchKey
+| extend 
+    AssetTier = Tier,
+    BusinessOwner = Owner,
+    AlertPriority = case(
+        Tier == "Tier1", "Critical",
+        Tier == "Tier2", "High",
+        "Medium"
+    )
+
+// Method 3: Exclude known good (allowlisting)
+let ApprovedServiceAccounts = _GetWatchlist('Service_Accounts')
+    | project ServiceAccount = SearchKey;
+SecurityEvent
+| where EventID == 4672  // Special privileges assigned
+| where SubjectUserName !in (ApprovedServiceAccounts)
+| where SubjectUserName !endswith "$"  // Exclude machine accounts</code></pre>
+                </div>
+
+                <!-- ASIM Normalization -->
+                <h2>ASIM (Advanced Security Information Model)</h2>
+
+                <p>ASIM provides a normalized schema across different data sources, enabling you to write detection rules that work regardless of the source.</p>
+
+                <h3>Why ASIM Matters</h3>
+
+                <div class="info-box info">
+                    <strong>Write Once, Detect Everywhere:</strong> Instead of writing separate rules for Windows Events, 
+                    Sysmon, CrowdStrike, and Carbon Black - write one ASIM-based rule that works with all of them.
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ASIM Schema</th>
+                            <th>Covers</th>
+                            <th>Parser Function</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Authentication</strong></td>
+                            <td>Logon events from all sources</td>
+                            <td>imAuthentication</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Process Events</strong></td>
+                            <td>Process creation/termination</td>
+                            <td>imProcessCreate, imProcessTerminate</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Network Session</strong></td>
+                            <td>Firewall, proxy, flow data</td>
+                            <td>imNetworkSession</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DNS</strong></td>
+                            <td>DNS queries and responses</td>
+                            <td>imDns</td>
+                        </tr>
+                        <tr>
+                            <td><strong>File Events</strong></td>
+                            <td>File creation, modification, deletion</td>
+                            <td>imFileEvent</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Web Session</strong></td>
+                            <td>HTTP/HTTPS traffic</td>
+                            <td>imWebSession</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">ASIM-Based Detection Rule</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// ASIM Authentication - works across all auth sources
+imAuthentication
+| where TimeGenerated > ago(1h)
+| where EventResult == "Failure"
+| where EventResultDetails == "NoSuchUser"
+| summarize 
+    AttemptCount = count(),
+    TargetAccounts = make_set(TargetUsername, 100),
+    SourceSystems = make_set(EventProduct)
+    by SrcIpAddr, bin(TimeGenerated, 5m)
+| where AttemptCount > 20
+| extend Description = strcat(
+    "User enumeration detected from ", SrcIpAddr,
+    " across ", array_length(SourceSystems), " systems"
+)
+
+// ASIM Process - detect suspicious process across EDR sources
+imProcessCreate
+| where TimeGenerated > ago(1h)
+| where TargetProcessName has_any ("mimikatz", "procdump", "psexec")
+    or TargetProcessCommandLine has_any (
+        "sekurlsa::logonpasswords",
+        "-ma lsass",
+        "comsvcs.dll MiniDump"
+    )
+| project 
+    TimeGenerated,
+    EventProduct,  // Shows which EDR detected it
+    DvcHostname,
+    ActingProcessName,
+    TargetProcessName,
+    TargetProcessCommandLine,
+    TargetUsername</code></pre>
+                </div>
+
+                <!-- Automation/Playbooks -->
+                <h2>Automation with Playbooks</h2>
+
+                <p>Playbooks (Logic Apps) enable automated response, enrichment, and notification when incidents are created.</p>
+
+                <h3>Common Playbook Patterns</h3>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Enrichment</h4>
+                        <ul>
+                            <li>IP reputation lookup (VirusTotal, AbuseIPDB)</li>
+                            <li>User context from Azure AD</li>
+                            <li>Asset inventory lookup</li>
+                            <li>Previous incident history</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Notification</h4>
+                        <ul>
+                            <li>Teams/Slack alerts</li>
+                            <li>Email notifications</li>
+                            <li>PagerDuty/ServiceNow tickets</li>
+                            <li>Executive summaries</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Response</h4>
+                        <ul>
+                            <li>Block IP in firewall</li>
+                            <li>Disable compromised user</li>
+                            <li>Isolate host via EDR</li>
+                            <li>Revoke active sessions</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JSON</span>
+                        <span class="code-title">Logic App - Block IP in Azure Firewall</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "triggers": {
+            "Microsoft_Sentinel_incident": {
+                "type": "ApiConnectionWebhook",
+                "inputs": {
+                    "body": {
+                        "callback_url": "@{listCallbackUrl()}"
+                    },
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['azuresentinel']['connectionId']"
+                        }
+                    },
+                    "path": "/incident-creation"
+                }
+            }
+        },
+        "actions": {
+            "Get_IPs_from_incident": {
+                "type": "ApiConnection",
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['azuresentinel']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "path": "/entities/ip"
+                }
+            },
+            "For_each_IP": {
+                "type": "Foreach",
+                "foreach": "@body('Get_IPs_from_incident')?['IPs']",
+                "actions": {
+                    "Add_IP_to_blocklist": {
+                        "type": "ApiConnection",
+                        "inputs": {
+                            "body": {
+                                "ip_address": "@items('For_each_IP')?['Address']",
+                                "rule_collection": "Blocked-IPs",
+                                "priority": "100",
+                                "action": "Deny"
+                            }
+                        }
+                    },
+                    "Add_comment_to_incident": {
+                        "type": "ApiConnection",
+                        "inputs": {
+                            "body": {
+                                "incidentArmId": "@triggerBody()?['object']?['id']",
+                                "message": "IP @{items('For_each_IP')?['Address']} blocked in Azure Firewall"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}</code></pre>
+                </div>
+
+                <!-- Cost Optimization -->
+                <h2>Cost Optimization Strategies</h2>
+
+                <p>Sentinel costs are primarily driven by data ingestion. Understanding the cost model enables intelligent decisions about what to collect.</p>
+
+                <h3>Cost Model Overview</h3>
+
+                <div class="info-box info">
+                    <strong>Sentinel Pricing Components:</strong>
+                    <ul>
+                        <li><strong>Data Ingestion:</strong> Pay-as-you-go or commitment tiers (100GB/day+)</li>
+                        <li><strong>Data Retention:</strong> First 90 days free, then per GB/month</li>
+                        <li><strong>Playbook Runs:</strong> Logic Apps consumption pricing</li>
+                        <li><strong>Basic Logs:</strong> 60% cheaper for high-volume, low-value data</li>
+                    </ul>
+                </div>
+
+                <h3>Cost Reduction Techniques</h3>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Identify Cost Optimization Opportunities</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Find highest volume tables
+Usage
+| where TimeGenerated > ago(30d)
+| summarize TotalGB = sum(Quantity) / 1024 by DataType
+| sort by TotalGB desc
+| take 20
+| extend MonthlyCost_USD = TotalGB * 2.76  // Approximate PAYG pricing
+
+// Identify noisy event types within a table
+SecurityEvent
+| where TimeGenerated > ago(7d)
+| summarize EventCount = count() by EventID
+| sort by EventCount desc
+| take 20
+| extend 
+    EventDescription = case(
+        EventID == 4688, "Process Creation",
+        EventID == 4624, "Successful Logon",
+        EventID == 4625, "Failed Logon",
+        EventID == 4648, "Explicit Credentials",
+        EventID == 5156, "Windows Filtering Platform",
+        "Other"
+    ),
+    DetectionValue = case(
+        EventID in (4688, 4624, 4625, 4648, 4672, 4720, 4732), "High",
+        EventID in (5156, 5158, 4634), "Low",
+        "Medium"
+    )
+
+// Find candidates for Basic Logs tier
+Usage
+| where TimeGenerated > ago(30d)
+| where DataType in ("AzureMetrics", "ContainerLog", "AppTraces")
+| summarize 
+    TotalGB = sum(Quantity) / 1024,
+    QueryCount = countif(IsBillable == true)
+| extend 
+    CurrentCost = TotalGB * 2.76,
+    BasicLogsCost = TotalGB * 0.50,
+    PotentialSavings = CurrentCost - BasicLogsCost</code></pre>
+                </div>
+
+                <h3>Data Collection Strategies</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Strategy</th>
+                            <th>Method</th>
+                            <th>Use Case</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Basic Logs</strong></td>
+                            <td>Convert table to Basic tier</td>
+                            <td>High-volume verbose logs (traces, metrics, flow logs)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Transformation Rules</strong></td>
+                            <td>DCR-based filtering at ingestion</td>
+                            <td>Filter out unwanted events before they hit workspace</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Archive Tier</strong></td>
+                            <td>Move to long-term storage</td>
+                            <td>Compliance retention beyond active analysis</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Summary Rules</strong></td>
+                            <td>Pre-aggregate data</td>
+                            <td>Keep summaries, discard raw for reporting tables</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Interview Questions -->
+                <h2>Interview Questions & Answers</h2>
+
+                <div class="expandable">
+                    <div class="expandable-header">
+                        <span>Q: What's the difference between Scheduled and NRT analytics rules?</span>
+                        <svg class="expand-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="expandable-content">
+                        <p><strong>Scheduled Rules:</strong></p>
+                        <ul>
+                            <li>Run at configurable intervals (5 minutes to 14 days)</li>
+                            <li>Support full KQL including joins, unions, external data</li>
+                            <li>Can analyze historical data with lookback periods</li>
+                            <li>Typical latency: 5-15 minutes depending on frequency</li>
+                        </ul>
+                        <p><strong>NRT (Near Real-Time) Rules:</strong></p>
+                        <ul>
+                            <li>Run every minute with ~1 minute detection latency</li>
+                            <li>Limited KQL: No joins, no union (except SecurityAlert), no external data</li>
+                            <li>Can only look at most recent data (no historical correlation)</li>
+                            <li>Best for critical alerts where speed matters more than correlation</li>
+                        </ul>
+                        <p><strong>When to use each:</strong> Use NRT for simple pattern matching on critical events (e.g., admin login from unusual country). Use Scheduled for complex correlation, threshold-based detection, or anything requiring joins/lookups.</p>
+                    </div>
+                </div>
+
+                <div class="expandable">
+                    <div class="expandable-header">
+                        <span>Q: How does entity mapping improve incident investigation?</span>
+                        <svg class="expand-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="expandable-content">
+                        <p>Entity mapping connects your detection output to Sentinel's built-in investigation capabilities:</p>
+                        <ul>
+                            <li><strong>Investigation Graph:</strong> Visually explore relationships between entities (users, IPs, hosts) involved in an incident</li>
+                            <li><strong>Entity Pages:</strong> Click on any entity to see all related activity, risk scores, and timeline</li>
+                            <li><strong>UEBA Integration:</strong> Mapped entities automatically correlate with User and Entity Behavior Analytics</li>
+                            <li><strong>Cross-Incident Correlation:</strong> Find other incidents involving the same entities</li>
+                            <li><strong>Automated Enrichment:</strong> Playbooks can automatically enrich mapped entities (e.g., IP reputation, user details)</li>
+                        </ul>
+                        <p>Without proper mapping, analysts lose these capabilities and must manually search for context.</p>
+                    </div>
+                </div>
+
+                <div class="expandable">
+                    <div class="expandable-header">
+                        <span>Q: Explain ASIM and why it matters for detection engineering</span>
+                        <svg class="expand-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="expandable-content">
+                        <p><strong>ASIM (Advanced Security Information Model)</strong> is Sentinel's data normalization framework that provides:</p>
+                        <ul>
+                            <li><strong>Unified Schema:</strong> Common field names across different products (e.g., SourceIP becomes SrcIpAddr regardless of source)</li>
+                            <li><strong>Parser Functions:</strong> Built-in functions (imAuthentication, imProcessCreate) that query all relevant sources</li>
+                            <li><strong>Vendor Agnostic Detection:</strong> Write one rule that works across CrowdStrike, Defender, Carbon Black, etc.</li>
+                        </ul>
+                        <p><strong>Without ASIM:</strong> You'd write separate rules for each EDR, each with different field names:</p>
+                        <ul>
+                            <li>Windows: NewProcessName</li>
+                            <li>CrowdStrike: ImageFileName</li>
+                            <li>Carbon Black: process_name</li>
+                        </ul>
+                        <p><strong>With ASIM:</strong> Use imProcessCreate and reference TargetProcessName - works everywhere.</p>
+                    </div>
+                </div>
+
+                <div class="expandable">
+                    <div class="expandable-header">
+                        <span>Q: How would you reduce Sentinel costs without losing detection capability?</span>
+                        <svg class="expand-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="expandable-content">
+                        <p><strong>1. Use Basic Logs tier</strong> for high-volume, low-query data:</p>
+                        <ul>
+                            <li>Azure Metrics, Container Logs, Application Traces</li>
+                            <li>60% cost reduction with 8-day query retention</li>
+                            <li>Search Jobs for ad-hoc investigation when needed</li>
+                        </ul>
+                        <p><strong>2. Implement Transformation Rules (DCRs)</strong> to filter at ingestion:</p>
+                        <ul>
+                            <li>Drop noisy Windows events (e.g., 5156, 5158)</li>
+                            <li>Filter out known-good service account activity</li>
+                            <li>Remove unnecessary fields from verbose logs</li>
+                        </ul>
+                        <p><strong>3. Commitment Tiers</strong> for predictable workloads:</p>
+                        <ul>
+                            <li>100GB/day tier = 50% discount</li>
+                            <li>Analyze usage patterns before committing</li>
+                        </ul>
+                        <p><strong>4. Archive long-term data</strong> instead of active retention</p>
+                        <p><strong>5. Use Summary Rules</strong> to pre-aggregate reporting data</p>
+                    </div>
+                </div>
+
+                <div class="expandable">
+                    <div class="expandable-header">
+                        <span>Q: Walk me through creating a detection rule from scratch</span>
+                        <svg class="expand-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="expandable-content">
+                        <p><strong>1. Define the Threat:</strong></p>
+                        <ul>
+                            <li>What attack technique are we detecting? (e.g., T1003 - Credential Dumping)</li>
+                            <li>What does the attack look like in logs?</li>
+                        </ul>
+                        <p><strong>2. Identify Data Sources:</strong></p>
+                        <ul>
+                            <li>Which tables contain relevant events?</li>
+                            <li>Do we have visibility? Check data connector health</li>
+                        </ul>
+                        <p><strong>3. Develop the Query:</strong></p>
+                        <ul>
+                            <li>Start broad, then narrow down</li>
+                            <li>Test against known-good baseline to understand false positive rate</li>
+                            <li>Add exclusions for legitimate activity</li>
+                        </ul>
+                        <p><strong>4. Configure Rule Settings:</strong></p>
+                        <ul>
+                            <li>Set appropriate frequency and lookback</li>
+                            <li>Map entities (Account, Host, IP, Process)</li>
+                            <li>Configure severity and MITRE mapping</li>
+                        </ul>
+                        <p><strong>5. Document and Test:</strong></p>
+                        <ul>
+                            <li>Write clear description and remediation steps</li>
+                            <li>Test with atomic red team or simulation</li>
+                            <li>Monitor for false positives in first 2 weeks</li>
+                        </ul>
+                        <p><strong>6. Enable Automation:</strong></p>
+                        <ul>
+                            <li>Attach enrichment playbooks</li>
+                            <li>Configure alert grouping</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <div class="page-nav">
+                    <a href="fundamentals.html" class="nav-btn prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                        Detection Fundamentals
+                    </a>
+                    <a href="splunk-comparison.html" class="nav-btn next">
+                        Splunk Comparison
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

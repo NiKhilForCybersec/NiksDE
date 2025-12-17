@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Security - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span>Detection Engineering</span>
+                </a>
+                <button class="sidebar-toggle" aria-label="Toggle sidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="nav-sections">
+                <!-- Module 1: Detection Fundamentals -->
+                <div class="nav-section" data-section="fundamentals">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                            <span>Detection Fundamentals</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../detection-engineering/fundamentals.html" class="nav-item">Core Concepts</a>
+                        <a href="../detection-engineering/sentinel-deep-dive.html" class="nav-item">Microsoft Sentinel Deep Dive</a>
+                        <a href="../detection-engineering/splunk-comparison.html" class="nav-item">Splunk Comparison</a>
+                        <a href="../detection-engineering/use-case-framework.html" class="nav-item">Use Case Framework</a>
+                        <a href="../detection-engineering/detection-logic.html" class="nav-item">Detection Logic Design</a>
+                        <a href="../detection-engineering/mitre-mapping.html" class="nav-item">MITRE ATT&CK Mapping</a>
+                        <a href="../detection-engineering/metrics.html" class="nav-item">Detection Metrics & Optimization</a>
+                    </div>
+                </div>
+
+                <!-- Module 2: Log Analysis -->
+                <div class="nav-section" data-section="log-analysis">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                            <span>Log Analysis</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../log-analysis/fundamentals.html" class="nav-item">Log Analysis Fundamentals</a>
+                        <a href="../log-analysis/endpoint-logs.html" class="nav-item">Endpoint Logs</a>
+                        <a href="../log-analysis/network-logs.html" class="nav-item">Network Logs</a>
+                        <a href="../log-analysis/cloud-logs.html" class="nav-item">Cloud Logs</a>
+                        <a href="../log-analysis/identity-logs.html" class="nav-item">Identity & Access Logs</a>
+                    </div>
+                </div>
+
+                <!-- Module 3: Threat Intelligence -->
+                <div class="nav-section" data-section="threat-intel">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                            <span>Threat Intelligence</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../threat-intel/fundamentals.html" class="nav-item">Threat Intel Fundamentals</a>
+                        <a href="../threat-intel/sources.html" class="nav-item">Intelligence Sources</a>
+                        <a href="../threat-intel/ioc-management.html" class="nav-item">IOC Management</a>
+                    </div>
+                </div>
+
+                <!-- Module 6: Cloud Security -->
+                <div class="nav-section expanded" data-section="cloud">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                            </svg>
+                            <span>Cloud Security</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item">Cloud Security Fundamentals</a>
+                        <a href="aws-security.html" class="nav-item active">AWS Security</a>
+                        <a href="azure-security.html" class="nav-item">Azure Security</a>
+                        <a href="gcp-security.html" class="nav-item">GCP Security</a>
+                        <a href="multi-cloud.html" class="nav-item">Multi-Cloud Strategy</a>
+                        <a href="cspm.html" class="nav-item">CSPM & CWPP</a>
+                    </div>
+                </div>
+
+                <!-- Module: References -->
+                <div class="nav-section" data-section="references">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                            <span>References</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../references/kql-cheatsheet.html" class="nav-item">KQL Cheat Sheet</a>
+                        <a href="../references/regex-patterns.html" class="nav-item">Regex Mastery</a>
+                        <a href="../references/windows-events.html" class="nav-item">Windows Event IDs</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <button class="mobile-menu-btn" aria-label="Toggle navigation">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="fundamentals.html">Cloud Security</a>
+                    <span class="separator">/</span>
+                    <span class="current">AWS Security</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>AWS Security</h1>
+                    <p class="subtitle">Comprehensive AWS security monitoring with CloudTrail, GuardDuty, IAM analysis, and detection engineering for cloud-native threats.</p>
+                </header>
+
+                <!-- AWS Security Architecture -->
+                <section class="content-section">
+                    <h2>AWS Security Architecture</h2>
+                    
+                    <p>AWS provides a comprehensive security stack that detection engineers must master. Understanding the relationships between services and their logging capabilities is essential for building effective detections.</p>
+
+                    <div class="grid-2">
+                        <div class="info-box">
+                            <h4>📊 Detection Services</h4>
+                            <ul>
+                                <li><strong>CloudTrail</strong> - API activity logging</li>
+                                <li><strong>GuardDuty</strong> - Threat detection</li>
+                                <li><strong>Security Hub</strong> - Centralized findings</li>
+                                <li><strong>Detective</strong> - Investigation graphs</li>
+                                <li><strong>Macie</strong> - Data classification</li>
+                                <li><strong>Inspector</strong> - Vulnerability scanning</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4>🛡️ Preventive Controls</h4>
+                            <ul>
+                                <li><strong>IAM</strong> - Identity management</li>
+                                <li><strong>Organizations SCPs</strong> - Guardrails</li>
+                                <li><strong>WAF</strong> - Web app protection</li>
+                                <li><strong>Shield</strong> - DDoS protection</li>
+                                <li><strong>Network Firewall</strong> - VPC protection</li>
+                                <li><strong>KMS</strong> - Key management</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>AWS Security Data Flow</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>AWS Security Architecture</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│                        AWS Security Architecture                          │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐                │
+│  │     EC2       │  │      S3       │  │    Lambda     │                │
+│  │  Workloads    │  │    Storage    │  │  Serverless   │                │
+│  └───────┬───────┘  └───────┬───────┘  └───────┬───────┘                │
+│          │                  │                  │                         │
+│          ▼                  ▼                  ▼                         │
+│  ┌─────────────────────────────────────────────────────┐                │
+│  │                    CloudTrail                        │                │
+│  │            (All API Activity Logging)                │                │
+│  └────────────────────────┬────────────────────────────┘                │
+│                           │                                              │
+│          ┌────────────────┼────────────────┐                            │
+│          ▼                ▼                ▼                            │
+│  ┌───────────────┐ ┌───────────────┐ ┌───────────────┐                 │
+│  │   GuardDuty   │ │  CloudWatch   │ │   S3 Bucket   │                 │
+│  │   (Threat     │ │    Logs       │ │   (Archive)   │                 │
+│  │   Detection)  │ │               │ │               │                 │
+│  └───────┬───────┘ └───────┬───────┘ └───────┬───────┘                 │
+│          │                 │                 │                          │
+│          ▼                 ▼                 ▼                          │
+│  ┌─────────────────────────────────────────────────────┐                │
+│  │                  Security Hub                        │                │
+│  │          (Aggregated Security Findings)              │                │
+│  └────────────────────────┬────────────────────────────┘                │
+│                           │                                              │
+│                           ▼                                              │
+│  ┌─────────────────────────────────────────────────────┐                │
+│  │                    SIEM Export                       │                │
+│  │         (Sentinel / Splunk / Chronicle)              │                │
+│  └─────────────────────────────────────────────────────┘                │
+│                                                                           │
+└─────────────────────────────────────────────────────────────────────────┘</code></pre>
+                    </div>
+                </section>
+
+                <!-- CloudTrail Deep Dive -->
+                <section class="content-section">
+                    <h2>CloudTrail Deep Dive</h2>
+                    
+                    <p>CloudTrail is the foundation of AWS security monitoring. It records API calls made to AWS services, providing the audit trail essential for detection engineering.</p>
+
+                    <h3>CloudTrail Event Structure</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>CloudTrail Event JSON</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>{
+    "eventVersion": "1.08",
+    "userIdentity": {
+        "type": "IAMUser",
+        "principalId": "AIDAXXXXXXXXXXXXXXXXX",
+        "arn": "arn:aws:iam::123456789012:user/admin",
+        "accountId": "123456789012",
+        "accessKeyId": "AKIAIOSFODNN7EXAMPLE",
+        "userName": "admin",
+        "sessionContext": {
+            "attributes": {
+                "mfaAuthenticated": "false",
+                "creationDate": "2024-01-15T10:30:00Z"
+            }
+        }
+    },
+    "eventTime": "2024-01-15T10:35:00Z",
+    "eventSource": "iam.amazonaws.com",
+    "eventName": "CreateAccessKey",
+    "awsRegion": "us-east-1",
+    "sourceIPAddress": "198.51.100.50",
+    "userAgent": "aws-cli/2.13.0 Python/3.11.4",
+    "requestParameters": {
+        "userName": "backdoor-user"
+    },
+    "responseElements": {
+        "accessKey": {
+            "accessKeyId": "AKIAIOSFODNN7NEWKEY",
+            "status": "Active",
+            "userName": "backdoor-user"
+        }
+    },
+    "requestID": "cb6f4d2f-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "eventID": "3b1f5e8a-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "readOnly": false,
+    "eventType": "AwsApiCall",
+    "managementEvent": true,
+    "recipientAccountId": "123456789012",
+    "eventCategory": "Management"
+}</code></pre>
+                    </div>
+
+                    <h3>Critical CloudTrail Fields</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Description</th>
+                                <th>Detection Use</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>userIdentity.type</code></td>
+                                <td>Identity type (Root, IAMUser, AssumedRole, etc.)</td>
+                                <td>Root account activity detection</td>
+                            </tr>
+                            <tr>
+                                <td><code>eventSource</code></td>
+                                <td>AWS service that processed request</td>
+                                <td>Service-specific monitoring</td>
+                            </tr>
+                            <tr>
+                                <td><code>eventName</code></td>
+                                <td>Specific API action called</td>
+                                <td>High-risk action detection</td>
+                            </tr>
+                            <tr>
+                                <td><code>sourceIPAddress</code></td>
+                                <td>IP address of caller</td>
+                                <td>Unusual location detection</td>
+                            </tr>
+                            <tr>
+                                <td><code>userAgent</code></td>
+                                <td>Client application identifier</td>
+                                <td>Unusual tooling detection</td>
+                            </tr>
+                            <tr>
+                                <td><code>errorCode</code></td>
+                                <td>Error if request failed</td>
+                                <td>Access denied patterns</td>
+                            </tr>
+                            <tr>
+                                <td><code>readOnly</code></td>
+                                <td>Whether event was read-only</td>
+                                <td>Focus on write operations</td>
+                            </tr>
+                            <tr>
+                                <td><code>mfaAuthenticated</code></td>
+                                <td>MFA status for session</td>
+                                <td>Non-MFA sensitive actions</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>CloudTrail Event Categories</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Management Events</h4>
+                            <p>Control plane operations on AWS resources. Always enabled by default.</p>
+                            <ul>
+                                <li>CreateUser, DeleteUser</li>
+                                <li>CreateBucket, DeleteBucket</li>
+                                <li>RunInstances, StopInstances</li>
+                                <li>PutBucketPolicy</li>
+                                <li>CreateSecurityGroup</li>
+                            </ul>
+                            <span class="badge badge-green">Detection Priority: High</span>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Data Events</h4>
+                            <p>Data plane operations. Additional cost, must be explicitly enabled.</p>
+                            <ul>
+                                <li>S3: GetObject, PutObject</li>
+                                <li>Lambda: Invoke</li>
+                                <li>DynamoDB: GetItem, PutItem</li>
+                                <li>EBS: Direct API calls</li>
+                            </ul>
+                            <span class="badge badge-yellow">Detection Priority: Medium</span>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Insights Events</h4>
+                            <p>Anomalous API activity detected by CloudTrail Insights.</p>
+                            <ul>
+                                <li>Unusual API call rates</li>
+                                <li>Unusual error rates</li>
+                                <li>Behavioral anomalies</li>
+                                <li>Volume-based detection</li>
+                            </ul>
+                            <span class="badge badge-cyan">Detection Priority: High</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Critical AWS Detections -->
+                <section class="content-section">
+                    <h2>Critical AWS Detections</h2>
+
+                    <h3>IAM Credential Compromise</h3>
+                    <div class="info-box warning">
+                        <h4>⚠️ MITRE ATT&CK: T1078.004 - Valid Accounts: Cloud Accounts</h4>
+                        <p>Compromised IAM credentials are the most common entry point for AWS attacks. Monitor for credential creation, unusual usage patterns, and privilege escalation.</p>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: New Access Key Creation</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Sentinel KQL - New IAM Access Key Creation
+AWSCloudTrail
+| where EventName == "CreateAccessKey"
+| extend TargetUser = tostring(parse_json(RequestParameters).userName)
+| extend CreatedKeyId = tostring(parse_json(ResponseElements).accessKey.accessKeyId)
+| project 
+    TimeGenerated,
+    UserIdentityArn,
+    UserIdentityUserName,
+    TargetUser,
+    CreatedKeyId,
+    SourceIpAddress,
+    UserAgent,
+    AWSRegion,
+    RecipientAccountId
+| where UserIdentityUserName != TargetUser  // User creating key for different user
+| extend AlertSeverity = case(
+    TargetUser contains "admin", "High",
+    TargetUser contains "service", "High",
+    "Medium"
+)</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: Console Login Without MFA</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Sentinel KQL - Console Login Without MFA
+AWSCloudTrail
+| where EventName == "ConsoleLogin"
+| extend LoginResult = tostring(parse_json(ResponseElements).ConsoleLogin)
+| extend MFAUsed = tostring(parse_json(AdditionalEventData).MFAUsed)
+| where LoginResult == "Success"
+| where MFAUsed != "Yes"
+| project 
+    TimeGenerated,
+    UserIdentityArn,
+    UserIdentityUserName,
+    SourceIpAddress,
+    UserAgent,
+    AWSRegion,
+    MFAUsed
+| extend 
+    GeoInfo = geo_info_from_ip_address(SourceIpAddress),
+    AlertSeverity = "High"</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: Root Account Usage</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Sentinel KQL - Root Account Activity
+AWSCloudTrail
+| where UserIdentityType == "Root"
+| where EventName !in ("ConsoleLogin")  // Separate detection for root logins
+| project 
+    TimeGenerated,
+    EventName,
+    EventSource,
+    SourceIpAddress,
+    UserAgent,
+    AWSRegion,
+    ErrorCode,
+    ErrorMessage,
+    RequestParameters
+| extend AlertSeverity = "Critical"
+| extend Description = strcat("Root account performed: ", EventName, " on ", EventSource)</code></pre>
+                    </div>
+
+                    <h3>Privilege Escalation Patterns</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: IAM Policy Attachment for Privilege Escalation</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Sentinel KQL - Privilege Escalation via Policy Attachment
+let HighPrivilegePolicies = dynamic([
+    "AdministratorAccess",
+    "IAMFullAccess",
+    "PowerUserAccess",
+    "SecurityAudit",
+    "arn:aws:iam::aws:policy/AdministratorAccess"
+]);
+AWSCloudTrail
+| where EventName in ("AttachUserPolicy", "AttachRolePolicy", "AttachGroupPolicy", 
+                       "PutUserPolicy", "PutRolePolicy", "PutGroupPolicy")
+| extend PolicyArn = coalesce(
+    tostring(parse_json(RequestParameters).policyArn),
+    tostring(parse_json(RequestParameters).policyName)
+)
+| where PolicyArn has_any (HighPrivilegePolicies) or PolicyArn contains "Admin"
+| extend TargetPrincipal = coalesce(
+    tostring(parse_json(RequestParameters).userName),
+    tostring(parse_json(RequestParameters).roleName),
+    tostring(parse_json(RequestParameters).groupName)
+)
+| project 
+    TimeGenerated,
+    EventName,
+    UserIdentityArn,
+    SourceIpAddress,
+    PolicyArn,
+    TargetPrincipal,
+    AWSRegion
+| extend AlertSeverity = "High"</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: STS AssumeRole to Privileged Roles</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Sentinel KQL - Suspicious Role Assumption
+AWSCloudTrail
+| where EventName == "AssumeRole"
+| where ErrorCode == ""  // Successful assumption only
+| extend AssumedRoleArn = tostring(parse_json(RequestParameters).roleArn)
+| extend AssumedRoleName = extract(@"role/([^/]+)$", 1, AssumedRoleArn)
+| where AssumedRoleName has_any ("admin", "Admin", "root", "privileged", "break-glass")
+// Baseline: exclude known automation
+| where UserIdentityArn !contains "automation"
+| where UserIdentityArn !contains "cicd"
+| project 
+    TimeGenerated,
+    UserIdentityArn,
+    UserIdentityType,
+    AssumedRoleArn,
+    AssumedRoleName,
+    SourceIpAddress,
+    UserAgent,
+    AWSRegion
+| extend AlertSeverity = "High"</code></pre>
+                    </div>
+
+                    <h3>Security Control Tampering</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: CloudTrail Logging Tampering</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Sentinel KQL - CloudTrail Tampering
+AWSCloudTrail
+| where EventName in (
+    "StopLogging",
+    "DeleteTrail", 
+    "UpdateTrail",
+    "PutEventSelectors",
+    "DeleteEventDataStore",
+    "StopEventDataStoreIngestion"
+)
+| extend TrailName = coalesce(
+    tostring(parse_json(RequestParameters).name),
+    tostring(parse_json(RequestParameters).trailName)
+)
+| project 
+    TimeGenerated,
+    EventName,
+    UserIdentityArn,
+    SourceIpAddress,
+    TrailName,
+    RequestParameters,
+    AWSRegion,
+    ErrorCode
+| extend AlertSeverity = "Critical"
+| extend MITRE = "T1562.008 - Impair Defenses: Disable Cloud Logs"</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: GuardDuty Tampering</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Sentinel KQL - GuardDuty Disabled or Modified
+AWSCloudTrail
+| where EventSource == "guardduty.amazonaws.com"
+| where EventName in (
+    "DeleteDetector",
+    "DisassociateFromMasterAccount",
+    "DisassociateMembers",
+    "StopMonitoringMembers",
+    "UpdateDetector",
+    "DeleteIPSet",
+    "DeleteThreatIntelSet",
+    "ArchiveFindings",
+    "CreateFilter"  // Could be used to suppress findings
+)
+| project 
+    TimeGenerated,
+    EventName,
+    UserIdentityArn,
+    SourceIpAddress,
+    RequestParameters,
+    AWSRegion
+| extend AlertSeverity = case(
+    EventName in ("DeleteDetector", "StopMonitoringMembers"), "Critical",
+    EventName == "ArchiveFindings", "High",
+    "Medium"
+)</code></pre>
+                    </div>
+
+                    <h3>Data Exfiltration Detection</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: S3 Bucket Made Public</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Sentinel KQL - S3 Public Access Configuration
+AWSCloudTrail
+| where EventSource == "s3.amazonaws.com"
+| where EventName in (
+    "PutBucketAcl",
+    "PutBucketPolicy",
+    "PutBucketPublicAccessBlock",
+    "DeleteBucketPublicAccessBlock"
+)
+| extend BucketName = tostring(parse_json(RequestParameters).bucketName)
+| extend RequestParamsStr = tostring(RequestParameters)
+// Detect public ACL grants
+| where RequestParamsStr has_any (
+    "AllUsers",
+    "AuthenticatedUsers",
+    "http://acs.amazonaws.com/groups/global/AllUsers",
+    "public-read",
+    "public-read-write"
+)
+    or EventName == "DeleteBucketPublicAccessBlock"
+| project 
+    TimeGenerated,
+    EventName,
+    UserIdentityArn,
+    BucketName,
+    SourceIpAddress,
+    RequestParameters,
+    AWSRegion
+| extend AlertSeverity = "Critical"
+| extend MITRE = "T1530 - Data from Cloud Storage Object"</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: Unusual S3 Data Transfer</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Sentinel KQL - S3 Mass Download Detection (requires Data Events)
+AWSCloudTrail
+| where EventSource == "s3.amazonaws.com"
+| where EventName == "GetObject"
+| extend BucketName = tostring(parse_json(RequestParameters).bucketName)
+| summarize 
+    ObjectCount = count(),
+    UniqueBuckets = dcount(BucketName),
+    Buckets = make_set(BucketName, 10)
+    by UserIdentityArn, SourceIpAddress, bin(TimeGenerated, 1h)
+| where ObjectCount > 100  // Threshold: adjust based on baseline
+| extend AlertSeverity = case(
+    ObjectCount > 1000, "Critical",
+    ObjectCount > 500, "High",
+    "Medium"
+)
+| project 
+    TimeGenerated,
+    UserIdentityArn,
+    SourceIpAddress,
+    ObjectCount,
+    UniqueBuckets,
+    Buckets,
+    AlertSeverity</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: EC2 Snapshot Shared Externally</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Sentinel KQL - EBS Snapshot Shared to External Account
+AWSCloudTrail
+| where EventName == "ModifySnapshotAttribute"
+| extend SnapshotId = tostring(parse_json(RequestParameters).snapshotId)
+| extend AddedAccounts = parse_json(RequestParameters).createVolumePermission.add.items
+| mv-expand AddedAccount = AddedAccounts
+| extend SharedToAccount = tostring(AddedAccount.userId)
+| extend SharedToGroup = tostring(AddedAccount.group)
+// Alert on shares to external accounts or "all" (public)
+| where SharedToAccount != RecipientAccountId 
+    or SharedToGroup == "all"
+| project 
+    TimeGenerated,
+    UserIdentityArn,
+    SourceIpAddress,
+    SnapshotId,
+    SharedToAccount,
+    SharedToGroup,
+    RecipientAccountId,
+    AWSRegion
+| extend AlertSeverity = case(
+    SharedToGroup == "all", "Critical",
+    "High"
+)
+| extend MITRE = "T1537 - Transfer Data to Cloud Account"</code></pre>
+                    </div>
+                </section>
+
+                <!-- GuardDuty Integration -->
+                <section class="content-section">
+                    <h2>GuardDuty Integration</h2>
+
+                    <p>Amazon GuardDuty provides managed threat detection using machine learning, anomaly detection, and integrated threat intelligence. Effective detection engineering requires understanding GuardDuty findings and building complementary detections.</p>
+
+                    <h3>GuardDuty Finding Categories</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Finding Types</th>
+                                <th>Detection Source</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>IAM</strong></td>
+                                <td>CredentialAccess, Persistence, PrivilegeEscalation</td>
+                                <td>CloudTrail events</td>
+                            </tr>
+                            <tr>
+                                <td><strong>S3</strong></td>
+                                <td>Exfiltration, Policy, UnauthorizedAccess</td>
+                                <td>S3 data events</td>
+                            </tr>
+                            <tr>
+                                <td><strong>EC2</strong></td>
+                                <td>Backdoor, CryptoCurrency, Trojan, UnauthorizedAccess</td>
+                                <td>VPC Flow Logs, DNS Logs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Kubernetes</strong></td>
+                                <td>Execution, CredentialAccess, PrivilegeEscalation</td>
+                                <td>EKS audit logs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>RDS</strong></td>
+                                <td>CredentialAccess, Discovery</td>
+                                <td>RDS login activity</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lambda</strong></td>
+                                <td>CryptoCurrency, UnauthorizedAccess</td>
+                                <td>Lambda invocation logs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Malware</strong></td>
+                                <td>Execution via EBS scans</td>
+                                <td>Malware Protection scans</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>High-Priority GuardDuty Findings</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>GuardDuty Finding Structure</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>{
+    "schemaVersion": "2.0",
+    "accountId": "123456789012",
+    "region": "us-east-1",
+    "partition": "aws",
+    "id": "12b34567890123456789012345678901",
+    "arn": "arn:aws:guardduty:us-east-1:123456789012:detector/...",
+    "type": "UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration.OutsideAWS",
+    "resource": {
+        "resourceType": "AccessKey",
+        "accessKeyDetails": {
+            "accessKeyId": "ASIAXXXXXXXXXXX",
+            "principalId": "AIDAXXXXXXXXXXXXXXXXX",
+            "userType": "IAMUser",
+            "userName": "developer"
+        }
+    },
+    "service": {
+        "serviceName": "guardduty",
+        "detectorId": "12b34567890123456789012345678901",
+        "action": {
+            "actionType": "AWS_API_CALL",
+            "awsApiCallAction": {
+                "api": "DescribeInstances",
+                "serviceName": "ec2.amazonaws.com",
+                "callerType": "Remote IP",
+                "remoteIpDetails": {
+                    "ipAddressV4": "198.51.100.50",
+                    "organization": {
+                        "asn": "12345",
+                        "asnOrg": "Suspicious ISP"
+                    },
+                    "country": {
+                        "countryName": "Russia"
+                    }
+                }
+            }
+        },
+        "evidence": {
+            "threatIntelligenceDetails": [{
+                "threatListName": "ProofPoint",
+                "threatNames": ["Scanner", "Bruteforce"]
+            }]
+        }
+    },
+    "severity": 8,
+    "title": "Credentials for IAM user developer are being exfiltrated",
+    "description": "Credentials for user developer are being used from external IP...",
+    "createdAt": "2024-01-15T10:30:00.000Z",
+    "updatedAt": "2024-01-15T10:35:00.000Z"
+}</code></pre>
+                    </div>
+
+                    <div class="info-box danger">
+                        <h4>🚨 Critical GuardDuty Findings Requiring Immediate Response</h4>
+                        <ul>
+                            <li><strong>InstanceCredentialExfiltration.OutsideAWS</strong> - EC2 role credentials used from external IP</li>
+                            <li><strong>IAMUser/AnomalousBehavior</strong> - ML-detected unusual API activity</li>
+                            <li><strong>Backdoor:EC2/C&CActivity</strong> - Instance communicating with C2 server</li>
+                            <li><strong>CryptoCurrency:EC2/BitcoinTool</strong> - Crypto mining detected</li>
+                            <li><strong>Trojan:EC2/PhishingDomainRequest</strong> - Instance contacting phishing domain</li>
+                            <li><strong>Policy:S3/BucketAnonymousAccessGranted</strong> - S3 bucket made public</li>
+                        </ul>
+                    </div>
+
+                    <h3>GuardDuty Finding Correlation</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Sentinel KQL - GuardDuty Critical Findings Alert</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Process GuardDuty findings from Security Hub or direct export
+AWSGuardDuty
+| where Severity >= 7  // High and Critical
+| where FindingType has_any (
+    "CredentialExfiltration",
+    "AnomalousBehavior",
+    "Backdoor",
+    "CryptoCurrency",
+    "Trojan",
+    "BucketAnonymousAccessGranted"
+)
+| extend 
+    ActionType = tostring(Service.action.actionType),
+    RemoteIP = tostring(Service.action.awsApiCallAction.remoteIpDetails.ipAddressV4),
+    API = tostring(Service.action.awsApiCallAction.api),
+    ResourceType = tostring(Resource.resourceType)
+| project 
+    TimeGenerated,
+    FindingType,
+    Severity,
+    Title,
+    Description,
+    AccountId,
+    Region,
+    ResourceType,
+    ActionType,
+    RemoteIP,
+    API
+| extend AlertSeverity = case(
+    Severity >= 8, "Critical",
+    Severity >= 7, "High",
+    "Medium"
+)</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Correlate GuardDuty with CloudTrail</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Enrich GuardDuty findings with CloudTrail context
+let GuardDutyAlerts = AWSGuardDuty
+| where Severity >= 7
+| extend 
+    PrincipalId = tostring(Resource.accessKeyDetails.principalId),
+    AlertTime = TimeGenerated
+| project AlertTime, FindingType, PrincipalId, Severity;
+//
+AWSCloudTrail
+| where TimeGenerated >= ago(24h)
+| join kind=inner GuardDutyAlerts on $left.UserIdentityPrincipalId == $right.PrincipalId
+| where TimeGenerated between (AlertTime - 1h .. AlertTime + 1h)
+| summarize 
+    EventCount = count(),
+    UniqueAPIs = dcount(EventName),
+    APIs = make_set(EventName, 20),
+    Regions = make_set(AWSRegion),
+    IPs = make_set(SourceIpAddress)
+    by PrincipalId, FindingType, bin(AlertTime, 1h)
+| extend Context = strcat("User performed ", EventCount, " actions across ", UniqueAPIs, " unique APIs")</code></pre>
+                    </div>
+                </section>
+
+                <!-- AWS Attack Patterns -->
+                <section class="content-section">
+                    <h2>AWS Attack Patterns & Detection</h2>
+
+                    <h3>Attack Pattern: SSRF to IMDS</h3>
+                    <div class="info-box warning">
+                        <h4>⚠️ Instance Metadata Service (IMDS) Exploitation</h4>
+                        <p>Attackers exploit SSRF vulnerabilities to access EC2 instance metadata at 169.254.169.254, stealing IAM role credentials. IMDSv2 requires session tokens, making exploitation harder.</p>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: IMDS Credential Theft Indicators</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detect stolen EC2 role credentials used from unusual location
+AWSCloudTrail
+| where UserIdentityType == "AssumedRole"
+| where UserIdentityArn contains ":assumed-role/"
+// EC2 instance roles typically have specific patterns
+| extend RoleName = extract(@"assumed-role/([^/]+)/", 1, UserIdentityArn)
+| extend InstanceId = extract(@"assumed-role/[^/]+/(.+)$", 1, UserIdentityArn)
+// Flag if credentials used from non-AWS IP (not 169.254.169.254 range)
+| where SourceIpAddress !startswith "169.254."
+| where SourceIpAddress !in ("AWS Internal")
+// Check if this is unusual for this role
+| summarize 
+    UniqueIPs = dcount(SourceIpAddress),
+    IPs = make_set(SourceIpAddress, 10),
+    EventCount = count()
+    by RoleName, InstanceId, bin(TimeGenerated, 1h)
+| where UniqueIPs > 1  // Role credentials used from multiple IPs
+| extend AlertSeverity = "High"
+| extend MITRE = "T1552.005 - Cloud Instance Metadata API"</code></pre>
+                    </div>
+
+                    <h3>Attack Pattern: Lambda Persistence</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: Lambda Function Backdoor</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detect suspicious Lambda modifications
+AWSCloudTrail
+| where EventSource == "lambda.amazonaws.com"
+| where EventName in (
+    "CreateFunction",
+    "UpdateFunctionCode",
+    "UpdateFunctionConfiguration",
+    "AddPermission",
+    "CreateEventSourceMapping"
+)
+| extend FunctionName = tostring(parse_json(RequestParameters).functionName)
+| extend Runtime = tostring(parse_json(RequestParameters).runtime)
+| extend Handler = tostring(parse_json(RequestParameters).handler)
+// Flag unusual patterns
+| extend SuspiciousIndicators = case(
+    // Function with external layer
+    RequestParameters has "arn:aws:lambda" and RequestParameters !has RecipientAccountId, "External layer",
+    // Suspicious runtime for account
+    Runtime in ("python2.7", "nodejs8.10"), "Deprecated runtime",
+    // Public invoke permission
+    RequestParameters has '"Principal":"*"', "Public invoke",
+    ""
+)
+| where isnotempty(SuspiciousIndicators)
+| project 
+    TimeGenerated,
+    EventName,
+    UserIdentityArn,
+    FunctionName,
+    Runtime,
+    SuspiciousIndicators,
+    SourceIpAddress,
+    AWSRegion
+| extend AlertSeverity = "High"</code></pre>
+                    </div>
+
+                    <h3>Attack Pattern: Cross-Account Access Abuse</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: Suspicious Cross-Account Role Assumption</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Monitor cross-account role assumptions
+AWSCloudTrail
+| where EventName == "AssumeRole"
+| where ErrorCode == ""
+| extend AssumedRoleArn = tostring(parse_json(RequestParameters).roleArn)
+| extend AssumedRoleAccount = extract(@"arn:aws:iam::(\d+):role", 1, AssumedRoleArn)
+| extend SourceAccount = RecipientAccountId
+// Cross-account: target account differs from source
+| where AssumedRoleAccount != SourceAccount
+// Build baseline of known cross-account relationships
+| where AssumedRoleAccount !in (
+    "111111111111",  // Known partner account
+    "222222222222"   // Known shared services account
+)
+| project 
+    TimeGenerated,
+    UserIdentityArn,
+    SourceAccount,
+    AssumedRoleAccount,
+    AssumedRoleArn,
+    SourceIpAddress,
+    UserAgent,
+    AWSRegion
+| extend AlertSeverity = "High"
+| extend MITRE = "T1550.001 - Use Alternate Authentication Material"</code></pre>
+                    </div>
+
+                    <h3>Attack Pattern: Secrets Manager Theft</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: Unusual Secrets Access</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detect mass secrets enumeration or theft
+AWSCloudTrail
+| where EventSource == "secretsmanager.amazonaws.com"
+| where EventName in ("GetSecretValue", "ListSecrets", "DescribeSecret")
+| extend SecretId = tostring(parse_json(RequestParameters).secretId)
+| summarize 
+    SecretsAccessed = dcount(SecretId),
+    SecretsList = make_set(SecretId, 20),
+    GetSecretCount = countif(EventName == "GetSecretValue"),
+    ListCount = countif(EventName == "ListSecrets")
+    by UserIdentityArn, SourceIpAddress, bin(TimeGenerated, 15m)
+// Threshold: adjust based on normal behavior
+| where SecretsAccessed > 5 or ListCount > 0
+| extend AlertSeverity = case(
+    SecretsAccessed > 20, "Critical",
+    SecretsAccessed > 10, "High",
+    "Medium"
+)
+| extend MITRE = "T1555 - Credentials from Password Stores"</code></pre>
+                    </div>
+                </section>
+
+                <!-- Security Hub & Compliance -->
+                <section class="content-section">
+                    <h2>Security Hub & Compliance Monitoring</h2>
+
+                    <p>AWS Security Hub aggregates findings from multiple security services and enables compliance monitoring against frameworks like CIS AWS Benchmarks, PCI DSS, and NIST.</p>
+
+                    <h3>Security Hub Finding Sources</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>AWS Native</h4>
+                            <ul>
+                                <li>GuardDuty</li>
+                                <li>Inspector</li>
+                                <li>Macie</li>
+                                <li>IAM Access Analyzer</li>
+                                <li>Firewall Manager</li>
+                                <li>Systems Manager Patch</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Third Party</h4>
+                            <ul>
+                                <li>CrowdStrike</li>
+                                <li>Palo Alto Networks</li>
+                                <li>Qualys</li>
+                                <li>Rapid7</li>
+                                <li>Splunk</li>
+                                <li>Custom integrations</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Compliance Standards</h4>
+                            <ul>
+                                <li>CIS AWS Foundations</li>
+                                <li>PCI DSS</li>
+                                <li>AWS Foundational Best Practices</li>
+                                <li>NIST 800-53</li>
+                                <li>SOC 2</li>
+                                <li>Custom standards</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>Critical CIS Benchmark Controls</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Control</th>
+                                <th>Description</th>
+                                <th>Detection Method</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1.4</td>
+                                <td>No root access keys</td>
+                                <td>IAM credential report analysis</td>
+                            </tr>
+                            <tr>
+                                <td>1.5</td>
+                                <td>MFA enabled for root</td>
+                                <td>IAM GetAccountSummary</td>
+                            </tr>
+                            <tr>
+                                <td>1.10</td>
+                                <td>MFA for console users</td>
+                                <td>IAM credential report</td>
+                            </tr>
+                            <tr>
+                                <td>2.1.1</td>
+                                <td>S3 Block Public Access</td>
+                                <td>S3 GetPublicAccessBlock</td>
+                            </tr>
+                            <tr>
+                                <td>2.3.1</td>
+                                <td>RDS encryption enabled</td>
+                                <td>RDS DescribeDBInstances</td>
+                            </tr>
+                            <tr>
+                                <td>3.1</td>
+                                <td>CloudTrail enabled</td>
+                                <td>CloudTrail DescribeTrails</td>
+                            </tr>
+                            <tr>
+                                <td>3.7</td>
+                                <td>CloudTrail S3 logging</td>
+                                <td>S3 GetBucketLogging</td>
+                            </tr>
+                            <tr>
+                                <td>4.3</td>
+                                <td>No 0.0.0.0/0 SSH</td>
+                                <td>EC2 DescribeSecurityGroups</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection: Security Hub Failed Compliance Checks</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Monitor Security Hub findings for compliance drift
+AWSSecurityHub
+| where ComplianceStatus == "FAILED"
+| where RecordState == "ACTIVE"
+| extend 
+    ControlId = tostring(Compliance.SecurityControlId),
+    StandardsArn = tostring(ProductFields["StandardsArn"])
+| summarize 
+    FailedResources = dcount(ResourceId),
+    ResourceList = make_set(ResourceId, 10)
+    by ControlId, StandardsArn, GeneratorId
+| where FailedResources > 0
+| extend ComplianceFramework = case(
+    StandardsArn contains "cis-aws", "CIS AWS Foundations",
+    StandardsArn contains "pci-dss", "PCI DSS",
+    StandardsArn contains "aws-foundational", "AWS Best Practices",
+    "Other"
+)
+| project 
+    ComplianceFramework,
+    ControlId,
+    GeneratorId,
+    FailedResources,
+    ResourceList</code></pre>
+                    </div>
+                </section>
+
+                <!-- AWS-Specific Best Practices -->
+                <section class="content-section">
+                    <h2>AWS Detection Best Practices</h2>
+
+                    <div class="info-box tip">
+                        <h4>💡 CloudTrail Configuration</h4>
+                        <ul>
+                            <li>Enable multi-region trail for complete coverage</li>
+                            <li>Enable organization trail for all accounts</li>
+                            <li>Enable data events for S3 and Lambda (critical buckets)</li>
+                            <li>Enable CloudTrail Insights for anomaly detection</li>
+                            <li>Send logs to CloudWatch for real-time analysis</li>
+                            <li>Use S3 Object Lock for log integrity</li>
+                        </ul>
+                    </div>
+
+                    <h3>AWS Detection Checklist</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Must-Have Detections</h4>
+                            <ul>
+                                <li>✅ Root account activity</li>
+                                <li>✅ Console login without MFA</li>
+                                <li>✅ Access key creation</li>
+                                <li>✅ CloudTrail tampering</li>
+                                <li>✅ S3 public access</li>
+                                <li>✅ Security group 0.0.0.0/0</li>
+                                <li>✅ High-privilege policy attachment</li>
+                                <li>✅ GuardDuty critical findings</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Advanced Detections</h4>
+                            <ul>
+                                <li>🔍 IMDS credential theft</li>
+                                <li>🔍 Cross-account role abuse</li>
+                                <li>🔍 Lambda backdoor</li>
+                                <li>🔍 Secrets enumeration</li>
+                                <li>🔍 Snapshot sharing</li>
+                                <li>🔍 Unusual API patterns</li>
+                                <li>🔍 Network anomalies</li>
+                                <li>🔍 Kubernetes audit logs</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Compliance Monitoring</h4>
+                            <ul>
+                                <li>📋 CIS benchmark drift</li>
+                                <li>📋 Encryption at rest</li>
+                                <li>📋 Encryption in transit</li>
+                                <li>📋 Logging enabled</li>
+                                <li>📋 MFA enforcement</li>
+                                <li>📋 Public exposure</li>
+                                <li>📋 IAM password policy</li>
+                                <li>📋 Key rotation</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>Python: AWS Security Automation</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>AWS Security Scanner</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>#!/usr/bin/env python3
+"""AWS Security Configuration Scanner"""
+
+import boto3
+from datetime import datetime, timedelta
+import json
+
+class AWSSecurityScanner:
+    def __init__(self, region='us-east-1'):
+        self.region = region
+        self.iam = boto3.client('iam')
+        self.s3 = boto3.client('s3')
+        self.ec2 = boto3.client('ec2', region_name=region)
+        self.cloudtrail = boto3.client('cloudtrail', region_name=region)
+        self.findings = []
+    
+    def check_root_access_keys(self):
+        """CIS 1.4 - Ensure no root account access keys exist"""
+        summary = self.iam.get_account_summary()['SummaryMap']
+        if summary.get('AccountAccessKeysPresent', 0) > 0:
+            self.findings.append({
+                'severity': 'CRITICAL',
+                'control': 'CIS 1.4',
+                'finding': 'Root account has access keys',
+                'recommendation': 'Delete root access keys immediately'
+            })
+    
+    def check_mfa_root(self):
+        """CIS 1.5 - Ensure MFA is enabled for root account"""
+        summary = self.iam.get_account_summary()['SummaryMap']
+        if summary.get('AccountMFAEnabled', 0) != 1:
+            self.findings.append({
+                'severity': 'CRITICAL',
+                'control': 'CIS 1.5',
+                'finding': 'Root account MFA not enabled',
+                'recommendation': 'Enable MFA for root account'
+            })
+    
+    def check_s3_public_access(self):
+        """Check S3 buckets for public access"""
+        buckets = self.s3.list_buckets()['Buckets']
+        for bucket in buckets:
+            bucket_name = bucket['Name']
+            try:
+                pab = self.s3.get_public_access_block(Bucket=bucket_name)
+                config = pab['PublicAccessBlockConfiguration']
+                if not all([
+                    config.get('BlockPublicAcls', False),
+                    config.get('IgnorePublicAcls', False),
+                    config.get('BlockPublicPolicy', False),
+                    config.get('RestrictPublicBuckets', False)
+                ]):
+                    self.findings.append({
+                        'severity': 'HIGH',
+                        'control': 'CIS 2.1.1',
+                        'finding': f'Bucket {bucket_name} has incomplete public access block',
+                        'recommendation': 'Enable all S3 Block Public Access settings'
+                    })
+            except self.s3.exceptions.NoSuchPublicAccessBlockConfiguration:
+                self.findings.append({
+                    'severity': 'HIGH',
+                    'control': 'CIS 2.1.1',
+                    'finding': f'Bucket {bucket_name} has no public access block',
+                    'recommendation': 'Enable S3 Block Public Access'
+                })
+    
+    def check_security_groups_open(self):
+        """CIS 4.3 - Check for unrestricted SSH/RDP"""
+        security_groups = self.ec2.describe_security_groups()['SecurityGroups']
+        for sg in security_groups:
+            for permission in sg.get('IpPermissions', []):
+                from_port = permission.get('FromPort', 0)
+                to_port = permission.get('ToPort', 0)
+                
+                # Check for SSH (22) or RDP (3389) open to world
+                if from_port in [22, 3389] or (from_port <= 22 <= to_port) or (from_port <= 3389 <= to_port):
+                    for ip_range in permission.get('IpRanges', []):
+                        if ip_range.get('CidrIp') == '0.0.0.0/0':
+                            self.findings.append({
+                                'severity': 'HIGH',
+                                'control': 'CIS 4.3/4.4',
+                                'finding': f'Security group {sg["GroupId"]} allows unrestricted access to port {from_port}',
+                                'recommendation': 'Restrict inbound SSH/RDP to specific IPs'
+                            })
+    
+    def check_cloudtrail_enabled(self):
+        """CIS 3.1 - Ensure CloudTrail is enabled"""
+        trails = self.cloudtrail.describe_trails()['trailList']
+        if not trails:
+            self.findings.append({
+                'severity': 'CRITICAL',
+                'control': 'CIS 3.1',
+                'finding': 'No CloudTrail trails configured',
+                'recommendation': 'Enable CloudTrail for all regions'
+            })
+        else:
+            for trail in trails:
+                status = self.cloudtrail.get_trail_status(Name=trail['Name'])
+                if not status.get('IsLogging', False):
+                    self.findings.append({
+                        'severity': 'CRITICAL',
+                        'control': 'CIS 3.1',
+                        'finding': f'CloudTrail {trail["Name"]} is not logging',
+                        'recommendation': 'Enable logging on CloudTrail'
+                    })
+    
+    def check_iam_users_mfa(self):
+        """CIS 1.10 - Ensure MFA enabled for console users"""
+        users = self.iam.list_users()['Users']
+        for user in users:
+            mfa_devices = self.iam.list_mfa_devices(UserName=user['UserName'])['MFADevices']
+            # Check if user has console access
+            try:
+                self.iam.get_login_profile(UserName=user['UserName'])
+                has_console = True
+            except:
+                has_console = False
+            
+            if has_console and not mfa_devices:
+                self.findings.append({
+                    'severity': 'HIGH',
+                    'control': 'CIS 1.10',
+                    'finding': f'User {user["UserName"]} has console access without MFA',
+                    'recommendation': 'Enable MFA for all console users'
+                })
+    
+    def run_all_checks(self):
+        """Execute all security checks"""
+        print("Running AWS Security Scan...")
+        self.check_root_access_keys()
+        self.check_mfa_root()
+        self.check_s3_public_access()
+        self.check_security_groups_open()
+        self.check_cloudtrail_enabled()
+        self.check_iam_users_mfa()
+        return self.findings
+    
+    def generate_report(self):
+        """Generate security findings report"""
+        findings = self.run_all_checks()
+        
+        # Count by severity
+        severity_counts = {}
+        for f in findings:
+            sev = f['severity']
+            severity_counts[sev] = severity_counts.get(sev, 0) + 1
+        
+        report = {
+            'scan_time': datetime.utcnow().isoformat(),
+            'region': self.region,
+            'summary': severity_counts,
+            'total_findings': len(findings),
+            'findings': findings
+        }
+        
+        return json.dumps(report, indent=2)
+
+
+if __name__ == '__main__':
+    scanner = AWSSecurityScanner()
+    report = scanner.generate_report()
+    print(report)</code></pre>
+                    </div>
+                </section>
+
+                <!-- Interview Q&A -->
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What are the key differences between CloudTrail management events and data events?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Management events</strong> capture control plane operations—API calls that create, modify, or delete AWS resources. These include actions like CreateBucket, RunInstances, DeleteUser, and ModifySecurityGroup. They're enabled by default and captured at no additional cost per event.</p>
+                            <p><strong>Data events</strong> capture data plane operations—actions that interact with the data within resources. S3 GetObject/PutObject, Lambda Invoke, and DynamoDB GetItem are examples. Data events must be explicitly enabled and incur additional costs because they generate significantly higher volume.</p>
+                            <p><strong>For detection engineering:</strong> Management events are essential for security monitoring and should always be enabled. Data events should be selectively enabled for critical resources—sensitive S3 buckets, Lambda functions processing secrets, etc.—because the volume can be substantial but they're crucial for detecting data exfiltration.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How would you detect and respond to compromised AWS access keys?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Detection indicators:</strong></p>
+                            <ul>
+                                <li>API calls from unusual geographic locations or IPs</li>
+                                <li>Access during unusual hours for the user's pattern</li>
+                                <li>Access from IPs not in corporate ranges</li>
+                                <li>Unusual API calls for that user's role</li>
+                                <li>GuardDuty UnauthorizedAccess findings</li>
+                                <li>High volume of reconnaissance calls (List*, Describe*)</li>
+                            </ul>
+                            <p><strong>Response steps:</strong></p>
+                            <ol>
+                                <li>Immediately disable the compromised access key (don't delete—preserve for forensics)</li>
+                                <li>Review CloudTrail for all actions taken with that key</li>
+                                <li>Check if new access keys, users, or roles were created</li>
+                                <li>Look for privilege escalation attempts</li>
+                                <li>Check for data access (S3, Secrets Manager, etc.)</li>
+                                <li>Rotate any credentials the key may have accessed</li>
+                                <li>Create new key for legitimate user after investigation</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What is IMDSv2 and why is it important for security?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>IMDS</strong> (Instance Metadata Service) allows EC2 instances to access metadata about themselves, including IAM role credentials at 169.254.169.254/latest/meta-data/iam/security-credentials/.</p>
+                            <p><strong>IMDSv1</strong> uses simple GET requests with no authentication. This makes it vulnerable to SSRF attacks—if an attacker can make the application issue HTTP requests, they can steal IAM role credentials.</p>
+                            <p><strong>IMDSv2</strong> requires a session token obtained via PUT request with special headers. The token has limited TTL and cannot be used from outside the instance. This mitigates SSRF because:</p>
+                            <ul>
+                                <li>PUT requests are blocked by many proxies</li>
+                                <li>X-aws-ec2-metadata-token header must be present</li>
+                                <li>Token has TTL (max 6 hours)</li>
+                                <li>X-Forwarded-For header triggers token refusal</li>
+                            </ul>
+                            <p><strong>Detection tip:</strong> Monitor for IMDSv1 usage via CloudWatch metric MetadataNoTokenRejected. Enforce IMDSv2 via instance metadata options HttpTokens=required.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you build detection for AWS privilege escalation?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Key privilege escalation paths in AWS:</strong></p>
+                            <ul>
+                                <li><strong>IAM policy attachment:</strong> AttachUserPolicy, AttachRolePolicy with admin policies</li>
+                                <li><strong>Inline policy creation:</strong> PutUserPolicy, PutRolePolicy granting excessive permissions</li>
+                                <li><strong>Role assumption:</strong> sts:AssumeRole to privileged roles</li>
+                                <li><strong>PassRole abuse:</strong> Passing high-privilege role to EC2/Lambda</li>
+                                <li><strong>Access key creation:</strong> CreateAccessKey for users with higher privileges</li>
+                                <li><strong>Trust policy modification:</strong> UpdateAssumeRolePolicy to allow new principals</li>
+                            </ul>
+                            <p><strong>Detection approach:</strong></p>
+                            <ol>
+                                <li>Baseline normal IAM activities per user/role</li>
+                                <li>Alert on any admin policy attachment</li>
+                                <li>Monitor CreateAccessKey for cross-user creation</li>
+                                <li>Track AssumeRole to sensitive roles from unusual sources</li>
+                                <li>Use IAM Access Analyzer for continuous analysis</li>
+                                <li>Correlate multiple IAM events in short timeframe</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How would you architect AWS security monitoring for a large organization?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Multi-account strategy:</strong></p>
+                            <ul>
+                                <li><strong>Organization trail:</strong> Single CloudTrail capturing all accounts</li>
+                                <li><strong>Centralized log account:</strong> Dedicated account for security logs with restricted access</li>
+                                <li><strong>GuardDuty organization:</strong> Delegated admin with member accounts</li>
+                                <li><strong>Security Hub aggregation:</strong> Central account receives all findings</li>
+                            </ul>
+                            <p><strong>Log flow architecture:</strong></p>
+                            <ol>
+                                <li>CloudTrail → S3 (centralized) + CloudWatch Logs</li>
+                                <li>CloudWatch Logs → Kinesis Data Firehose → SIEM</li>
+                                <li>GuardDuty → EventBridge → Security Hub → SIEM</li>
+                                <li>VPC Flow Logs → S3/CloudWatch → SIEM</li>
+                            </ol>
+                            <p><strong>Key considerations:</strong></p>
+                            <ul>
+                                <li>Enable data events only for critical buckets (cost management)</li>
+                                <li>Use S3 lifecycle policies for log retention</li>
+                                <li>Enable S3 Object Lock for log integrity</li>
+                                <li>Implement SCPs to prevent CloudTrail/GuardDuty tampering</li>
+                                <li>Regular access reviews of log account permissions</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Navigation -->
+                <nav class="page-nav">
+                    <a href="fundamentals.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                        Cloud Security Fundamentals
+                    </a>
+                    <a href="azure-security.html" class="nav-link next">
+                        Azure Security
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Communication - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="incident-response">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                            <span>Incident Response</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="ir-support.html" class="nav-item">IR for Detection Engineers</a>
+                        <a href="forensics.html" class="nav-item">Forensic Fundamentals</a>
+                        <a href="soc-collaboration.html" class="nav-item">SOC Collaboration</a>
+                        <a href="communication.html" class="nav-item active">Incident Communication</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="ir-support.html">Incident Response</a>
+                    <span class="separator">/</span>
+                    <span class="current">Incident Communication</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>Incident Communication</h1>
+                    <p class="subtitle">Effective communication during security incidents—stakeholder management, status updates, executive briefings, and post-incident reporting.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Communication Stakeholders</h2>
+                    
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Stakeholder</th>
+                                <th>Needs to Know</th>
+                                <th>Communication Style</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>SOC Analysts</strong></td>
+                                <td>Technical details, IOCs, actions needed</td>
+                                <td>Technical, real-time, detailed</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IR Team</strong></td>
+                                <td>Scope, timeline, evidence, containment status</td>
+                                <td>Technical, structured updates</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IT Operations</strong></td>
+                                <td>Affected systems, required actions, downtime</td>
+                                <td>Technical, actionable</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Security Leadership</strong></td>
+                                <td>Business impact, risk, resource needs</td>
+                                <td>Summary, business-focused</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Executive Team</strong></td>
+                                <td>Business impact, customer impact, timeline</td>
+                                <td>High-level, non-technical</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Legal/Compliance</strong></td>
+                                <td>Regulatory implications, breach determination</td>
+                                <td>Formal, documented</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PR/Communications</strong></td>
+                                <td>Public messaging, customer notification</td>
+                                <td>Approved messaging only</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Status Update Templates</h2>
+
+                    <h3>Technical Status Update (SOC/IR)</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Technical Update Template</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>INCIDENT STATUS UPDATE - [INCIDENT-ID]
+Date/Time: [YYYY-MM-DD HH:MM UTC]
+Update #: [X]
+Severity: [Critical/High/Medium/Low]
+Status: [Investigating/Containing/Eradicating/Recovering]
+
+SUMMARY
+Brief description of current state and key developments.
+
+TIMELINE (Last 4 hours)
+- [HH:MM] Action taken / Finding discovered
+- [HH:MM] Action taken / Finding discovered
+- [HH:MM] Action taken / Finding discovered
+
+AFFECTED SYSTEMS
+- [System/Count]: [Status]
+- [System/Count]: [Status]
+
+INDICATORS OF COMPROMISE
+- IPs: [List]
+- Domains: [List]
+- Hashes: [List]
+
+CONTAINMENT STATUS
+☑ Affected hosts isolated
+☐ Malicious accounts disabled
+☐ Network segments blocked
+
+NEXT STEPS
+1. [Action] - Owner: [Name] - ETA: [Time]
+2. [Action] - Owner: [Name] - ETA: [Time]
+
+RESOURCES NEEDED
+- [Resource requirement]
+
+NEXT UPDATE: [Time] or upon significant development</code></pre>
+                    </div>
+
+                    <h3>Executive Status Update</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Executive Update Template</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>SECURITY INCIDENT BRIEFING
+Date: [Date]
+Incident: [Brief Name]
+Severity: [Critical/High/Medium]
+
+SITUATION
+[2-3 sentences describing what happened in business terms]
+
+BUSINESS IMPACT
+- Operations: [Impact description]
+- Customers: [Impact description]
+- Data: [Impact description]
+- Financial: [Estimated impact if known]
+
+CURRENT STATUS
+[1-2 sentences on where we are in response]
+
+ACTIONS TAKEN
+• [Key action 1]
+• [Key action 2]
+• [Key action 3]
+
+TIMELINE TO RESOLUTION
+Estimated: [Timeframe]
+
+WHAT WE NEED
+• [Decision or resource needed]
+
+NEXT UPDATE
+[When they'll hear from us next]
+
+---
+Questions: Contact [Name] at [Contact]</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Communication Channels</h2>
+
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Real-Time (War Room)</h4>
+                            <ul>
+                                <li>Dedicated Slack/Teams channel</li>
+                                <li>Video bridge for coordination</li>
+                                <li>Technical discussion and decisions</li>
+                                <li>Limit to active responders</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Scheduled Updates</h4>
+                            <ul>
+                                <li>Email for formal updates</li>
+                                <li>Regular cadence (hourly/daily)</li>
+                                <li>Stakeholder-appropriate detail</li>
+                                <li>Documented record</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Incident Management</h4>
+                            <ul>
+                                <li>Ticketing system (ServiceNow, Jira)</li>
+                                <li>Single source of truth</li>
+                                <li>Audit trail</li>
+                                <li>Compliance evidence</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="info-box warning">
+                        <h4>⚠️ Communication Security</h4>
+                        <ul>
+                            <li><strong>Assume compromise:</strong> Don't use potentially compromised systems</li>
+                            <li><strong>Out-of-band:</strong> Use separate channels (phone, personal devices)</li>
+                            <li><strong>Need-to-know:</strong> Limit detailed IOCs to responders</li>
+                            <li><strong>No speculation:</strong> Report facts, not assumptions</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Post-Incident Report</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Post-Incident Report Template</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code># POST-INCIDENT REPORT
+## Incident: [INCIDENT-ID] - [Brief Name]
+
+### Executive Summary
+[2-3 paragraph summary for leadership]
+
+### Incident Details
+| Field | Value |
+|-------|-------|
+| Incident ID | [ID] |
+| Severity | [Level] |
+| Detection Time | [DateTime] |
+| Containment Time | [DateTime] |
+| Resolution Time | [DateTime] |
+| Duration | [Hours] |
+| Detected By | [Detection method/rule] |
+
+### Timeline
+| Time (UTC) | Event |
+|------------|-------|
+| [Time] | Initial compromise (estimated) |
+| [Time] | Detection triggered |
+| [Time] | Investigation started |
+| [Time] | Containment achieved |
+| [Time] | Eradication complete |
+| [Time] | Recovery complete |
+
+### Attack Summary
+**Initial Access:** [How attacker got in]
+**Execution:** [What attacker did]
+**Impact:** [What was affected]
+
+### Technical Details
+**Affected Systems:**
+- [System list]
+
+**Indicators of Compromise:**
+- [IOC list]
+
+**MITRE ATT&CK Mapping:**
+- [Technique IDs and names]
+
+### Detection Analysis
+**What Worked:**
+- [Detection that fired]
+- [What enabled quick response]
+
+**Gaps Identified:**
+- [What we missed]
+- [Where detection was slow]
+
+### Response Analysis
+**Effective Actions:**
+- [What went well]
+
+**Areas for Improvement:**
+- [What could be better]
+
+### Recommendations
+| Priority | Recommendation | Owner | Due Date |
+|----------|----------------|-------|----------|
+| High | [Action] | [Name] | [Date] |
+| Medium | [Action] | [Name] | [Date] |
+
+### Lessons Learned
+1. [Key lesson]
+2. [Key lesson]
+3. [Key lesson]
+
+### Appendix
+- Forensic artifacts
+- Full IOC list
+- Communication log</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Detection Engineer's Role in Communication</h2>
+
+                    <div class="info-box tip">
+                        <h4>💡 How Detection Engineers Support IR Communication</h4>
+                        <ul>
+                            <li><strong>Alert context:</strong> Provide detection rule logic and why it fired</li>
+                            <li><strong>Historical data:</strong> Query for related activity and scope</li>
+                            <li><strong>IOC enrichment:</strong> Add threat intel context to indicators</li>
+                            <li><strong>Timeline generation:</strong> Build attack timeline from logs</li>
+                            <li><strong>Detection gaps:</strong> Identify what we missed and why</li>
+                            <li><strong>Improvement recommendations:</strong> New detections needed</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you communicate during a security incident?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Key principles:</strong></p>
+                            <ul>
+                                <li><strong>Audience-appropriate:</strong> Technical for SOC, business impact for executives</li>
+                                <li><strong>Regular cadence:</strong> Set expectations for update frequency</li>
+                                <li><strong>Facts not speculation:</strong> Report what we know, not what we think</li>
+                                <li><strong>Single source of truth:</strong> Centralized incident ticket</li>
+                                <li><strong>Out-of-band if needed:</strong> Don't use compromised channels</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What goes in a post-incident report?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Essential elements:</strong></p>
+                            <ul>
+                                <li>Executive summary (non-technical)</li>
+                                <li>Timeline of events</li>
+                                <li>Technical details (IOCs, affected systems)</li>
+                                <li>Detection analysis (what worked, gaps)</li>
+                                <li>Response analysis (effective actions, improvements)</li>
+                                <li>Recommendations with owners and dates</li>
+                                <li>Lessons learned</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="soc-collaboration.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        SOC Collaboration
+                    </a>
+                    <a href="../references/kql-cheatsheet.html" class="nav-link next">
+                        KQL Cheatsheet
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Models - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="log-analysis">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                            <span>Log Analysis</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item">Log Fundamentals</a>
+                        <a href="data-models.html" class="nav-item active">Data Models</a>
+                        <a href="parsing.html" class="nav-item">Log Parsing</a>
+                        <a href="endpoint-logs.html" class="nav-item">Endpoint Logs</a>
+                        <a href="network-logs.html" class="nav-item">Network Logs</a>
+                        <a href="identity-logs.html" class="nav-item">Identity Logs</a>
+                        <a href="cloud-logs.html" class="nav-item">Cloud Logs</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="fundamentals.html">Log Analysis</a>
+                    <span class="separator">/</span>
+                    <span class="current">Data Models</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>Security Data Models</h1>
+                    <p class="subtitle">Understanding SIEM data models—CIM, OCSF, ECS, and normalized schemas for detection engineering.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Why Data Models Matter</h2>
+                    
+                    <p>Data models normalize logs from different sources into a common schema, enabling:</p>
+                    <ul>
+                        <li>Writing detections that work across multiple log sources</li>
+                        <li>Consistent field names regardless of vendor</li>
+                        <li>Easier correlation between different data types</li>
+                        <li>Portable detection rules</li>
+                    </ul>
+                </section>
+
+                <section class="content-section">
+                    <h2>Common Data Models</h2>
+
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Platform</th>
+                                <th>Key Features</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>CIM</strong></td>
+                                <td>Splunk</td>
+                                <td>Common Information Model - Authentication, Network, Endpoint</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ASIM</strong></td>
+                                <td>Microsoft Sentinel</td>
+                                <td>Advanced SIEM Information Model - normalized parsers</td>
+                            </tr>
+                            <tr>
+                                <td><strong>OCSF</strong></td>
+                                <td>Open standard</td>
+                                <td>Open Cybersecurity Schema Framework - vendor neutral</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ECS</strong></td>
+                                <td>Elastic</td>
+                                <td>Elastic Common Schema - nested JSON structure</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Splunk CIM Example</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>SPL - Using CIM for Authentication</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Without CIM - vendor-specific field names
+index=windows EventCode=4625 
+| stats count by Account_Name, Source_Network_Address
+
+// With CIM - normalized field names
+| datamodel Authentication Successful_Authentication search
+| stats count by user, src_ip
+
+// CIM Authentication fields:
+// user, src_ip, dest, action, app, authentication_method
+
+// Works across: Windows, Linux, VPN, Cloud auth, etc.</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Microsoft Sentinel ASIM</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - ASIM Normalized Query</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Without ASIM - source-specific
+SecurityEvent
+| where EventID == 4625
+| project TimeGenerated, Account, IpAddress
+
+// With ASIM - normalized across sources
+imAuthentication
+| where EventResult == "Failure"
+| project TimeGenerated, TargetUsername, SrcIpAddr, EventProduct
+
+// ASIM schemas: imAuthentication, imNetworkSession, 
+//               imProcessCreate, imFileEvent, imDns</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>OCSF Categories</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>OCSF Event Categories</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>OCSF Category Structure:
+
+1. System Activity
+   ├── File System Activity (1001)
+   ├── Kernel Extension (1002)
+   ├── Memory Activity (1004)
+   └── Process Activity (1007)
+
+2. Findings
+   ├── Security Finding (2001)
+   └── Vulnerability Finding (2002)
+
+3. Identity & Access
+   ├── Authentication (3001)
+   ├── Authorization (3002)
+   └── Account Change (3003)
+
+4. Network Activity
+   ├── Network Activity (4001)
+   ├── HTTP Activity (4002)
+   ├── DNS Activity (4003)
+   └── Email Activity (4009)
+
+5. Discovery
+   └── Device Inventory (5001)</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What is a SIEM data model and why use it?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Data model:</strong> A normalized schema that maps vendor-specific field names to common field names.</p>
+                            <p><strong>Benefits:</strong></p>
+                            <ul>
+                                <li>Write one detection that works across multiple sources</li>
+                                <li>Easier correlation (user is always "user", not "Account_Name" vs "username")</li>
+                                <li>Portable rules between SIEMs (with standards like OCSF)</li>
+                            </ul>
+                            <p><strong>Examples:</strong> Splunk CIM, Sentinel ASIM, Elastic ECS, OCSF</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="fundamentals.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        Log Fundamentals
+                    </a>
+                    <a href="parsing.html" class="nav-link next">
+                        Log Parsing
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAP Log Types - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="sap-security">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                            <span>SAP Security</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="sap-overview.html" class="nav-item">SAP Overview</a>
+                        <a href="architecture.html" class="nav-item">Architecture</a>
+                        <a href="modules-services.html" class="nav-item">Modules & Services</a>
+                        <a href="security-fundamentals.html" class="nav-item">Security Fundamentals</a>
+                        <a href="log-types.html" class="nav-item active">Log Types</a>
+                        <a href="threat-detection.html" class="nav-item">Threat Detection</a>
+                        <a href="siem-integration.html" class="nav-item">SIEM Integration</a>
+                        <a href="compliance.html" class="nav-item">SAP Compliance</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="sap-overview.html">SAP Security</a>
+                    <span class="separator">/</span>
+                    <span class="current">Log Types</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>SAP Log Types</h1>
+                    <p class="subtitle">Understanding SAP security logs—Security Audit Log, System Log, Change Documents, and tables for SIEM integration.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Key SAP Logs</h2>
+                    
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Log Type</th>
+                                <th>Transaction</th>
+                                <th>Table</th>
+                                <th>Content</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Security Audit Log</strong></td>
+                                <td>SM20, RSAU_READ_LOG</td>
+                                <td>RSAU*</td>
+                                <td>Logins, failed auth, transaction starts</td>
+                            </tr>
+                            <tr>
+                                <td><strong>System Log</strong></td>
+                                <td>SM21</td>
+                                <td>SLOGVIEW</td>
+                                <td>System events, errors, warnings</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Change Documents</strong></td>
+                                <td>RSSCD100</td>
+                                <td>CDHDR, CDPOS</td>
+                                <td>Master data changes (users, vendors)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Table Logging</strong></td>
+                                <td>SCU3</td>
+                                <td>DBTABLOG</td>
+                                <td>Changes to logged tables</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Read Access Log</strong></td>
+                                <td>SRALMANAGER</td>
+                                <td>RAL*</td>
+                                <td>Sensitive data reads (GDPR)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Security Audit Log (SAL)</h2>
+
+                    <p>The Security Audit Log is the primary source for authentication and authorization events.</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Key SAL Event Classes</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>SECURITY AUDIT LOG EVENT CLASSES:
+
+Authentication Events:
+- AU1: Successful dialog logon
+- AU2: Successful RFC/CPIC logon
+- AUB: Successful HTTP logon (Fiori)
+- AU3: Failed logon (all types)
+- AU4: Successful logoff
+
+Authorization Events:
+- AUC: Transaction started
+- AUD: Report started
+- AUE: RFC function call
+- AUF: Authorization check failed
+
+User Administration:
+- AUI: User master changed
+- AUJ: User locked/unlocked
+- AUK: User deleted
+
+System Events:
+- AUM: System changed (profile parameters)
+- AUO: Debugging in production
+- AUW: RFC destination changed</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Change Documents</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Change Document Tables</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>CDHDR - Change Document Header
+├── OBJECTCLAS: Object class (USER, VENDOR, MATERIAL)
+├── OBJECTID: Object key (username, vendor number)
+├── CHANGENR: Change document number
+├── USERNAME: User who made change
+├── UDATE: Date of change
+└── UTIME: Time of change
+
+CDPOS - Change Document Items (Details)
+├── TABNAME: Table that changed
+├── FNAME: Field that changed
+├── VALUE_OLD: Previous value
+└── VALUE_NEW: New value
+
+Key Object Classes:
+- USER: User master changes (USR*)
+- VENDOR: Vendor master (LFA1)
+- KRED: Customer master
+- MATERIAL: Material master
+- BANF: Purchase requisition</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Log Configuration</h2>
+
+                    <div class="info-box warning">
+                        <h4>⚠️ SAL Must Be Enabled</h4>
+                        <p>Security Audit Log is NOT enabled by default. Check and configure via:</p>
+                        <ul>
+                            <li><strong>SM19:</strong> Configure audit profile</li>
+                            <li><strong>rsau/enable = 1:</strong> Profile parameter to enable</li>
+                            <li><strong>rsau/max_diskspace/local:</strong> Log file size</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What SAP logs would you send to SIEM?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Priority 1:</strong> Security Audit Log (authentication, authorization failures, sensitive transactions)</p>
+                            <p><strong>Priority 2:</strong> Change Documents (user changes, vendor master changes)</p>
+                            <p><strong>Priority 3:</strong> System Log (errors, critical events)</p>
+                            <p><strong>Priority 4:</strong> Table logging for critical tables (payment tables, config tables)</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="security-fundamentals.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        Security Fundamentals
+                    </a>
+                    <a href="threat-detection.html" class="nav-link next">
+                        Threat Detection
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

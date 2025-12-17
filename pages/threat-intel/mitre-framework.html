@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MITRE ATT&CK Deep Dive - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="threat-intel">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                            <span>Threat Intelligence</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item">TI Fundamentals</a>
+                        <a href="sources.html" class="nav-item">Intelligence Sources</a>
+                        <a href="ioc-management.html" class="nav-item">IOC Management</a>
+                        <a href="threat-hunting.html" class="nav-item">Threat Hunting Intro</a>
+                        <a href="hunting-methodology.html" class="nav-item">Hunting Methodology</a>
+                        <a href="hunting-techniques.html" class="nav-item">Hunting Techniques</a>
+                        <a href="hunting-queries.html" class="nav-item">Hunting Queries</a>
+                        <a href="mitre-framework.html" class="nav-item active">MITRE ATT&CK Deep Dive</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="fundamentals.html">Threat Intelligence</a>
+                    <span class="separator">/</span>
+                    <span class="current">MITRE ATT&CK Deep Dive</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>MITRE ATT&CK Deep Dive</h1>
+                    <p class="subtitle">Comprehensive coverage of MITRE ATT&CK framework—mapping detections, measuring coverage, and operationalizing for detection engineering.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Framework Structure</h2>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>ATT&CK Hierarchy</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>ATT&CK Framework Structure:
+
+MATRICES (Environment-specific)
+├── Enterprise (Windows, macOS, Linux, Cloud, Network, Containers)
+├── Mobile (iOS, Android)
+└── ICS (Industrial Control Systems)
+
+TACTICS (14 in Enterprise - The "Why")
+├── Reconnaissance          TA0043
+├── Resource Development    TA0042
+├── Initial Access          TA0001
+├── Execution              TA0002
+├── Persistence            TA0003
+├── Privilege Escalation   TA0004
+├── Defense Evasion        TA0005
+├── Credential Access      TA0006
+├── Discovery              TA0007
+├── Lateral Movement       TA0008
+├── Collection             TA0009
+├── Command and Control    TA0011
+├── Exfiltration           TA0010
+└── Impact                 TA0040
+
+TECHNIQUES (The "How")
+├── T1059 - Command and Scripting Interpreter
+│   └── Sub-techniques:
+│       ├── T1059.001 - PowerShell
+│       ├── T1059.003 - Windows Command Shell
+│       └── T1059.005 - Visual Basic
+└── ...
+
+PROCEDURES (Specific implementations)
+└── APT29 uses T1059.001 by executing encoded PowerShell...</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Detection Coverage Mapping</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection Rule to ATT&CK Mapping</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code># detection_mappings.yaml
+detections:
+  - id: DET-001
+    name: "Encoded PowerShell Execution"
+    mitre:
+      tactics:
+        - TA0002  # Execution
+        - TA0005  # Defense Evasion
+      techniques:
+        - T1059.001  # PowerShell
+        - T1027      # Obfuscated Files
+    data_sources:
+      - Process Creation
+      - Script Execution
+    coverage_level: high  # high/medium/low
+    
+  - id: DET-002
+    name: "LSASS Memory Access"
+    mitre:
+      tactics:
+        - TA0006  # Credential Access
+      techniques:
+        - T1003.001  # LSASS Memory
+    data_sources:
+      - Process Access
+    coverage_level: high
+
+  - id: DET-003
+    name: "Scheduled Task Persistence"
+    mitre:
+      tactics:
+        - TA0003  # Persistence
+        - TA0004  # Privilege Escalation
+      techniques:
+        - T1053.005  # Scheduled Task
+    data_sources:
+      - Scheduled Job Creation
+      - Windows Event Log
+    coverage_level: medium</code></pre>
+                    </div>
+
+                    <h3>Coverage Calculation</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Python - Calculate ATT&CK Coverage</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>import yaml
+from collections import defaultdict
+
+def calculate_coverage(detections_file: str) -> dict:
+    """Calculate MITRE ATT&CK coverage from detection mappings"""
+    
+    with open(detections_file) as f:
+        data = yaml.safe_load(f)
+    
+    # Total techniques in Enterprise ATT&CK (approximate)
+    TOTAL_TECHNIQUES = 201
+    TOTAL_SUB_TECHNIQUES = 424
+    
+    covered_techniques = set()
+    coverage_by_tactic = defaultdict(set)
+    
+    for detection in data['detections']:
+        for technique in detection['mitre']['techniques']:
+            covered_techniques.add(technique)
+            for tactic in detection['mitre']['tactics']:
+                coverage_by_tactic[tactic].add(technique)
+    
+    # Calculate coverage
+    technique_coverage = len(covered_techniques) / TOTAL_TECHNIQUES * 100
+    
+    return {
+        'total_detections': len(data['detections']),
+        'unique_techniques_covered': len(covered_techniques),
+        'technique_coverage_pct': round(technique_coverage, 1),
+        'coverage_by_tactic': {
+            tactic: len(techniques) 
+            for tactic, techniques in coverage_by_tactic.items()
+        },
+        'uncovered_priorities': identify_gaps(covered_techniques)
+    }
+
+def identify_gaps(covered: set) -> list:
+    """Identify high-priority uncovered techniques"""
+    # Top techniques by prevalence (from threat reports)
+    priority_techniques = [
+        'T1059.001', 'T1078', 'T1566', 'T1027', 'T1053',
+        'T1021', 'T1003', 'T1486', 'T1047', 'T1105'
+    ]
+    return [t for t in priority_techniques if t not in covered]</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Data Source Requirements</h2>
+
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Data Source</th>
+                                <th>Techniques Enabled</th>
+                                <th>Platform</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Process Creation</strong></td>
+                                <td>T1059, T1053, T1204, T1047</td>
+                                <td>Sysmon 1, MDE, 4688</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Network Connection</strong></td>
+                                <td>T1071, T1095, T1571</td>
+                                <td>Sysmon 3, Firewall, NDR</td>
+                            </tr>
+                            <tr>
+                                <td><strong>File Creation</strong></td>
+                                <td>T1105, T1027, T1074</td>
+                                <td>Sysmon 11, MDE</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Registry</strong></td>
+                                <td>T1547, T1112, T1546</td>
+                                <td>Sysmon 12/13/14, MDE</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Authentication</strong></td>
+                                <td>T1078, T1110, T1558</td>
+                                <td>4624/4625/4769, Entra ID</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Script Execution</strong></td>
+                                <td>T1059.001, T1059.005</td>
+                                <td>PowerShell 4104, AMSI</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>ATT&CK Navigator</h2>
+
+                    <p>Use ATT&CK Navigator to visualize and share detection coverage.</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Navigator Layer JSON</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>{
+    "name": "Detection Coverage",
+    "versions": {
+        "attack": "14",
+        "navigator": "4.9.1",
+        "layer": "4.5"
+    },
+    "domain": "enterprise-attack",
+    "description": "Current detection coverage",
+    "techniques": [
+        {
+            "techniqueID": "T1059.001",
+            "color": "#31a354",
+            "comment": "DET-001: Encoded PowerShell",
+            "score": 100
+        },
+        {
+            "techniqueID": "T1003.001",
+            "color": "#31a354",
+            "comment": "DET-002: LSASS Access",
+            "score": 100
+        },
+        {
+            "techniqueID": "T1053.005",
+            "color": "#addd8e",
+            "comment": "DET-003: Medium coverage",
+            "score": 50
+        }
+    ],
+    "gradient": {
+        "colors": ["#ff6666", "#ffe766", "#8ec843"],
+        "minValue": 0,
+        "maxValue": 100
+    },
+    "legendItems": [
+        {"label": "No Detection", "color": "#ff6666"},
+        {"label": "Partial Detection", "color": "#ffe766"},
+        {"label": "Full Detection", "color": "#8ec843"}
+    ]
+}</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Prioritizing Coverage</h2>
+
+                    <div class="info-box tip">
+                        <h4>💡 Coverage Prioritization Framework</h4>
+                        <ol>
+                            <li><strong>Threat intelligence:</strong> What TTPs target your industry?</li>
+                            <li><strong>Prevalence:</strong> What techniques are most commonly used?</li>
+                            <li><strong>Data availability:</strong> What can you actually detect?</li>
+                            <li><strong>Impact:</strong> Which techniques lead to highest impact?</li>
+                            <li><strong>Kill chain position:</strong> Earlier detection = better outcomes</li>
+                        </ol>
+                    </div>
+
+                    <div class="info-box warning">
+                        <h4>⚠️ Coverage Pitfalls</h4>
+                        <ul>
+                            <li><strong>Coverage ≠ Detection:</strong> Having a rule doesn't mean it works</li>
+                            <li><strong>Sub-techniques matter:</strong> T1059 has 9 sub-techniques - covering one isn't full coverage</li>
+                            <li><strong>Platform-specific:</strong> A Windows detection doesn't cover Linux</li>
+                            <li><strong>Test your detections:</strong> Use Atomic Red Team to validate</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you use MITRE ATT&CK in your detection program?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Key uses:</strong></p>
+                            <ul>
+                                <li><strong>Gap analysis:</strong> Map existing detections to identify uncovered techniques</li>
+                                <li><strong>Prioritization:</strong> Focus on prevalent techniques for our threat profile</li>
+                                <li><strong>Documentation:</strong> Tag all detection rules with MITRE IDs</li>
+                                <li><strong>Testing:</strong> Use Atomic Red Team to validate coverage</li>
+                                <li><strong>Communication:</strong> Report coverage metrics to stakeholders</li>
+                            </ul>
+                            <p><strong>Example:</strong> "We use ATT&CK Navigator to visualize coverage. Our current focus is improving Credential Access (TA0006) detection because recent threat reports show increased Kerberoasting against our industry."</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="hunting-queries.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        Hunting Queries
+                    </a>
+                    <a href="../sap-security/sap-overview.html" class="nav-link next">
+                        SAP Security Overview
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

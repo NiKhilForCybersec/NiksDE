@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automation Fundamentals - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="automation">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                            <span>Automation & Scripting</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item active">Automation Fundamentals</a>
+                        <a href="python-security.html" class="nav-item">Python for Security</a>
+                        <a href="powershell-security.html" class="nav-item">PowerShell for Security</a>
+                        <a href="bash-security.html" class="nav-item">Bash for Security</a>
+                        <a href="soar.html" class="nav-item">SOAR Platforms</a>
+                        <a href="api-integration.html" class="nav-item">API Integration</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <span class="current">Automation Fundamentals</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>Security Automation Fundamentals</h1>
+                    <p class="subtitle">Core concepts, best practices, and frameworks for automating security operations, detection engineering, and incident response workflows.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Why Automate Security?</h2>
+                    
+                    <p>Security automation transforms manual, repetitive tasks into efficient, consistent, and scalable processes. For detection engineers, automation is essential for managing alerts at scale, enriching data, and accelerating response.</p>
+
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Speed & Scale</h4>
+                            <ul>
+                                <li>Process thousands of alerts/hour</li>
+                                <li>Enrich IOCs in milliseconds</li>
+                                <li>Deploy detections across environments</li>
+                                <li>Respond to threats in real-time</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Consistency</h4>
+                            <ul>
+                                <li>Eliminate human error</li>
+                                <li>Standardize processes</li>
+                                <li>Ensure complete coverage</li>
+                                <li>Reproducible results</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Efficiency</h4>
+                            <ul>
+                                <li>Free analysts for high-value work</li>
+                                <li>Reduce alert fatigue</li>
+                                <li>24/7 coverage without burnout</li>
+                                <li>Lower operational costs</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Automation Use Cases</h2>
+
+                    <h3>Detection Engineering Automation</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Use Case</th>
+                                <th>Description</th>
+                                <th>Tools</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Detection-as-Code</strong></td>
+                                <td>Version control, CI/CD for detection rules</td>
+                                <td>Git, GitHub Actions, Azure DevOps</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Rule Deployment</strong></td>
+                                <td>Automated deployment to SIEM</td>
+                                <td>Sentinel API, Splunk REST, Chronicle API</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Detection Testing</strong></td>
+                                <td>Automated validation against test data</td>
+                                <td>Atomic Red Team, MITRE Caldera</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Rule Tuning</strong></td>
+                                <td>Automated threshold adjustment</td>
+                                <td>Custom scripts, ML models</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Coverage Analysis</strong></td>
+                                <td>Map detections to MITRE ATT&CK</td>
+                                <td>ATT&CK Navigator, custom tools</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>SOC Automation</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Use Case</th>
+                                <th>Description</th>
+                                <th>Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Alert Triage</strong></td>
+                                <td>Auto-classify, prioritize, and route alerts</td>
+                                <td>80% reduction in manual triage</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IOC Enrichment</strong></td>
+                                <td>Auto-lookup IPs, domains, hashes</td>
+                                <td>Minutes → seconds per alert</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ticket Creation</strong></td>
+                                <td>Auto-create ITSM tickets from alerts</td>
+                                <td>Consistent documentation</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Containment</strong></td>
+                                <td>Auto-isolate hosts, block IPs</td>
+                                <td>MTTR reduction</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Reporting</strong></td>
+                                <td>Auto-generate daily/weekly reports</td>
+                                <td>Hours → minutes</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Automation Maturity Model</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Security Automation Maturity Levels</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>Level 0: Manual
+├── All tasks performed manually
+├── No standardization
+└── High analyst workload
+
+Level 1: Scripted
+├── Basic scripts for repetitive tasks
+├── Python/PowerShell/Bash utilities
+├── Manual trigger, automated execution
+└── Individual tool automation
+
+Level 2: Orchestrated
+├── SOAR platform implemented
+├── Playbooks for common scenarios
+├── Multi-tool integration
+└── Semi-automated workflows
+
+Level 3: Automated
+├── Full playbook coverage
+├── Minimal human intervention
+├── Automated enrichment + response
+└── Metrics-driven optimization
+
+Level 4: Autonomous
+├── ML-driven decision making
+├── Self-tuning detections
+├── Predictive automation
+└── Continuous improvement loops</code></pre>
+                    </div>
+
+                    <h3>Maturity Assessment Questions</h3>
+                    <div class="info-box tip">
+                        <h4>💡 Evaluate Your Current State</h4>
+                        <ul>
+                            <li>What percentage of alerts require manual investigation?</li>
+                            <li>How long does IOC enrichment take per alert?</li>
+                            <li>Are detection rules version-controlled?</li>
+                            <li>Can you deploy a new detection in under 1 hour?</li>
+                            <li>What's your mean time to respond (MTTR)?</li>
+                            <li>How many playbooks exist for common scenarios?</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Detection-as-Code</h2>
+
+                    <p>Detection-as-Code (DaC) applies software engineering practices to detection rule management. Rules are stored in version control, tested automatically, and deployed through CI/CD pipelines.</p>
+
+                    <h3>DaC Architecture</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection-as-Code Pipeline</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                   Detection-as-Code Pipeline                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐         │
+│  │   Author    │───▶│   Commit    │───▶│   CI/CD     │         │
+│  │  Detection  │    │  to Git     │    │   Trigger   │         │
+│  └─────────────┘    └─────────────┘    └──────┬──────┘         │
+│                                                │                  │
+│                                                ▼                  │
+│                     ┌──────────────────────────────────┐        │
+│                     │         Validation Pipeline       │        │
+│                     │                                   │        │
+│                     │  1. Syntax validation (YAML/JSON) │        │
+│                     │  2. Schema validation             │        │
+│                     │  3. Query syntax check            │        │
+│                     │  4. Unit tests (sample data)      │        │
+│                     │  5. False positive analysis       │        │
+│                     └──────────────┬───────────────────┘        │
+│                                    │                             │
+│              ┌─────────────────────┼─────────────────────┐      │
+│              ▼                     ▼                     ▼      │
+│       ┌───────────┐         ┌───────────┐         ┌───────────┐│
+│       │   Dev     │         │  Staging  │         │   Prod    ││
+│       │   SIEM    │         │   SIEM    │         │   SIEM    ││
+│       └───────────┘         └───────────┘         └───────────┘│
+│                                                                   │
+└─────────────────────────────────────────────────────────────────┘</code></pre>
+                    </div>
+
+                    <h3>Detection Rule Format (YAML)</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>detection-rule.yaml</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>id: detect-suspicious-powershell
+name: Suspicious PowerShell Encoded Command
+description: Detects PowerShell execution with base64 encoded commands
+severity: high
+status: production
+
+# MITRE ATT&CK mapping
+mitre:
+  tactics:
+    - execution
+    - defense-evasion
+  techniques:
+    - T1059.001  # PowerShell
+    - T1027      # Obfuscated Files
+
+# Detection logic
+detection:
+  platform: sentinel
+  language: kql
+  query: |
+    DeviceProcessEvents
+    | where ProcessCommandLine has_any ("-enc", "-EncodedCommand", "-ec")
+    | where ProcessCommandLine matches regex @"[A-Za-z0-9+/=]{50,}"
+    | project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
+    | extend AlertSeverity = "High"
+
+# Testing
+test_data:
+  true_positives:
+    - 'powershell.exe -enc UwB0AGEAcgB0AC0AUwBsAGUAZQBwAC...'
+    - 'powershell -EncodedCommand JABjAGwAaQBlAG4AdAA...'
+  false_positives:
+    - 'powershell.exe -File script.ps1'  # Should NOT trigger
+
+# Metadata
+author: security-team
+created: 2024-01-15
+modified: 2024-01-20
+references:
+  - https://attack.mitre.org/techniques/T1059/001/
+tags:
+  - powershell
+  - encoded
+  - execution</code></pre>
+                    </div>
+
+                    <h3>GitHub Actions CI/CD</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>.github/workflows/detection-pipeline.yml</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>name: Detection Rule Pipeline
+
+on:
+  push:
+    paths:
+      - 'detections/**'
+  pull_request:
+    paths:
+      - 'detections/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: pip install pyyaml jsonschema kql-validator
+      
+      - name: Validate YAML syntax
+        run: |
+          for file in detections/*.yaml; do
+            python -c "import yaml; yaml.safe_load(open('$file'))"
+          done
+      
+      - name: Validate against schema
+        run: python scripts/validate_schema.py detections/
+      
+      - name: Validate KQL syntax
+        run: python scripts/validate_kql.py detections/
+      
+      - name: Run unit tests
+        run: python scripts/test_detections.py detections/
+
+  deploy-staging:
+    needs: validate
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Deploy to Staging Sentinel
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.STAGING_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.STAGING_CLIENT_SECRET }}
+        run: python scripts/deploy_sentinel.py --env staging
+
+  deploy-production:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Deploy to Production Sentinel
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.PROD_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.PROD_CLIENT_SECRET }}
+        run: python scripts/deploy_sentinel.py --env production</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Automation Best Practices</h2>
+
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>✅ Do</h4>
+                            <ul>
+                                <li>Start with high-volume, low-risk tasks</li>
+                                <li>Version control all automation code</li>
+                                <li>Include rollback mechanisms</li>
+                                <li>Log all automated actions</li>
+                                <li>Test in staging before production</li>
+                                <li>Document playbook logic</li>
+                                <li>Monitor automation health</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>❌ Don't</h4>
+                            <ul>
+                                <li>Automate without human oversight</li>
+                                <li>Skip error handling</li>
+                                <li>Hardcode credentials</li>
+                                <li>Ignore edge cases</li>
+                                <li>Deploy untested playbooks</li>
+                                <li>Automate everything at once</li>
+                                <li>Forget about rate limits</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>Human-in-the-Loop Design</h3>
+                    <div class="info-box warning">
+                        <h4>⚠️ When to Require Human Approval</h4>
+                        <ul>
+                            <li><strong>Containment actions:</strong> Host isolation, account disable</li>
+                            <li><strong>High-impact changes:</strong> Firewall rules, network blocks</li>
+                            <li><strong>Uncertain classifications:</strong> Low-confidence ML predictions</li>
+                            <li><strong>Sensitive data access:</strong> PII, credentials, financial data</li>
+                            <li><strong>Production systems:</strong> Actions affecting business-critical services</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Automation Tooling Landscape</h2>
+
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Tools</th>
+                                <th>Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Scripting</strong></td>
+                                <td>Python, PowerShell, Bash</td>
+                                <td>Custom automation, data processing</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SOAR</strong></td>
+                                <td>Sentinel Automation, XSOAR, Splunk SOAR, Tines</td>
+                                <td>Playbook orchestration, response</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CI/CD</strong></td>
+                                <td>GitHub Actions, Azure DevOps, GitLab CI</td>
+                                <td>Detection deployment pipelines</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IaC</strong></td>
+                                <td>Terraform, Pulumi, ARM templates</td>
+                                <td>Security infrastructure as code</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Workflow</strong></td>
+                                <td>Apache Airflow, Prefect, n8n</td>
+                                <td>Complex data pipelines</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Testing</strong></td>
+                                <td>Atomic Red Team, MITRE Caldera</td>
+                                <td>Detection validation</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Describe a security task you've automated and its impact.</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Example answer structure:</strong></p>
+                            <ol>
+                                <li><strong>Problem:</strong> "IOC enrichment was taking analysts 15 minutes per alert, with 200+ alerts daily."</li>
+                                <li><strong>Solution:</strong> "Built Python script integrated with VirusTotal, AbuseIPDB, and Shodan APIs to auto-enrich IPs, domains, and hashes."</li>
+                                <li><strong>Implementation:</strong> "Deployed as Azure Function triggered by Sentinel incidents, results written back to incident comments."</li>
+                                <li><strong>Impact:</strong> "Reduced enrichment time from 15 minutes to under 30 seconds, saving ~50 analyst hours per week."</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you decide what to automate vs keep manual?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Automation candidates:</strong></p>
+                            <ul>
+                                <li>High volume, low complexity (alert enrichment)</li>
+                                <li>Well-defined decision trees (triage workflows)</li>
+                                <li>Time-sensitive responses (containment)</li>
+                                <li>Repetitive data gathering (reporting)</li>
+                            </ul>
+                            <p><strong>Keep manual:</strong></p>
+                            <ul>
+                                <li>Novel attack investigation</li>
+                                <li>High-stakes decisions (major containment)</li>
+                                <li>Context-heavy analysis</li>
+                                <li>Stakeholder communication</li>
+                            </ul>
+                            <p><strong>Framework:</strong> Consider frequency × time saved × risk. High frequency + high time savings + low risk = automate first.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What is Detection-as-Code and why is it important?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Definition:</strong> Detection-as-Code applies software engineering practices to detection rule management—version control, code review, automated testing, and CI/CD deployment.</p>
+                            <p><strong>Benefits:</strong></p>
+                            <ul>
+                                <li><strong>Version control:</strong> Track changes, rollback if needed</li>
+                                <li><strong>Code review:</strong> Peer review for quality</li>
+                                <li><strong>Automated testing:</strong> Validate against sample data</li>
+                                <li><strong>Consistent deployment:</strong> Same process every time</li>
+                                <li><strong>Documentation:</strong> Rules self-document with metadata</li>
+                            </ul>
+                            <p><strong>Tools:</strong> Git for version control, YAML/JSON for rule format, GitHub Actions/Azure DevOps for CI/CD, SIEM APIs for deployment.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="../cloud-security/cspm.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        CSPM & CWPP
+                    </a>
+                    <a href="python-security.html" class="nav-link next">
+                        Python for Security
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

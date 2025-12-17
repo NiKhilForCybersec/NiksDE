@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Log Analysis - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar" id="sidebar"></nav>
+        <div class="main-wrapper">
+            <header class="top-bar">
+                <button class="menu-toggle" id="menuToggle">☰</button>
+                <div class="breadcrumb">Log Analysis / Cloud Logs</div>
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search documentation...">
+                </div>
+            </header>
+            <main class="content">
+                <div class="content-header">
+                    <h1>Cloud Log Analysis</h1>
+                    <p class="subtitle">Comprehensive guide to AWS, Azure, and GCP security logging for threat detection</p>
+                </div>
+
+                <!-- Cloud Logging Overview -->
+                <section class="doc-section">
+                    <h2>Cloud Logging Landscape</h2>
+                    <p>Cloud environments generate diverse log types that require different analysis approaches compared to traditional on-premises infrastructure.</p>
+                    
+                    <div class="comparison-grid">
+                        <div class="comparison-card" style="border-left-color: #ff9900;">
+                            <h4>AWS Logs</h4>
+                            <ul>
+                                <li><strong>CloudTrail</strong> - API activity audit trail</li>
+                                <li><strong>GuardDuty</strong> - Threat detection findings</li>
+                                <li><strong>VPC Flow Logs</strong> - Network traffic metadata</li>
+                                <li><strong>CloudWatch</strong> - Application/system logs</li>
+                                <li><strong>S3 Access Logs</strong> - Object access audit</li>
+                                <li><strong>ALB/ELB Logs</strong> - Load balancer requests</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card sentinel-card">
+                            <h4>Azure Logs</h4>
+                            <ul>
+                                <li><strong>Activity Log</strong> - Subscription operations</li>
+                                <li><strong>Entra ID Logs</strong> - Identity/auth events</li>
+                                <li><strong>NSG Flow Logs</strong> - Network flows</li>
+                                <li><strong>Diagnostic Logs</strong> - Resource telemetry</li>
+                                <li><strong>Key Vault Logs</strong> - Secret access audit</li>
+                                <li><strong>Storage Analytics</strong> - Blob/file access</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card" style="border-left-color: #4285f4;">
+                            <h4>GCP Logs</h4>
+                            <ul>
+                                <li><strong>Admin Activity</strong> - API audit logs</li>
+                                <li><strong>Data Access</strong> - Resource access audit</li>
+                                <li><strong>VPC Flow Logs</strong> - Network metadata</li>
+                                <li><strong>Cloud Audit Logs</strong> - All admin actions</li>
+                                <li><strong>Access Transparency</strong> - Google access</li>
+                                <li><strong>Security Command Center</strong> - Findings</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- AWS CloudTrail -->
+                <section class="doc-section">
+                    <h2>AWS CloudTrail Analysis</h2>
+                    <p>CloudTrail records all API calls made in your AWS account, making it the foundational log source for AWS security monitoring.</p>
+                    
+                    <h3>Critical CloudTrail Fields</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Description</th>
+                                    <th>Detection Use</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>eventSource</code></td>
+                                    <td>AWS service (e.g., ec2.amazonaws.com)</td>
+                                    <td>Filter by service type</td>
+                                </tr>
+                                <tr>
+                                    <td><code>eventName</code></td>
+                                    <td>API action performed</td>
+                                    <td>Identify sensitive operations</td>
+                                </tr>
+                                <tr>
+                                    <td><code>userIdentity</code></td>
+                                    <td>Principal making request</td>
+                                    <td>Attribution, privilege escalation</td>
+                                </tr>
+                                <tr>
+                                    <td><code>sourceIPAddress</code></td>
+                                    <td>Request origin IP</td>
+                                    <td>Impossible travel, suspicious IPs</td>
+                                </tr>
+                                <tr>
+                                    <td><code>errorCode</code></td>
+                                    <td>Error if request failed</td>
+                                    <td>Reconnaissance, access denied patterns</td>
+                                </tr>
+                                <tr>
+                                    <td><code>requestParameters</code></td>
+                                    <td>API call parameters</td>
+                                    <td>Resource targets, configurations</td>
+                                </tr>
+                                <tr>
+                                    <td><code>responseElements</code></td>
+                                    <td>API response data</td>
+                                    <td>Created resources, credentials</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>IAM Credential Compromise Detection</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - AWS Access Key Abuse</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect potential AWS access key compromise
+AWSCloudTrail
+| where TimeGenerated > ago(24h)
+| where UserIdentityType == "IAMUser"
+| extend 
+    AccessKeyId = tostring(UserIdentityAccessKeyId),
+    UserName = tostring(UserIdentityUserName)
+| summarize 
+    DistinctIPs = dcount(SourceIpAddress),
+    IPs = make_set(SourceIpAddress, 10),
+    DistinctRegions = dcount(AWSRegion),
+    Regions = make_set(AWSRegion, 10),
+    EventCount = count(),
+    DistinctEvents = dcount(EventName)
+    by AccessKeyId, UserName, bin(TimeGenerated, 1h)
+| where DistinctIPs > 3 or DistinctRegions > 3
+| extend 
+    CompromiseIndicator = case(
+        DistinctIPs > 5 and DistinctRegions > 3, "Critical - Multiple IPs and Regions",
+        DistinctIPs > 5, "High - Multiple Source IPs",
+        DistinctRegions > 3, "High - Multiple Regions",
+        "Medium - Anomalous Activity"
+    )
+| project TimeGenerated, UserName, AccessKeyId, CompromiseIndicator, DistinctIPs, IPs, DistinctRegions, Regions</code></pre>
+                    </div>
+
+                    <h3>Privilege Escalation Detection</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - IAM Privilege Escalation</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect IAM privilege escalation attempts
+let PrivEscActions = dynamic([
+    "CreatePolicyVersion",
+    "SetDefaultPolicyVersion",
+    "CreateAccessKey",
+    "CreateLoginProfile",
+    "UpdateLoginProfile",
+    "AttachUserPolicy",
+    "AttachGroupPolicy",
+    "AttachRolePolicy",
+    "PutUserPolicy",
+    "PutGroupPolicy",
+    "PutRolePolicy",
+    "AddUserToGroup",
+    "UpdateAssumeRolePolicy",
+    "CreateRole",
+    "PassRole",
+    "iam:CreateServiceLinkedRole"
+]);
+AWSCloudTrail
+| where TimeGenerated > ago(24h)
+| where EventSource == "iam.amazonaws.com"
+| where EventName in (PrivEscActions)
+| extend 
+    TargetUser = tostring(parse_json(RequestParameters).userName),
+    TargetRole = tostring(parse_json(RequestParameters).roleName),
+    PolicyArn = tostring(parse_json(RequestParameters).policyArn),
+    Actor = tostring(UserIdentityUserName)
+| where Actor != TargetUser or isempty(TargetUser)  // Self-modification less suspicious
+| extend 
+    RiskLevel = case(
+        EventName in ("CreateAccessKey", "CreateLoginProfile") and Actor != TargetUser, "Critical",
+        EventName contains "AttachPolicy" and PolicyArn contains "AdministratorAccess", "Critical",
+        EventName in ("PutUserPolicy", "PutRolePolicy"), "High",
+        EventName == "AddUserToGroup", "Medium",
+        "Low"
+    )
+| project TimeGenerated, Actor, EventName, TargetUser, TargetRole, PolicyArn, RiskLevel, SourceIpAddress</code></pre>
+                    </div>
+
+                    <h3>Resource Exposure Detection</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - S3 Bucket Exposure</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect S3 bucket made public
+AWSCloudTrail
+| where TimeGenerated > ago(24h)
+| where EventSource == "s3.amazonaws.com"
+| where EventName in ("PutBucketAcl", "PutBucketPolicy", "PutBucketPublicAccessBlock")
+| extend 
+    BucketName = tostring(parse_json(RequestParameters).bucketName),
+    RequestParams = tostring(RequestParameters)
+| where RequestParams contains "AllUsers" 
+    or RequestParams contains "AuthenticatedUsers"
+    or RequestParams contains '"BlockPublicAcls":false'
+    or RequestParams contains '"IgnorePublicAcls":false'
+| extend 
+    ExposureType = case(
+        RequestParams contains "AllUsers", "Public to Internet",
+        RequestParams contains "AuthenticatedUsers", "Public to AWS Users",
+        RequestParams contains "BlockPublicAcls", "Public Access Block Disabled",
+        "Other Exposure"
+    )
+| project 
+    TimeGenerated,
+    UserIdentityUserName,
+    BucketName,
+    EventName,
+    ExposureType,
+    SourceIpAddress,
+    RequestParams</code></pre>
+                    </div>
+
+                    <h3>AWS Console Login Anomalies</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Suspicious Console Logins</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect suspicious AWS console login patterns
+AWSCloudTrail
+| where TimeGenerated > ago(24h)
+| where EventName == "ConsoleLogin"
+| extend 
+    LoginStatus = tostring(parse_json(ResponseElements).ConsoleLogin),
+    MFAUsed = tostring(parse_json(AdditionalEventData).MFAUsed),
+    UserName = tostring(UserIdentityUserName)
+| extend 
+    SuspiciousIndicators = pack_array(
+        iff(MFAUsed == "No", "No MFA", ""),
+        iff(LoginStatus == "Failure", "Failed Login", ""),
+        iff(SourceIpAddress matches regex @"^(?:185\.|91\.|45\.)", "Suspicious IP Range", "")
+    )
+| mv-expand SuspiciousIndicator = SuspiciousIndicators
+| where SuspiciousIndicator != ""
+| summarize 
+    Indicators = make_set(SuspiciousIndicator),
+    LoginAttempts = count(),
+    SourceIPs = make_set(SourceIpAddress, 5)
+    by UserName, LoginStatus, bin(TimeGenerated, 1h)
+| extend 
+    RiskScore = case(
+        array_length(Indicators) >= 2, "High",
+        LoginAttempts > 5, "Medium",
+        "Low"
+    )
+| project TimeGenerated, UserName, LoginStatus, Indicators, LoginAttempts, SourceIPs, RiskScore</code></pre>
+                    </div>
+                </section>
+
+                <!-- Azure Activity & Entra ID -->
+                <section class="doc-section">
+                    <h2>Azure Security Logging</h2>
+                    <p>Azure provides comprehensive logging through Activity Logs, Entra ID logs, and resource-specific diagnostic logs.</p>
+                    
+                    <h3>Azure Activity Log Analysis</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Critical Azure Operations</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect critical Azure resource modifications
+AzureActivity
+| where TimeGenerated > ago(24h)
+| where CategoryValue == "Administrative"
+| where ActivityStatusValue == "Success"
+| extend 
+    Operation = OperationNameValue,
+    Resource = tostring(parse_json(Properties).resource),
+    ResourceGroup = ResourceGroup
+| where Operation has_any (
+    "delete",
+    "Microsoft.Authorization/roleAssignments/write",
+    "Microsoft.Network/networkSecurityGroups/securityRules/write",
+    "Microsoft.Network/networkSecurityGroups/delete",
+    "Microsoft.KeyVault/vaults/delete",
+    "Microsoft.Storage/storageAccounts/delete"
+)
+| extend 
+    Severity = case(
+        Operation contains "delete" and Operation contains "KeyVault", "Critical",
+        Operation contains "roleAssignments/write", "High",
+        Operation contains "networkSecurityGroups", "High",
+        Operation contains "delete", "Medium",
+        "Low"
+    )
+| project TimeGenerated, Caller, Operation, Resource, ResourceGroup, Severity, CallerIpAddress</code></pre>
+                    </div>
+
+                    <h3>Entra ID Sign-In Analysis</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Suspicious Sign-In Patterns</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Comprehensive Entra ID sign-in risk detection
+SigninLogs
+| where TimeGenerated > ago(24h)
+| extend 
+    // Parse conditional access results
+    CAStatus = tostring(ConditionalAccessPolicies),
+    // Parse device info
+    DeviceOS = tostring(DeviceDetail.operatingSystem),
+    DeviceTrust = tostring(DeviceDetail.trustType),
+    // Parse location
+    City = tostring(LocationDetails.city),
+    Country = tostring(LocationDetails.countryOrRegion)
+| extend 
+    RiskIndicators = pack_array(
+        iff(RiskLevelDuringSignIn in ("high", "medium"), strcat("Risk Level: ", RiskLevelDuringSignIn), ""),
+        iff(ResultType != 0, strcat("Failed: ", ResultDescription), ""),
+        iff(IsInteractive == false and AppDisplayName contains "Azure", "Non-Interactive Azure Access", ""),
+        iff(DeviceTrust == "" or DeviceTrust == "Unknown", "Unmanaged Device", ""),
+        iff(Country !in ("Canada", "United States"), strcat("Foreign Location: ", Country), "")
+    )
+| mv-expand RiskIndicator = RiskIndicators
+| where RiskIndicator != ""
+| summarize 
+    Indicators = make_set(RiskIndicator),
+    DistinctApps = dcount(AppDisplayName),
+    Apps = make_set(AppDisplayName, 5),
+    LoginCount = count()
+    by UserPrincipalName, IPAddress, bin(TimeGenerated, 1h)
+| where array_length(Indicators) >= 2 or LoginCount > 10
+| project TimeGenerated, UserPrincipalName, IPAddress, Indicators, DistinctApps, Apps, LoginCount</code></pre>
+                    </div>
+
+                    <h3>Impossible Travel Detection</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Impossible Travel</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect physically impossible travel between sign-ins
+SigninLogs
+| where TimeGenerated > ago(24h)
+| where ResultType == 0  // Successful logins only
+| extend 
+    Latitude = toreal(LocationDetails.geoCoordinates.latitude),
+    Longitude = toreal(LocationDetails.geoCoordinates.longitude),
+    City = tostring(LocationDetails.city),
+    Country = tostring(LocationDetails.countryOrRegion)
+| where isnotempty(Latitude) and isnotempty(Longitude)
+| sort by UserPrincipalName, TimeGenerated asc
+| extend 
+    PrevTime = prev(TimeGenerated, 1),
+    PrevLat = prev(Latitude, 1),
+    PrevLon = prev(Longitude, 1),
+    PrevCity = prev(City, 1),
+    PrevCountry = prev(Country, 1),
+    PrevUser = prev(UserPrincipalName, 1)
+| where UserPrincipalName == PrevUser
+| extend 
+    TimeDiffHours = datetime_diff('hour', TimeGenerated, PrevTime),
+    // Haversine formula approximation for distance
+    DistanceKm = 6371 * acos(
+        cos(radians(Latitude)) * cos(radians(PrevLat)) * 
+        cos(radians(PrevLon) - radians(Longitude)) + 
+        sin(radians(Latitude)) * sin(radians(PrevLat))
+    )
+| where DistanceKm > 500  // More than 500km
+| extend 
+    RequiredSpeedKmh = DistanceKm / TimeDiffHours,
+    // 900 km/h is roughly commercial flight speed
+    ImpossibleTravel = RequiredSpeedKmh > 900
+| where ImpossibleTravel == true or (RequiredSpeedKmh > 500 and TimeDiffHours < 2)
+| project 
+    TimeGenerated,
+    UserPrincipalName,
+    FromLocation = strcat(PrevCity, ", ", PrevCountry),
+    ToLocation = strcat(City, ", ", Country),
+    DistanceKm = round(DistanceKm, 0),
+    TimeDiffHours,
+    RequiredSpeedKmh = round(RequiredSpeedKmh, 0),
+    IPAddress</code></pre>
+                    </div>
+
+                    <h3>Service Principal Abuse</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Suspicious Service Principal Activity</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect suspicious service principal/app registration activity
+AuditLogs
+| where TimeGenerated > ago(24h)
+| where Category == "ApplicationManagement"
+| where OperationName has_any (
+    "Add service principal credentials",
+    "Add service principal",
+    "Update application - Certificates and secrets",
+    "Add application",
+    "Add delegated permission grant",
+    "Add app role assignment grant to user"
+)
+| extend 
+    Actor = tostring(InitiatedBy.user.userPrincipalName),
+    ActorIP = tostring(InitiatedBy.user.ipAddress),
+    TargetApp = tostring(TargetResources[0].displayName),
+    TargetType = tostring(TargetResources[0].type)
+| extend 
+    RiskLevel = case(
+        OperationName contains "credentials" and Actor != "System", "High - Credential Added",
+        OperationName contains "delegated permission", "High - Permission Granted",
+        OperationName contains "Add service principal" and Actor !contains "azure", "Medium - New SP Created",
+        "Low"
+    )
+| where RiskLevel != "Low"
+| project TimeGenerated, Actor, OperationName, TargetApp, TargetType, RiskLevel, ActorIP</code></pre>
+                    </div>
+
+                    <h3>Key Vault Access Monitoring</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Key Vault Sensitive Access</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Monitor sensitive Key Vault operations
+AzureDiagnostics
+| where ResourceProvider == "MICROSOFT.KEYVAULT"
+| where TimeGenerated > ago(24h)
+| where OperationName in (
+    "SecretGet",
+    "SecretList",
+    "KeyGet",
+    "KeyList",
+    "CertificateGet",
+    "VaultAccessPolicyChanged",
+    "SecretBackup",
+    "KeyBackup"
+)
+| extend 
+    VaultName = Resource,
+    SecretName = tostring(parse_json(properties_s).id_s),
+    CallerIP = CallerIPAddress
+| summarize 
+    Operations = make_set(OperationName),
+    SecretCount = dcountif(SecretName, OperationName has "Secret"),
+    KeyCount = dcountif(SecretName, OperationName has "Key"),
+    AccessCount = count()
+    by identity_claim_upn_s, VaultName, CallerIP, bin(TimeGenerated, 1h)
+| where AccessCount > 20 or SecretCount > 10
+| extend 
+    RiskIndicator = case(
+        Operations has "Backup", "Critical - Secrets Backed Up",
+        Operations has "VaultAccessPolicyChanged", "High - Policy Modified",
+        SecretCount > 20, "High - Mass Secret Access",
+        "Medium - Elevated Access"
+    )
+| project TimeGenerated, identity_claim_upn_s, VaultName, RiskIndicator, Operations, SecretCount, AccessCount</code></pre>
+                    </div>
+                </section>
+
+                <!-- GCP Audit Logs -->
+                <section class="doc-section">
+                    <h2>GCP Cloud Audit Logs</h2>
+                    <p>Google Cloud Platform provides comprehensive audit logging through Admin Activity, Data Access, and System Event logs.</p>
+                    
+                    <h3>GCP Log Types</h3>
+                    <div class="info-box info">
+                        <h4>GCP Audit Log Categories</h4>
+                        <ul>
+                            <li><strong>Admin Activity</strong> - API calls that modify resources (always on, no charge)</li>
+                            <li><strong>Data Access</strong> - API calls reading config or user data (must enable, generates volume)</li>
+                            <li><strong>System Event</strong> - GCP-initiated actions on resources</li>
+                            <li><strong>Policy Denied</strong> - When access denied by security policy</li>
+                        </ul>
+                    </div>
+
+                    <h3>GCP IAM Privilege Escalation</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - GCP IAM Changes</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect GCP IAM privilege escalation
+GCPAuditLogs
+| where TimeGenerated > ago(24h)
+| where ServiceName == "iam.googleapis.com"
+| where MethodName has_any (
+    "SetIamPolicy",
+    "CreateServiceAccount",
+    "CreateServiceAccountKey",
+    "SetOrgPolicy",
+    "CreateRole",
+    "UpdateRole"
+)
+| extend 
+    Actor = tostring(AuthenticationInfo.principalEmail),
+    TargetResource = tostring(ResourceName),
+    CallerIP = tostring(RequestMetadata.callerIp)
+| extend 
+    RiskLevel = case(
+        MethodName contains "CreateServiceAccountKey", "Critical - New SA Key",
+        MethodName contains "SetIamPolicy" and TargetResource contains "organization", "Critical - Org Policy",
+        MethodName contains "SetIamPolicy", "High - IAM Policy Change",
+        MethodName contains "CreateRole", "Medium - Custom Role",
+        "Low"
+    )
+| where RiskLevel != "Low"
+| project TimeGenerated, Actor, MethodName, TargetResource, RiskLevel, CallerIP</code></pre>
+                    </div>
+
+                    <h3>GCP Compute Security</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - GCP Compute Exposure</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect GCP firewall and compute exposure
+GCPAuditLogs
+| where TimeGenerated > ago(24h)
+| where ServiceName == "compute.googleapis.com"
+| where MethodName has_any (
+    "v1.compute.firewalls.insert",
+    "v1.compute.firewalls.patch",
+    "v1.compute.instances.setMetadata",
+    "v1.compute.instances.setServiceAccount"
+)
+| extend 
+    Actor = tostring(AuthenticationInfo.principalEmail),
+    RequestData = tostring(Request)
+| extend 
+    // Check for dangerous firewall rules
+    AllowsAllPorts = RequestData contains '"IPProtocol":"all"',
+    AllowsAnySource = RequestData contains '"sourceRanges":["0.0.0.0/0"]',
+    // Check for SSH key injection
+    HasSSHKey = RequestData contains "ssh-keys"
+| where AllowsAllPorts or AllowsAnySource or HasSSHKey
+| extend 
+    RiskIndicator = case(
+        AllowsAnySource and AllowsAllPorts, "Critical - Internet Exposure",
+        HasSSHKey, "High - SSH Key Injection",
+        AllowsAnySource, "Medium - Public Firewall Rule",
+        "Low"
+    )
+| project TimeGenerated, Actor, MethodName, RiskIndicator, RequestData</code></pre>
+                    </div>
+                </section>
+
+                <!-- Multi-Cloud Detection Patterns -->
+                <section class="doc-section">
+                    <h2>Multi-Cloud Detection Patterns</h2>
+                    <p>Common attack patterns that apply across cloud platforms with platform-specific implementations.</p>
+                    
+                    <h3>Cross-Cloud Attack Mapping</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Attack Pattern</th>
+                                    <th>AWS Indicator</th>
+                                    <th>Azure Indicator</th>
+                                    <th>GCP Indicator</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Credential Theft</strong></td>
+                                    <td>CreateAccessKey, GetSecretValue</td>
+                                    <td>Add SP credentials, Key Vault access</td>
+                                    <td>CreateServiceAccountKey</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Privilege Escalation</strong></td>
+                                    <td>AttachUserPolicy, PassRole</td>
+                                    <td>Role assignment, PIM elevation</td>
+                                    <td>SetIamPolicy, CreateRole</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Persistence</strong></td>
+                                    <td>Lambda function, EC2 user data</td>
+                                    <td>Automation runbook, Function</td>
+                                    <td>Cloud Function, Compute metadata</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Data Exfiltration</strong></td>
+                                    <td>S3 public bucket, snapshot share</td>
+                                    <td>Storage SAS token, public blob</td>
+                                    <td>GCS public bucket, BigQuery export</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Defense Evasion</strong></td>
+                                    <td>StopLogging, DeleteTrail</td>
+                                    <td>Delete diagnostic settings</td>
+                                    <td>Delete log sink, modify audit config</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Cloud Trail Tampering Detection</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Logging Tampering Detection (AWS)</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect CloudTrail logging tampering
+AWSCloudTrail
+| where TimeGenerated > ago(24h)
+| where EventSource == "cloudtrail.amazonaws.com"
+| where EventName in (
+    "StopLogging",
+    "DeleteTrail",
+    "UpdateTrail",
+    "PutEventSelectors",
+    "DeleteEventDataStore"
+)
+| extend 
+    TrailName = tostring(parse_json(RequestParameters).name),
+    TrailArn = tostring(parse_json(RequestParameters).trailArn)
+| extend 
+    Severity = case(
+        EventName in ("StopLogging", "DeleteTrail"), "Critical - Logging Disabled",
+        EventName == "PutEventSelectors", "High - Event Selection Changed",
+        "Medium"
+    )
+| project TimeGenerated, UserIdentityUserName, EventName, TrailName, Severity, SourceIpAddress, UserIdentityArn</code></pre>
+                    </div>
+
+                    <h3>Unified Cloud Security Query</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Multi-Cloud High-Risk Activity</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Unified high-risk cloud activity across platforms
+let AWSHighRisk = AWSCloudTrail
+| where TimeGenerated > ago(24h)
+| where EventName in ("CreateAccessKey", "AttachUserPolicy", "StopLogging", "PutBucketPolicy")
+| extend 
+    Platform = "AWS",
+    Actor = UserIdentityUserName,
+    Operation = EventName,
+    SourceIP = SourceIpAddress,
+    RiskLevel = "High";
+let AzureHighRisk = AzureActivity
+| where TimeGenerated > ago(24h)
+| where OperationNameValue has_any ("roleAssignments/write", "delete", "networkSecurityGroups")
+| extend 
+    Platform = "Azure",
+    Actor = Caller,
+    Operation = OperationNameValue,
+    SourceIP = CallerIpAddress,
+    RiskLevel = "High";
+let AzureIdentityRisk = SigninLogs
+| where TimeGenerated > ago(24h)
+| where RiskLevelDuringSignIn in ("high", "medium")
+| extend 
+    Platform = "Azure AD",
+    Actor = UserPrincipalName,
+    Operation = strcat("Risky Sign-in: ", RiskLevelDuringSignIn),
+    SourceIP = IPAddress,
+    RiskLevel = RiskLevelDuringSignIn;
+union AWSHighRisk, AzureHighRisk, AzureIdentityRisk
+| project TimeGenerated, Platform, Actor, Operation, SourceIP, RiskLevel
+| sort by TimeGenerated desc</code></pre>
+                    </div>
+                </section>
+
+                <!-- Cloud Security Best Practices -->
+                <section class="doc-section">
+                    <h2>Cloud Logging Best Practices</h2>
+                    
+                    <div class="info-box tip">
+                        <h4>Essential Cloud Logging Configuration</h4>
+                        <ul>
+                            <li><strong>Enable all log types</strong> - Management/control plane AND data plane logs</li>
+                            <li><strong>Centralize logs</strong> - Send to SIEM for correlation across clouds</li>
+                            <li><strong>Immutable storage</strong> - Use write-once storage for compliance</li>
+                            <li><strong>Cross-account/subscription logging</strong> - Aggregate from all accounts</li>
+                            <li><strong>Enable management event logging</strong> - CloudTrail, Activity Logs, Admin Activity</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box warning">
+                        <h4>Common Cloud Logging Gaps</h4>
+                        <ul>
+                            <li><strong>Data plane logs disabled</strong> - S3 object access, Key Vault reads not logged by default</li>
+                            <li><strong>Single-region trails</strong> - CloudTrail must be multi-region</li>
+                            <li><strong>No log validation</strong> - Enable log file integrity validation</li>
+                            <li><strong>Missing serverless logs</strong> - Lambda, Functions execution logs</li>
+                            <li><strong>Container/K8s gaps</strong> - EKS/AKS/GKE audit logs require explicit enabling</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Interview Questions -->
+                <section class="doc-section">
+                    <h2>Interview Questions & Answers</h2>
+                    
+                    <div class="qa-accordion">
+                        <div class="qa-item">
+                            <button class="qa-question">How would you detect compromised AWS access keys?</button>
+                            <div class="qa-answer">
+                                <p><strong>Answer:</strong> I'd implement multiple detection layers:</p>
+                                <ol>
+                                    <li><strong>Geographic anomalies:</strong>
+                                        <ul>
+                                            <li>Same access key used from multiple IP addresses simultaneously</li>
+                                            <li>API calls from unusual regions (especially if org only operates in specific regions)</li>
+                                            <li>Impossible travel - calls from distant locations within short timeframes</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Behavioral anomalies:</strong>
+                                        <ul>
+                                            <li>Access key suddenly used for services/APIs never used before</li>
+                                            <li>Spike in API calls compared to baseline</li>
+                                            <li>Calls during off-hours for that user</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Specific attack indicators:</strong>
+                                        <ul>
+                                            <li>GetCallerIdentity as first call (attackers verify access works)</li>
+                                            <li>Rapid enumeration: ListBuckets, ListUsers, DescribeInstances</li>
+                                            <li>Attempts to create new access keys or modify IAM</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Error patterns:</strong>
+                                        <ul>
+                                            <li>Access denied errors across multiple services (reconnaissance)</li>
+                                            <li>UnauthorizedAccess errors for privileged operations</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="qa-item">
+                            <button class="qa-question">What's the difference between Azure Activity Logs and Entra ID logs?</button>
+                            <div class="qa-answer">
+                                <p><strong>Answer:</strong></p>
+                                <table>
+                                    <tr>
+                                        <th>Aspect</th>
+                                        <th>Azure Activity Logs</th>
+                                        <th>Entra ID Logs</th>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Scope</strong></td>
+                                        <td>Azure resource operations</td>
+                                        <td>Identity and access events</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Content</strong></td>
+                                        <td>Create/modify/delete resources, RBAC changes</td>
+                                        <td>Sign-ins, password changes, MFA, conditional access</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Key Tables</strong></td>
+                                        <td>AzureActivity, AzureDiagnostics</td>
+                                        <td>SigninLogs, AuditLogs, AADNonInteractiveUserSignInLogs</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Detection Focus</strong></td>
+                                        <td>Resource exposure, policy changes, data access</td>
+                                        <td>Account compromise, credential theft, risky sign-ins</td>
+                                    </tr>
+                                </table>
+                                <p>Both are essential - Entra ID logs capture the "who authenticated" while Activity logs capture "what they did with Azure resources."</p>
+                            </div>
+                        </div>
+
+                        <div class="qa-item">
+                            <button class="qa-question">How do you handle high-volume cloud logs cost-effectively?</button>
+                            <div class="qa-answer">
+                                <p><strong>Answer:</strong> Cloud log management requires balancing visibility with cost:</p>
+                                <ol>
+                                    <li><strong>Tiered retention:</strong>
+                                        <ul>
+                                            <li>Hot storage (30-90 days) for active investigation</li>
+                                            <li>Cold/archive storage (1-7 years) for compliance</li>
+                                            <li>Use Basic Logs tier in Sentinel for high-volume, low-query logs</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Selective ingestion:</strong>
+                                        <ul>
+                                            <li>Filter out known-good, high-volume events at source</li>
+                                            <li>Sample verbose logs (VPC Flow) rather than ingest 100%</li>
+                                            <li>Use summary/aggregation for routine events</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Detection-focused approach:</strong>
+                                        <ul>
+                                            <li>Always ingest: IAM changes, authentication, security group changes</li>
+                                            <li>Selective: Data plane logs only for sensitive resources</li>
+                                            <li>Filter: Health checks, routine automated operations</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Architecture:</strong>
+                                        <ul>
+                                            <li>Process logs at edge before ingestion (AWS Lambda, Azure Functions)</li>
+                                            <li>Use cloud-native SIEM where possible to avoid egress costs</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="qa-item">
+                            <button class="qa-question">Describe how you'd detect data exfiltration from cloud storage.</button>
+                            <div class="qa-answer">
+                                <p><strong>Answer:</strong> Data exfiltration detection across cloud storage requires multi-signal approach:</p>
+                                <ol>
+                                    <li><strong>Access pattern analysis:</strong>
+                                        <ul>
+                                            <li>Unusual download volumes compared to baseline</li>
+                                            <li>Access to large numbers of objects in short time</li>
+                                            <li>First-time access to sensitive buckets/containers</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Permission changes:</strong>
+                                        <ul>
+                                            <li>Bucket/container made public (PutBucketAcl, SetContainerAccessPolicy)</li>
+                                            <li>Pre-signed URL generation (GetObject with presigned)</li>
+                                            <li>Cross-account access grants</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Data movement signals:</strong>
+                                        <ul>
+                                            <li>Snapshot sharing to external accounts</li>
+                                            <li>Large S3/Blob downloads from unusual IPs</li>
+                                            <li>Storage copied to different region (replication rule changes)</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Correlate with identity:</strong>
+                                        <ul>
+                                            <li>Access from compromised credentials (link to sign-in anomalies)</li>
+                                            <li>Service account accessing human-owned data</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                                <p>Key challenge: distinguishing legitimate bulk operations (backups, migrations) from exfiltration requires baseline understanding and context.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Navigation -->
+                <div class="doc-navigation">
+                    <a href="network-logs.html" class="nav-link prev">
+                        <span class="arrow">←</span>
+                        <span>Network Log Analysis</span>
+                    </a>
+                    <a href="../threat-intel/ti-fundamentals.html" class="nav-link next">
+                        <span>Threat Intelligence Fundamentals</span>
+                        <span class="arrow">→</span>
+                    </a>
+                </div>
+            </main>
+            <footer class="footer">
+                <p>Detection Engineering Mastery © 2024 | Building world-class detection capabilities</p>
+            </footer>
+        </div>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+    <script>
+        document.querySelectorAll('.qa-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const isOpen = answer.style.maxHeight;
+                document.querySelectorAll('.qa-answer').forEach(a => a.style.maxHeight = null);
+                document.querySelectorAll('.qa-question').forEach(q => q.classList.remove('active'));
+                if (!isOpen) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    button.classList.add('active');
+                }
+            });
+        });
+        function copyCode(btn) {
+            const code = btn.parentElement.nextElementSibling.querySelector('code').innerText;
+            navigator.clipboard.writeText(code);
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = 'Copy', 2000);
+        }
+    </script>
+</body>
+</html>

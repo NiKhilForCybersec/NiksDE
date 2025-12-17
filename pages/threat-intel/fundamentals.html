@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threat Intelligence Fundamentals - Detection Engineering</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar" id="sidebar"></nav>
+        <main class="main-content">
+            <div class="breadcrumb">
+                <a href="../../index.html">Home</a> / <a href="#">Threat Intel</a> / Fundamentals
+            </div>
+
+            <h1>🎯 Threat Intelligence Fundamentals</h1>
+            <p class="subtitle">Understanding, collecting, and operationalizing threat intelligence for detection engineering</p>
+
+            <!-- Overview -->
+            <section>
+                <h2>What is Threat Intelligence?</h2>
+                <p>Threat Intelligence (TI) is evidence-based knowledge about existing or emerging threats that helps inform security decisions. It transforms raw data into actionable insights that drive detection, prevention, and response capabilities.</p>
+
+                <div class="info-box tip">
+                    <strong>💡 Key Distinction:</strong> Threat intelligence is not just a feed of IOCs - it's contextual information that enables understanding of adversary capabilities, intent, and behavior patterns.
+                </div>
+
+                <h3>The Intelligence Cycle</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Phase</th>
+                                <th>Description</th>
+                                <th>Detection Engineering Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Planning & Direction</strong></td>
+                                <td>Define intelligence requirements and priorities</td>
+                                <td>Identify gaps in detection coverage, prioritize threat actors</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Collection</strong></td>
+                                <td>Gather raw data from various sources</td>
+                                <td>Ingest IOCs, threat feeds, reports, telemetry</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Processing</strong></td>
+                                <td>Normalize and structure collected data</td>
+                                <td>Parse feeds, deduplicate, standardize formats (STIX/TAXII)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Analysis</strong></td>
+                                <td>Transform data into actionable intelligence</td>
+                                <td>Correlate with environment, assess relevance, extract TTPs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Dissemination</strong></td>
+                                <td>Deliver intelligence to stakeholders</td>
+                                <td>Create detections, update blocklists, brief SOC teams</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Feedback</strong></td>
+                                <td>Evaluate effectiveness and refine requirements</td>
+                                <td>Measure detection hits, tune rules, improve coverage</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Intelligence Types -->
+            <section>
+                <h2>Types of Threat Intelligence</h2>
+
+                <h3>Strategic Intelligence</h3>
+                <p>High-level information for executives and decision-makers about threat landscape trends, geopolitical factors, and risk assessments.</p>
+                <ul>
+                    <li>Threat landscape reports</li>
+                    <li>Industry-specific threat assessments</li>
+                    <li>Geopolitical cyber threat analysis</li>
+                    <li>Risk posture evaluations</li>
+                </ul>
+
+                <h3>Tactical Intelligence</h3>
+                <p>Detailed information about adversary TTPs (Tactics, Techniques, and Procedures) used by security teams to improve defenses.</p>
+                <ul>
+                    <li>MITRE ATT&CK mappings</li>
+                    <li>Attack playbooks and kill chains</li>
+                    <li>Malware analysis reports</li>
+                    <li>Detection rule development guidance</li>
+                </ul>
+
+                <h3>Operational Intelligence</h3>
+                <p>Information about specific incoming attacks or campaigns enabling proactive defense.</p>
+                <ul>
+                    <li>Campaign tracking and attribution</li>
+                    <li>Threat actor profiles and targeting</li>
+                    <li>Vulnerability exploitation timelines</li>
+                    <li>Attack infrastructure mapping</li>
+                </ul>
+
+                <h3>Technical Intelligence</h3>
+                <p>Machine-readable indicators that can be directly operationalized in security tools.</p>
+                <ul>
+                    <li>IP addresses, domains, URLs</li>
+                    <li>File hashes (MD5, SHA1, SHA256)</li>
+                    <li>Email indicators (sender, subject, attachments)</li>
+                    <li>Network signatures (YARA, Snort, Sigma)</li>
+                </ul>
+
+                <div class="comparison-grid">
+                    <div class="comparison-item sentinel">
+                        <h4>Sentinel TI Integration</h4>
+                        <p>Built-in threat intelligence via Microsoft Defender Threat Intelligence (MDTI), threat indicator tables, and TI workbooks for visualization.</p>
+                    </div>
+                    <div class="comparison-item splunk">
+                        <h4>Splunk TI Framework</h4>
+                        <p>Enterprise Security threat intelligence framework with KV stores, threat_activity datamodel, and integration with various TI platforms.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Indicator Types -->
+            <section>
+                <h2>Indicator Types and Confidence</h2>
+
+                <h3>Pyramid of Pain</h3>
+                <p>David Bianco's Pyramid of Pain illustrates the difficulty for adversaries when defenders detect and block different indicator types:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Pyramid of Pain (Bottom to Top)</span>
+                    </div>
+                    <pre>
+┌─────────────────────────────────────┐
+│          TTPs (Hardest)             │ ← Behavioral detections
+├─────────────────────────────────────┤
+│           Tools                     │ ← Tool-specific signatures
+├─────────────────────────────────────┤
+│      Network/Host Artifacts         │ ← C2 patterns, registry keys
+├─────────────────────────────────────┤
+│        Domain Names                 │ ← DNS blocklists
+├─────────────────────────────────────┤
+│        IP Addresses                 │ ← Firewall blocks
+├─────────────────────────────────────┤
+│       Hash Values (Easiest)         │ ← File blocklists
+└─────────────────────────────────────┘
+
+Detection Value: Higher levels = More durable detections
+Adversary Cost:  Higher levels = More expensive to change</pre>
+                </div>
+
+                <h3>Indicator Confidence Levels</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Confidence</th>
+                                <th>Score Range</th>
+                                <th>Description</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="status-badge critical">High</span></td>
+                                <td>80-100</td>
+                                <td>Confirmed malicious, multiple validations</td>
+                                <td>Block, alert, auto-respond</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge warning">Medium</span></td>
+                                <td>50-79</td>
+                                <td>Likely malicious, some uncertainty</td>
+                                <td>Alert, investigate, conditional block</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge info">Low</span></td>
+                                <td>20-49</td>
+                                <td>Possible threat, limited evidence</td>
+                                <td>Log, monitor, watchlist</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge">Unknown</span></td>
+                                <td>0-19</td>
+                                <td>Unverified, needs investigation</td>
+                                <td>Enrich, correlate, no action</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box warning">
+                    <strong>⚠️ Confidence Decay:</strong> Indicator confidence should decrease over time. A hash that was high-confidence 2 years ago may no longer be relevant. Implement automatic confidence decay policies.
+                </div>
+            </section>
+
+            <!-- Intelligence Sources -->
+            <section>
+                <h2>Threat Intelligence Sources</h2>
+
+                <h3>Commercial Feeds</h3>
+                <ul>
+                    <li><strong>Recorded Future</strong> - Real-time threat intelligence platform</li>
+                    <li><strong>Mandiant/FireEye</strong> - APT tracking and threat analysis</li>
+                    <li><strong>CrowdStrike Falcon X</strong> - Adversary intelligence</li>
+                    <li><strong>Anomali ThreatStream</strong> - TI aggregation platform</li>
+                    <li><strong>Microsoft MDTI</strong> - Integrated with Defender ecosystem</li>
+                </ul>
+
+                <h3>Open Source Intelligence (OSINT)</h3>
+                <ul>
+                    <li><strong>AlienVault OTX</strong> - Community threat intelligence</li>
+                    <li><strong>Abuse.ch</strong> - URLhaus, MalwareBazaar, ThreatFox</li>
+                    <li><strong>VirusTotal</strong> - File and URL analysis</li>
+                    <li><strong>MISP</strong> - Open Source Threat Intelligence Platform</li>
+                    <li><strong>OpenCTI</strong> - Open Cyber Threat Intelligence Platform</li>
+                    <li><strong>PhishTank</strong> - Phishing URL database</li>
+                </ul>
+
+                <h3>Industry Sharing (ISACs/ISAOs)</h3>
+                <ul>
+                    <li><strong>FS-ISAC</strong> - Financial Services</li>
+                    <li><strong>H-ISAC</strong> - Healthcare</li>
+                    <li><strong>E-ISAC</strong> - Energy Sector</li>
+                    <li><strong>MS-ISAC</strong> - Multi-State (Government)</li>
+                    <li><strong>IT-ISAC</strong> - Information Technology</li>
+                </ul>
+
+                <h3>Government Sources</h3>
+                <ul>
+                    <li><strong>CISA</strong> - Advisories, alerts, and IOCs</li>
+                    <li><strong>FBI IC3</strong> - Cybercrime intelligence</li>
+                    <li><strong>NSA Cybersecurity Advisories</strong></li>
+                    <li><strong>NCSC (UK)</strong> - Threat reports and guidance</li>
+                    <li><strong>CCCS (Canada)</strong> - Canadian Centre for Cyber Security</li>
+                </ul>
+            </section>
+
+            <!-- STIX/TAXII -->
+            <section>
+                <h2>Intelligence Standards: STIX & TAXII</h2>
+
+                <h3>STIX 2.1 (Structured Threat Information Expression)</h3>
+                <p>A standardized language for describing cyber threat information in a structured, machine-readable format.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>STIX 2.1 Domain Objects</span>
+                    </div>
+                    <pre>
+┌─────────────────────────────────────────────────────────────┐
+│ STIX Domain Objects (SDOs)                                  │
+├─────────────────────────────────────────────────────────────┤
+│ Attack Pattern   - TTPs and techniques                      │
+│ Campaign         - Related attack activities                │
+│ Course of Action - Mitigation/response steps                │
+│ Grouping         - Logical grouping of objects              │
+│ Identity         - Individuals, organizations, groups       │
+│ Indicator        - Observable patterns for detection        │
+│ Infrastructure   - Systems used by threat actors            │
+│ Intrusion Set    - Grouped behaviors (threat actor proxy)   │
+│ Location         - Geographic locations                     │
+│ Malware          - Malicious software                       │
+│ Malware Analysis - Results of malware analysis              │
+│ Note             - Analyst comments                         │
+│ Observed Data    - Raw telemetry observations               │
+│ Opinion          - Assessment/confidence statements         │
+│ Report           - Finished intelligence product            │
+│ Threat Actor     - Individuals/groups conducting attacks    │
+│ Tool             - Legitimate software used maliciously     │
+│ Vulnerability    - CVE/weakness information                 │
+└─────────────────────────────────────────────────────────────┘</pre>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>STIX 2.1 Indicator Example (JSON)</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>{
+  "type": "indicator",
+  "spec_version": "2.1",
+  "id": "indicator--8e2e2d2b-17d4-4cbf-938f-98ee46b3cd3f",
+  "created": "2024-01-15T13:30:00.000Z",
+  "modified": "2024-01-15T13:30:00.000Z",
+  "name": "Cobalt Strike Beacon C2",
+  "description": "Domain associated with Cobalt Strike C2 infrastructure",
+  "indicator_types": ["malicious-activity"],
+  "pattern": "[domain-name:value = 'malicious-c2.example.com']",
+  "pattern_type": "stix",
+  "valid_from": "2024-01-15T00:00:00Z",
+  "valid_until": "2024-04-15T00:00:00Z",
+  "confidence": 85,
+  "labels": ["c2", "cobalt-strike"],
+  "external_references": [
+    {
+      "source_name": "Internal Analysis",
+      "description": "IR Case #2024-0142"
+    }
+  ]
+}</code></pre>
+                </div>
+
+                <h3>TAXII (Trusted Automated Exchange of Intelligence Information)</h3>
+                <p>A protocol for exchanging STIX content over HTTPS. Defines how threat intelligence is shared between systems.</p>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>TAXII Component</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Server</strong></td>
+                                <td>Hosts collections of STIX data</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Collection</strong></td>
+                                <td>Logical repository of threat intelligence</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Channel</strong></td>
+                                <td>Publish-subscribe mechanism for real-time sharing</td>
+                            </tr>
+                            <tr>
+                                <td><strong>API Root</strong></td>
+                                <td>Base URL for accessing collections</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- IOC Lifecycle -->
+            <section>
+                <h2>IOC Lifecycle Management</h2>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>IOC Lifecycle States</span>
+                    </div>
+                    <pre>
+┌───────────┐    ┌───────────┐    ┌───────────┐    ┌───────────┐
+│  Ingested │───▶│ Validated │───▶│  Active   │───▶│  Expired  │
+└───────────┘    └───────────┘    └───────────┘    └───────────┘
+      │               │                 │                │
+      ▼               ▼                 ▼                ▼
+   Raw feed      Enriched,        Deployed to       Archived,
+   import        confidence       detection          removed from
+                 scored           systems            active use</pre>
+                </div>
+
+                <h3>Recommended TTL by Indicator Type</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Indicator Type</th>
+                                <th>Recommended TTL</th>
+                                <th>Rationale</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>File Hash (MD5/SHA)</td>
+                                <td>180-365 days</td>
+                                <td>Static, but malware becomes irrelevant</td>
+                            </tr>
+                            <tr>
+                                <td>Domain</td>
+                                <td>30-90 days</td>
+                                <td>Can change ownership, be sinkholed</td>
+                            </tr>
+                            <tr>
+                                <td>IP Address</td>
+                                <td>7-30 days</td>
+                                <td>Highly dynamic, cloud/VPS rotation</td>
+                            </tr>
+                            <tr>
+                                <td>URL</td>
+                                <td>7-14 days</td>
+                                <td>Very short-lived, campaigns end quickly</td>
+                            </tr>
+                            <tr>
+                                <td>Email Address</td>
+                                <td>30-90 days</td>
+                                <td>Campaign-specific, reuse is limited</td>
+                            </tr>
+                            <tr>
+                                <td>TTP/Behavior</td>
+                                <td>365+ days</td>
+                                <td>Most durable, adversaries slow to change</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>KQL: IOC Age Analysis</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>KQL - Analyze IOC Age Distribution</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>ThreatIntelligenceIndicator
+| where TimeGenerated > ago(90d)
+| where Active == true
+| extend IndicatorAge = datetime_diff('day', now(), CreatedTimeUtc)
+| extend AgeCategory = case(
+    IndicatorAge <= 7, "Fresh (0-7 days)",
+    IndicatorAge <= 30, "Recent (8-30 days)",
+    IndicatorAge <= 90, "Aging (31-90 days)",
+    IndicatorAge <= 180, "Stale (91-180 days)",
+    "Expired (180+ days)"
+)
+| summarize 
+    IndicatorCount = count(),
+    AvgConfidence = avg(ConfidenceScore)
+    by AgeCategory, ThreatType
+| order by AgeCategory asc</code></pre>
+                </div>
+            </section>
+
+            <!-- Quality Assessment -->
+            <section>
+                <h2>Intelligence Quality Assessment</h2>
+
+                <h3>Quality Dimensions</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dimension</th>
+                                <th>Description</th>
+                                <th>Measurement</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Accuracy</strong></td>
+                                <td>Is the intelligence correct?</td>
+                                <td>True positive rate, validation results</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Relevance</strong></td>
+                                <td>Does it apply to your environment?</td>
+                                <td>Match rate against your telemetry</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Timeliness</strong></td>
+                                <td>Is it current and actionable?</td>
+                                <td>Age, time to detection after publication</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Completeness</strong></td>
+                                <td>Does it include necessary context?</td>
+                                <td>Enrichment fields populated, TTP mapping</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Actionability</strong></td>
+                                <td>Can you operationalize it?</td>
+                                <td>Detection rules created, blocks implemented</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>KQL: Feed Quality Scoring</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>KQL - Threat Feed Quality Analysis</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>// Analyze quality metrics by threat intelligence source
+let TIMatches = SecurityAlert
+| where TimeGenerated > ago(30d)
+| where AlertType contains "TI"
+| extend SourceFeed = extract(@"Source:\s*(\w+)", 1, ExtendedProperties)
+| summarize 
+    Alerts = count(),
+    TruePositives = countif(Classification == "TruePositive"),
+    FalsePositives = countif(Classification == "FalsePositive")
+    by SourceFeed;
+//
+let TIIndicators = ThreatIntelligenceIndicator
+| where TimeGenerated > ago(30d)
+| summarize TotalIndicators = count() by SourceSystem;
+//
+TIMatches
+| join kind=leftouter TIIndicators on $left.SourceFeed == $right.SourceSystem
+| extend 
+    TPRate = round(100.0 * TruePositives / Alerts, 2),
+    FPRate = round(100.0 * FalsePositives / Alerts, 2),
+    HitRate = round(100.0 * Alerts / TotalIndicators, 4)
+| extend QualityScore = (TPRate * 0.5) + ((100 - FPRate) * 0.3) + (HitRate * 0.2)
+| project SourceFeed, TotalIndicators, Alerts, TruePositives, FalsePositives, 
+          TPRate, FPRate, HitRate, QualityScore
+| order by QualityScore desc</code></pre>
+                </div>
+            </section>
+
+            <!-- Interview Section -->
+            <section class="interview-section">
+                <h2>🎯 Interview Questions</h2>
+                
+                <div class="interview-question">
+                    <h4>Q: What is the Pyramid of Pain and how does it guide detection strategy?</h4>
+                    <div class="interview-answer">
+                        <p><strong>A:</strong> The Pyramid of Pain ranks indicator types by how difficult they are for adversaries to change:</p>
+                        <ul>
+                            <li><strong>Bottom (Easy to change):</strong> Hash values - adversaries change a single byte</li>
+                            <li><strong>Middle:</strong> IP addresses, domains - infrastructure can be rotated</li>
+                            <li><strong>Top (Hard to change):</strong> TTPs - behavioral patterns require significant retooling</li>
+                        </ul>
+                        <p>Detection strategy should prioritize higher levels for durable detections. While hash-based IOCs are easy to implement, they're also easy to evade. Behavioral detections based on TTPs (like detecting credential dumping techniques regardless of specific tool) provide longer-lasting value.</p>
+                    </div>
+                </div>
+
+                <div class="interview-question">
+                    <h4>Q: How do you evaluate the quality of a threat intelligence feed?</h4>
+                    <div class="interview-answer">
+                        <p><strong>A:</strong> I evaluate feeds across multiple dimensions:</p>
+                        <ul>
+                            <li><strong>Accuracy:</strong> True positive rate when indicators match - are alerts legitimate threats?</li>
+                            <li><strong>Relevance:</strong> Do indicators relate to our industry, technology stack, and threat profile?</li>
+                            <li><strong>Timeliness:</strong> How fresh are indicators? What's the delay from threat emergence to feed publication?</li>
+                            <li><strong>Coverage:</strong> Does the feed provide context (TTPs, attribution, related indicators)?</li>
+                            <li><strong>False Positive Rate:</strong> How many alerts are noise vs actionable?</li>
+                        </ul>
+                        <p>I track metrics per feed and regularly compare quality scores to make retention decisions and optimize budget allocation.</p>
+                    </div>
+                </div>
+
+                <div class="interview-question">
+                    <h4>Q: Explain the difference between strategic, tactical, operational, and technical threat intelligence.</h4>
+                    <div class="interview-answer">
+                        <p><strong>A:</strong></p>
+                        <ul>
+                            <li><strong>Strategic:</strong> High-level trends for executives - "Nation-state actors are targeting healthcare sector"</li>
+                            <li><strong>Tactical:</strong> TTPs for security teams - "APT29 uses OAuth token theft via phishing"</li>
+                            <li><strong>Operational:</strong> Specific campaign info - "Campaign X targeting financial institutions in Q1"</li>
+                            <li><strong>Technical:</strong> Machine-readable IOCs - "Block IP 192.0.2.100, hash abc123..."</li>
+                        </ul>
+                        <p>As a detection engineer, I primarily consume tactical and technical intelligence - TTPs inform behavioral detection logic, while IOCs enable direct matching. However, strategic and operational context helps prioritize detection development.</p>
+                    </div>
+                </div>
+
+                <div class="interview-question">
+                    <h4>Q: How do you handle IOC lifecycle management to prevent alert fatigue?</h4>
+                    <div class="interview-answer">
+                        <p><strong>A:</strong> Effective IOC lifecycle management includes:</p>
+                        <ul>
+                            <li><strong>TTL Policies:</strong> Set expiration based on indicator type - IPs expire in 7-30 days, hashes in 180 days</li>
+                            <li><strong>Confidence Decay:</strong> Automatically reduce confidence scores over time</li>
+                            <li><strong>Validation:</strong> Periodically check if indicators are still active (domain still resolving, IP still malicious)</li>
+                            <li><strong>Deduplication:</strong> Merge overlapping indicators from multiple feeds</li>
+                            <li><strong>Relevance Filtering:</strong> Only ingest indicators relevant to our environment (e.g., skip Android malware if we're Windows-only)</li>
+                        </ul>
+                        <p>I also implement feedback loops - when analysts mark alerts as false positives, those indicators get flagged for review or automatic removal.</p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="page-navigation">
+                <a href="../detection-engineering/metrics-optimization.html" class="prev-page">← Detection Metrics</a>
+                <a href="integration-sentinel.html" class="next-page">Sentinel TI Integration →</a>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/sidebar.js"></script>
+    <script>
+        function copyCode(btn) {
+            const code = btn.parentElement.nextElementSibling.textContent;
+            navigator.clipboard.writeText(code);
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = 'Copy', 2000);
+        }
+    </script>
+</body>
+</html>

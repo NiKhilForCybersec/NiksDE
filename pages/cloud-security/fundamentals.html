@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Security Fundamentals - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <span class="logo-icon">⚡</span>
+                    <span class="logo-text">Detection<span class="logo-accent">Mastery</span></span>
+                </a>
+                <button class="sidebar-toggle" aria-label="Toggle sidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section expanded" data-section="cloud">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+                            <span>Cloud Security</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item active">Cloud Security Fundamentals</a>
+                        <a href="aws-security.html" class="nav-item">AWS Security</a>
+                        <a href="azure-security.html" class="nav-item">Azure Security</a>
+                        <a href="gcp-security.html" class="nav-item">GCP Security</a>
+                        <a href="cspm.html" class="nav-item">CSPM & CWPP</a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+
+            <div class="content-wrapper">
+                <div class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <span class="current">Cloud Security Fundamentals</span>
+                </div>
+
+                <article class="content">
+                    <header class="content-header">
+                        <h1>Cloud Security Fundamentals</h1>
+                        <p class="content-subtitle">Core concepts, shared responsibility, and detection strategies for cloud environments</p>
+                    </header>
+
+                    <!-- Shared Responsibility -->
+                    <section class="content-section">
+                        <h2>Shared Responsibility Model</h2>
+                        
+                        <p>Understanding the division of security responsibilities between cloud providers and customers is fundamental to effective cloud security. The model varies by service type.</p>
+
+                        <div class="table-responsive">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Responsibility</th>
+                                        <th>IaaS</th>
+                                        <th>PaaS</th>
+                                        <th>SaaS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Data Classification</strong></td>
+                                        <td><span class="badge badge-cyan">Customer</span></td>
+                                        <td><span class="badge badge-cyan">Customer</span></td>
+                                        <td><span class="badge badge-cyan">Customer</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Identity & Access</strong></td>
+                                        <td><span class="badge badge-cyan">Customer</span></td>
+                                        <td><span class="badge badge-cyan">Customer</span></td>
+                                        <td><span class="badge badge-purple">Shared</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Application</strong></td>
+                                        <td><span class="badge badge-cyan">Customer</span></td>
+                                        <td><span class="badge badge-purple">Shared</span></td>
+                                        <td><span class="badge badge-blue">Provider</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Network Controls</strong></td>
+                                        <td><span class="badge badge-cyan">Customer</span></td>
+                                        <td><span class="badge badge-purple">Shared</span></td>
+                                        <td><span class="badge badge-blue">Provider</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>OS & Middleware</strong></td>
+                                        <td><span class="badge badge-cyan">Customer</span></td>
+                                        <td><span class="badge badge-blue">Provider</span></td>
+                                        <td><span class="badge badge-blue">Provider</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Compute/Storage/Network</strong></td>
+                                        <td><span class="badge badge-blue">Provider</span></td>
+                                        <td><span class="badge badge-blue">Provider</span></td>
+                                        <td><span class="badge badge-blue">Provider</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Physical Security</strong></td>
+                                        <td><span class="badge badge-blue">Provider</span></td>
+                                        <td><span class="badge badge-blue">Provider</span></td>
+                                        <td><span class="badge badge-blue">Provider</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="info-box info-tip">
+                            <div class="info-box-header">
+                                <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                <span>Detection Implication</span>
+                            </div>
+                            <p>In cloud environments, you're responsible for detecting threats within your responsibility boundary. This means monitoring IAM, application behavior, network configurations, and data access - even if the underlying infrastructure is provider-managed.</p>
+                        </div>
+                    </section>
+
+                    <!-- Cloud Attack Surface -->
+                    <section class="content-section">
+                        <h2>Cloud Attack Surface</h2>
+                        
+                        <h3>Common Cloud Attack Vectors</h3>
+                        <div class="comparison-grid">
+                            <div class="comparison-card">
+                                <h4>Identity & Access</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li>Compromised API keys/access tokens</li>
+                                        <li>Overprivileged IAM roles</li>
+                                        <li>Service account abuse</li>
+                                        <li>Federation/SSO misconfiguration</li>
+                                        <li>MFA bypass or fatigue</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="comparison-card">
+                                <h4>Configuration</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li>Public storage buckets/blobs</li>
+                                        <li>Exposed management interfaces</li>
+                                        <li>Permissive security groups</li>
+                                        <li>Unencrypted data at rest/transit</li>
+                                        <li>Logging disabled or incomplete</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="comparison-card">
+                                <h4>Workload</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li>Container escape/breakout</li>
+                                        <li>Serverless function abuse</li>
+                                        <li>SSRF from cloud metadata</li>
+                                        <li>Cryptomining on compute resources</li>
+                                        <li>Supply chain (base images)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="comparison-card">
+                                <h4>Data</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li>Data exfiltration via storage</li>
+                                        <li>Snapshot/backup theft</li>
+                                        <li>Database exposure</li>
+                                        <li>Secrets in code/config</li>
+                                        <li>Cross-account data access</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Cloud Provider Comparison -->
+                    <section class="content-section">
+                        <h2>Major Cloud Providers - Security Services</h2>
+                        
+                        <div class="table-responsive">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Security Function</th>
+                                        <th>AWS</th>
+                                        <th>Azure</th>
+                                        <th>GCP</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Identity & Access</strong></td>
+                                        <td>IAM, Organizations, SSO</td>
+                                        <td>Entra ID, RBAC, PIM</td>
+                                        <td>Cloud IAM, Identity</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Logging & Monitoring</strong></td>
+                                        <td>CloudTrail, CloudWatch</td>
+                                        <td>Activity Log, Monitor, Log Analytics</td>
+                                        <td>Cloud Audit Logs, Cloud Monitoring</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Threat Detection</strong></td>
+                                        <td>GuardDuty, Detective</td>
+                                        <td>Defender for Cloud, Sentinel</td>
+                                        <td>Security Command Center, Chronicle</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Network Security</strong></td>
+                                        <td>Security Groups, NACLs, WAF</td>
+                                        <td>NSGs, Azure Firewall, WAF</td>
+                                        <td>VPC Firewall, Cloud Armor</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Secrets Management</strong></td>
+                                        <td>Secrets Manager, Parameter Store</td>
+                                        <td>Key Vault</td>
+                                        <td>Secret Manager</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>CSPM</strong></td>
+                                        <td>Security Hub, Config</td>
+                                        <td>Defender for Cloud</td>
+                                        <td>Security Command Center</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Container Security</strong></td>
+                                        <td>ECR Scanning, Inspector</td>
+                                        <td>Defender for Containers</td>
+                                        <td>Container Analysis, Binary Auth</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Essential Logging -->
+                    <section class="content-section">
+                        <h2>Essential Cloud Logging</h2>
+                        
+                        <h3>Must-Enable Log Sources</h3>
+                        <div class="info-box info-warning">
+                            <div class="info-box-header">
+                                <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                <span>Critical: Enable These First</span>
+                            </div>
+                            <p>Many cloud security incidents go undetected because logging wasn't properly configured. These log sources should be enabled in every cloud environment.</p>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Log Category</th>
+                                        <th>AWS</th>
+                                        <th>Azure</th>
+                                        <th>GCP</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>API/Control Plane</strong></td>
+                                        <td>CloudTrail (all regions, multi-account)</td>
+                                        <td>Activity Log, Entra Audit</td>
+                                        <td>Admin Activity logs</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Data Plane</strong></td>
+                                        <td>CloudTrail data events (S3, Lambda)</td>
+                                        <td>Storage analytics, Key Vault logs</td>
+                                        <td>Data Access logs (enable explicitly)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Network Flow</strong></td>
+                                        <td>VPC Flow Logs (all VPCs)</td>
+                                        <td>NSG Flow Logs</td>
+                                        <td>VPC Flow Logs</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Identity/Auth</strong></td>
+                                        <td>CloudTrail IAM events</td>
+                                        <td>Entra Sign-in logs</td>
+                                        <td>IAM audit logs</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>DNS</strong></td>
+                                        <td>Route 53 query logs</td>
+                                        <td>Azure DNS Analytics</td>
+                                        <td>Cloud DNS logs</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3>Log Retention Best Practices</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">Config</span>
+                                <span class="code-title">Recommended Retention Periods</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code># Cloud Log Retention Recommendations
+
+## Security-Critical Logs (CloudTrail, Activity Log, Audit Logs)
+Hot Storage:    90 days   # Active querying and alerting
+Warm Storage:   1 year    # Incident investigation
+Cold/Archive:   7 years   # Compliance retention (varies by regulation)
+
+## Network Flow Logs
+Hot Storage:    30 days   # Active monitoring
+Warm Storage:   90 days   # Investigation
+Archive:        1 year    # Forensics
+
+## Application Logs
+Hot Storage:    14-30 days
+Warm Storage:   90 days
+Archive:        1 year (if compliance required)
+
+## Cost Optimization Tips
+- Use tiered storage (S3 Glacier, Azure Cool/Archive)
+- Aggregate and compress before archiving
+- Define lifecycle policies to auto-transition
+- Sample high-volume logs if cost-prohibitive</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Detection Strategies -->
+                    <section class="content-section">
+                        <h2>Cloud Detection Strategies</h2>
+                        
+                        <h3>Detection Categories by Priority</h3>
+                        <div class="comparison-grid">
+                            <div class="comparison-card" style="border-left-color: #ef4444;">
+                                <h4>P1: Critical Detections</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li>Root/Global Admin activity</li>
+                                        <li>IAM policy changes allowing public access</li>
+                                        <li>Security group 0.0.0.0/0 ingress</li>
+                                        <li>Logging disabled or deleted</li>
+                                        <li>Access key created for root</li>
+                                        <li>Storage bucket made public</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="comparison-card" style="border-left-color: #f97316;">
+                                <h4>P2: High Priority</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li>Privilege escalation patterns</li>
+                                        <li>Unusual cross-account access</li>
+                                        <li>API calls from new regions</li>
+                                        <li>Mass resource deletion</li>
+                                        <li>Secrets Manager bulk access</li>
+                                        <li>Service account credential theft</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="comparison-card" style="border-left-color: #eab308;">
+                                <h4>P3: Medium Priority</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li>Unusual data transfer volumes</li>
+                                        <li>Failed access patterns</li>
+                                        <li>Resource creation in unused regions</li>
+                                        <li>Configuration drift from baseline</li>
+                                        <li>Snapshot creation/sharing</li>
+                                        <li>Network ACL modifications</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3>Universal Cloud Detection - Logging Tampering</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">Cross-Cloud Logging Tampering Detection</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// AWS - CloudTrail tampering
+AWSCloudTrail
+| where TimeGenerated > ago(24h)
+| where EventName in (
+    "StopLogging",
+    "DeleteTrail",
+    "UpdateTrail",
+    "PutEventSelectors"
+)
+| project 
+    TimeGenerated,
+    CloudProvider = "AWS",
+    EventName,
+    UserIdentityArn,
+    SourceIpAddress,
+    AlertSeverity = "Critical"
+
+// Azure - Diagnostic settings tampering
+AzureActivity
+| where TimeGenerated > ago(24h)
+| where OperationNameValue has_any (
+    "MICROSOFT.INSIGHTS/DIAGNOSTICSETTINGS/DELETE",
+    "MICROSOFT.INSIGHTS/DIAGNOSTICSETTINGS/WRITE"
+)
+| where ActivityStatusValue == "Success"
+| project 
+    TimeGenerated,
+    CloudProvider = "Azure",
+    OperationName = OperationNameValue,
+    Caller,
+    CallerIpAddress,
+    AlertSeverity = "Critical"
+
+// GCP - Audit config changes
+// (Assumes GCP logs ingested to Sentinel)
+GCPAuditLogs_CL
+| where TimeGenerated > ago(24h)
+| where protoPayload_methodName_s has_any (
+    "SetIamPolicy",
+    "UpdateSink",
+    "DeleteSink"
+)
+| where protoPayload_methodName_s contains "logging"
+| project 
+    TimeGenerated,
+    CloudProvider = "GCP",
+    Method = protoPayload_methodName_s,
+    Principal = protoPayload_authenticationInfo_principalEmail_s,
+    AlertSeverity = "Critical"</code></pre>
+                        </div>
+
+                        <h3>Public Exposure Detection</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">Detect Public Resource Exposure</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// AWS S3 bucket made public
+AWSCloudTrail
+| where TimeGenerated > ago(24h)
+| where EventName in ("PutBucketAcl", "PutBucketPolicy", 
+    "PutAccessPointPolicy")
+| where RequestParameters contains "AllUsers" or 
+    RequestParameters contains "AuthenticatedUsers" or
+    RequestParameters contains '"Effect":"Allow"' and 
+    RequestParameters contains '"Principal":"*"'
+| project 
+    TimeGenerated,
+    EventName,
+    BucketName = extract('"bucketName":"([^"]+)"', 1, RequestParameters),
+    UserIdentityArn,
+    SourceIpAddress,
+    AlertSeverity = "Critical",
+    AlertTitle = "S3 Bucket Public Access Configured"
+
+// Azure Storage public access
+AzureActivity
+| where TimeGenerated > ago(24h)
+| where OperationNameValue has "MICROSOFT.STORAGE"
+| where Properties contains '"allowBlobPublicAccess":true' or
+    Properties contains '"publicAccess":"Blob"' or
+    Properties contains '"publicAccess":"Container"'
+| project 
+    TimeGenerated,
+    OperationName = OperationNameValue,
+    ResourceId = _ResourceId,
+    Caller,
+    AlertSeverity = "Critical"
+
+// Security Group allowing 0.0.0.0/0 on sensitive ports
+AWSCloudTrail
+| where TimeGenerated > ago(24h)
+| where EventName in ("AuthorizeSecurityGroupIngress", 
+    "ModifySecurityGroupRules")
+| where RequestParameters contains "0.0.0.0/0"
+| extend SensitivePort = RequestParameters contains "22" or 
+    RequestParameters contains "3389" or 
+    RequestParameters contains "3306" or
+    RequestParameters contains "1433"
+| where SensitivePort
+| project TimeGenerated, EventName, UserIdentityArn, 
+    RequestParameters, SourceIpAddress</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- IAM Security -->
+                    <section class="content-section">
+                        <h2>Cloud IAM Security</h2>
+                        
+                        <h3>Privilege Escalation Detection</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">IAM Privilege Escalation Patterns</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// AWS - IAM privilege escalation events
+let PrivEscEvents = dynamic([
+    "CreateAccessKey",
+    "CreateLoginProfile", 
+    "UpdateLoginProfile",
+    "AttachUserPolicy",
+    "AttachGroupPolicy",
+    "AttachRolePolicy",
+    "PutUserPolicy",
+    "PutGroupPolicy", 
+    "PutRolePolicy",
+    "CreatePolicyVersion",
+    "SetDefaultPolicyVersion",
+    "PassRole",
+    "UpdateAssumeRolePolicy",
+    "iam:CreateUser",
+    "iam:AddUserToGroup"
+]);
+AWSCloudTrail
+| where TimeGenerated > ago(24h)
+| where EventName in (PrivEscEvents)
+| where ErrorCode == ""  // Successful only
+| summarize 
+    EventCount = count(),
+    Events = make_set(EventName),
+    TargetResources = make_set(extract('"(arn:aws:[^"]+)"', 1, RequestParameters))
+    by UserIdentityArn, SourceIpAddress, bin(TimeGenerated, 1h)
+| where EventCount > 3  // Multiple priv esc events
+| extend AlertSeverity = iff(EventCount > 5, "Critical", "High")
+
+// Azure - Dangerous role assignments
+AuditLogs
+| where TimeGenerated > ago(24h)
+| where OperationName has_any ("Add member to role", 
+    "Add eligible member to role")
+| where TargetResources[0].displayName has_any (
+    "Global Administrator",
+    "Privileged Role Administrator",
+    "Security Administrator",
+    "User Administrator"
+)
+| project 
+    TimeGenerated,
+    AssignedRole = TargetResources[0].displayName,
+    TargetUser = TargetResources[0].userPrincipalName,
+    AssignedBy = InitiatedBy.user.userPrincipalName,
+    AlertSeverity = "High"</code></pre>
+                        </div>
+
+                        <h3>IAM Best Practices</h3>
+                        <div class="info-box info-tip">
+                            <div class="info-box-header">
+                                <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                <span>IAM Security Principles</span>
+                            </div>
+                            <ul class="styled-list">
+                                <li><strong>Least Privilege:</strong> Grant minimum permissions required</li>
+                                <li><strong>No Long-Lived Credentials:</strong> Use roles, not access keys when possible</li>
+                                <li><strong>MFA Everywhere:</strong> Require MFA for all human access</li>
+                                <li><strong>Separate Accounts:</strong> Use account/project boundaries for isolation</li>
+                                <li><strong>Audit Regularly:</strong> Review permissions quarterly, remove unused</li>
+                                <li><strong>Rotate Credentials:</strong> 90-day maximum for any long-lived credentials</li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <!-- MITRE ATT&CK Cloud -->
+                    <section class="content-section">
+                        <h2>MITRE ATT&CK for Cloud</h2>
+                        
+                        <h3>Cloud-Specific Techniques</h3>
+                        <div class="table-responsive">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Tactic</th>
+                                        <th>Technique</th>
+                                        <th>Detection Log Source</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Initial Access</strong></td>
+                                        <td>T1078.004 - Valid Accounts: Cloud</td>
+                                        <td>CloudTrail, Sign-in logs</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Persistence</strong></td>
+                                        <td>T1098.001 - Account Manipulation: SSH Keys</td>
+                                        <td>CloudTrail EC2 events</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Privilege Escalation</strong></td>
+                                        <td>T1548.005 - Abuse Elevation Control: Temp Creds</td>
+                                        <td>STS AssumeRole events</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Defense Evasion</strong></td>
+                                        <td>T1562.008 - Impair Defenses: Cloud Logs</td>
+                                        <td>CloudTrail StopLogging</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Credential Access</strong></td>
+                                        <td>T1552.005 - Cloud Instance Metadata API</td>
+                                        <td>VPC Flow Logs to 169.254.169.254</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Discovery</strong></td>
+                                        <td>T1580 - Cloud Infrastructure Discovery</td>
+                                        <td>Describe/List API calls</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Collection</strong></td>
+                                        <td>T1530 - Data from Cloud Storage</td>
+                                        <td>S3 GetObject, Blob downloads</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Exfiltration</strong></td>
+                                        <td>T1537 - Transfer Data to Cloud Account</td>
+                                        <td>Cross-account S3 copies</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Interview Q&A -->
+                    <section class="content-section">
+                        <h2>Interview Preparation</h2>
+                        
+                        <div class="expandable open">
+                            <div class="expandable-header">
+                                <span class="expandable-icon">▶</span>
+                                <h3>Q: Explain the shared responsibility model for cloud security.</h3>
+                            </div>
+                            <div class="expandable-content">
+                                <p><strong>Strong Answer:</strong> The shared responsibility model defines who secures what between cloud provider and customer. The provider always handles physical security, infrastructure, and foundational services. The customer's responsibilities vary by service type: In IaaS (EC2, VMs), customers manage OS, applications, network config, and data. In PaaS (Lambda, App Service), providers manage more, but customers still own application code, data, and identity. In SaaS (M365, Salesforce), providers handle most security, but customers manage data classification, user access, and configuration. For detection engineering, this means I focus on monitoring what I control - IAM activity, data access patterns, application behavior, and configurations - regardless of who manages the underlying compute. A common mistake is assuming the provider detects threats in customer-managed areas.</p>
+                            </div>
+                        </div>
+
+                        <div class="expandable">
+                            <div class="expandable-header">
+                                <span class="expandable-icon">▶</span>
+                                <h3>Q: What's the first thing you'd check after a suspected cloud compromise?</h3>
+                            </div>
+                            <div class="expandable-content">
+                                <p><strong>Strong Answer:</strong> First, I'd verify logging is intact and hasn't been tampered with - check for DeleteTrail/StopLogging events, diagnostic setting changes, or log sink deletions. Attackers often disable logging early, so gaps indicate compromise scope. Second, I'd examine IAM activity - look for CreateAccessKey, CreateUser, AttachPolicy events that indicate persistence or privilege escalation. Third, I'd check for unauthorized resource creation, especially in unusual regions which is a common attacker pattern. Fourth, I'd review network exposure changes - public bucket policies, security group modifications. Finally, I'd look at data access patterns - bulk S3 downloads, snapshot creations that could indicate exfiltration. Throughout this, I'm preserving forensic evidence and containing by revoking compromised credentials and isolating affected resources.</p>
+                            </div>
+                        </div>
+
+                        <div class="expandable">
+                            <div class="expandable-header">
+                                <span class="expandable-icon">▶</span>
+                                <h3>Q: How do you approach multi-cloud security detection?</h3>
+                            </div>
+                            <div class="expandable-content">
+                                <p><strong>Strong Answer:</strong> Multi-cloud detection requires normalizing diverse log formats into common schemas and building platform-agnostic detection logic. I centralize logs into a single SIEM - Sentinel works well because it has native connectors for AWS, Azure, and GCP. For detection rules, I focus on behaviors rather than specific API names: instead of "AWSCloudTrail EventName=StopLogging", I write logic that catches "any action disabling audit logging" and map each provider's equivalent events. I maintain separate provider-specific detections for unique attack surfaces, but build unified detections for common threats like privilege escalation, public exposure, or unusual data access. MITRE ATT&CK's cloud matrix helps standardize threat coverage across providers. I also ensure consistent identity correlation - mapping IAM principals across clouds when users have access to multiple environments.</p>
+                            </div>
+                        </div>
+
+                        <div class="expandable">
+                            <div class="expandable-header">
+                                <span class="expandable-icon">▶</span>
+                                <h3>Q: What cloud-specific attacks are hardest to detect?</h3>
+                            </div>
+                            <div class="expandable-content">
+                                <p><strong>Strong Answer:</strong> Several cloud attacks are challenging: First, instance metadata service (IMDS) abuse where SSRF vulnerabilities allow attackers to steal credentials from 169.254.169.254 - this happens inside the instance and may not generate cloud-level logs. Detection requires monitoring internal network traffic or application logs. Second, living-off-the-land attacks using legitimate cloud services for C2 and exfiltration - using S3 or Azure Blobs for data transfer looks like normal cloud usage. Third, slow privilege escalation where attackers make small permission changes over time to avoid triggering thresholds. Fourth, cross-account attacks where attackers pivot using misconfigured trust relationships - requires correlation across account boundaries. Fifth, serverless function abuse where ephemeral execution makes traditional EDR approaches ineffective. These require behavioral baselines, cross-service correlation, and understanding legitimate usage patterns to detect anomalies.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Navigation -->
+                    <nav class="page-nav">
+                        <a href="../log-analysis/cloud-logs.html" class="nav-link prev">
+                            <span class="nav-label">Previous</span>
+                            <span class="nav-title">Cloud Logs</span>
+                        </a>
+                        <a href="aws-security.html" class="nav-link next">
+                            <span class="nav-label">Next</span>
+                            <span class="nav-title">AWS Security</span>
+                        </a>
+                    </nav>
+                </article>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

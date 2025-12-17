@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hunting Techniques - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="threat-intel">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                            <span>Threat Intelligence</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item">TI Fundamentals</a>
+                        <a href="sources.html" class="nav-item">Intelligence Sources</a>
+                        <a href="ioc-management.html" class="nav-item">IOC Management</a>
+                        <a href="threat-hunting.html" class="nav-item">Threat Hunting Intro</a>
+                        <a href="hunting-methodology.html" class="nav-item">Hunting Methodology</a>
+                        <a href="hunting-techniques.html" class="nav-item active">Hunting Techniques</a>
+                        <a href="hunting-queries.html" class="nav-item">Hunting Queries</a>
+                        <a href="mitre-framework.html" class="nav-item">MITRE ATT&CK Deep Dive</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="fundamentals.html">Threat Intelligence</a>
+                    <span class="separator">/</span>
+                    <span class="current">Hunting Techniques</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>Threat Hunting Techniques</h1>
+                    <p class="subtitle">Practical hunting techniques—baselining, stacking, frequency analysis, and behavioral pattern detection.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Core Hunting Techniques</h2>
+                    
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Technique</th>
+                                <th>Description</th>
+                                <th>Best For</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Stacking</strong></td>
+                                <td>Group and count to find outliers</td>
+                                <td>Finding rare activity in large datasets</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Baselining</strong></td>
+                                <td>Compare against normal behavior</td>
+                                <td>Anomaly detection</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Clustering</strong></td>
+                                <td>Group similar events together</td>
+                                <td>Pattern identification</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IOC Matching</strong></td>
+                                <td>Search for known bad indicators</td>
+                                <td>Known threat detection</td>
+                            </tr>
+                            <tr>
+                                <td><strong>TTP Hunting</strong></td>
+                                <td>Search for behavioral patterns</td>
+                                <td>Unknown threat detection</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Stacking (Frequency Analysis)</h2>
+
+                    <p>Stack and count to identify rare occurrences that may indicate malicious activity.</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Stacking Examples</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Stack: Rare parent-child process relationships
+DeviceProcessEvents
+| where TimeGenerated > ago(7d)
+| summarize Count = count() by 
+    InitiatingProcessFileName, 
+    FileName
+| where Count < 5  // Rare combinations
+| order by Count asc
+
+// Stack: Unusual service installations
+SecurityEvent
+| where EventID == 7045  // Service installed
+| summarize Count = count() by ServiceName, ServiceFileName
+| where Count == 1  // Unique services
+| order by Count asc
+
+// Stack: Rare scheduled tasks
+DeviceEvents
+| where ActionType == "ScheduledTaskCreated"
+| summarize Count = count() by TaskName = extractjson("$.TaskName", AdditionalFields)
+| where Count < 3
+
+// Stack: Uncommon PowerShell commands
+DeviceProcessEvents
+| where FileName == "powershell.exe"
+| extend Command = extract(@"-[eE]n?c?\s+([A-Za-z0-9+/=]+)", 1, ProcessCommandLine)
+| where isnotempty(Command)
+| summarize Count = count() by Command
+| where Count == 1  // Unique encoded commands</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Baselining</h2>
+
+                    <p>Establish normal behavior and hunt for deviations.</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Baseline Comparison</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Baseline: Normal logon hours for user
+let UserBaseline = SigninLogs
+| where TimeGenerated > ago(30d) and TimeGenerated < ago(1d)
+| extend Hour = datetime_part("Hour", TimeGenerated)
+| summarize 
+    NormalHours = make_set(Hour),
+    AvgLogonsPerDay = count() / 30
+    by UserPrincipalName;
+
+// Hunt: Logons outside normal hours
+SigninLogs
+| where TimeGenerated > ago(1d)
+| extend Hour = datetime_part("Hour", TimeGenerated)
+| join kind=inner UserBaseline on UserPrincipalName
+| where Hour !in (NormalHours)
+| project TimeGenerated, UserPrincipalName, Hour, NormalHours, IPAddress
+
+// Baseline: Normal network destinations
+let NetworkBaseline = DeviceNetworkEvents
+| where TimeGenerated > ago(30d)
+| summarize ConnectionCount = count() by RemoteUrl
+| where ConnectionCount > 100;  // Frequently accessed
+
+// Hunt: New/rare destinations
+DeviceNetworkEvents
+| where TimeGenerated > ago(1d)
+| summarize TodayCount = count() by RemoteUrl
+| join kind=leftanti NetworkBaseline on RemoteUrl
+| where TodayCount > 10  // Some volume but never seen before
+| order by TodayCount desc</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>TTP-Based Hunting</h2>
+
+                    <p>Hunt for specific attack techniques regardless of IOCs.</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Behavioral Pattern Hunting</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Hunt: LSASS Access (Credential Dumping - T1003.001)
+DeviceProcessEvents
+| where TimeGenerated > ago(24h)
+| where FileName =~ "lsass.exe"
+| join kind=inner (
+    DeviceEvents
+    | where ActionType == "ProcessAccess"
+    | where TargetProcessName =~ "lsass.exe"
+) on DeviceId, $left.ProcessId == $right.TargetProcessId
+| where InitiatingProcessFileName !in ("csrss.exe", "services.exe", "svchost.exe")
+| project TimeGenerated, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine
+
+// Hunt: Living Off the Land (LOLBins)
+let LOLBins = dynamic(["certutil.exe", "bitsadmin.exe", "mshta.exe", "regsvr32.exe", 
+                        "rundll32.exe", "wmic.exe", "msbuild.exe", "installutil.exe"]);
+DeviceProcessEvents
+| where TimeGenerated > ago(24h)
+| where FileName in~ (LOLBins)
+| where ProcessCommandLine has_any ("http", "ftp", "/download", "-decode", "-urlcache")
+| project TimeGenerated, DeviceName, FileName, ProcessCommandLine, AccountName
+
+// Hunt: Lateral Movement via WMI (T1047)
+DeviceProcessEvents
+| where TimeGenerated > ago(24h)
+| where InitiatingProcessFileName =~ "wmiprvse.exe"
+| where FileName in~ ("cmd.exe", "powershell.exe", "pwsh.exe")
+| project TimeGenerated, DeviceName, FileName, ProcessCommandLine</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Long Tail Analysis</h2>
+
+                    <div class="info-box tip">
+                        <h4>💡 The Long Tail Principle</h4>
+                        <p>In most environments, a small number of activities account for most events (the "head"), while malicious activity often hides in the rare occurrences (the "tail").</p>
+                        <ul>
+                            <li><strong>Head:</strong> Common, expected activity (filter out)</li>
+                            <li><strong>Tail:</strong> Rare, potentially suspicious (investigate)</li>
+                        </ul>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Long Tail Process Analysis</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Find processes in the long tail (bottom 1%)
+let ProcessCounts = DeviceProcessEvents
+| where TimeGenerated > ago(7d)
+| summarize Count = count() by FileName
+| extend Percentile = row_number() / todouble(count()) * 100;
+
+ProcessCounts
+| where Percentile > 99  // Bottom 1%
+| join kind=inner (
+    DeviceProcessEvents
+    | where TimeGenerated > ago(1d)
+) on FileName
+| project TimeGenerated, DeviceName, FileName, ProcessCommandLine, Count
+| order by Count asc</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What is stacking and when would you use it?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Stacking:</strong> Group data by a field and count occurrences, then sort to find outliers.</p>
+                            <p><strong>Use cases:</strong></p>
+                            <ul>
+                                <li>Find rare process names across environment</li>
+                                <li>Identify unusual parent-child process relationships</li>
+                                <li>Discover uncommon network destinations</li>
+                                <li>Detect unique scheduled tasks or services</li>
+                            </ul>
+                            <p><strong>Key insight:</strong> Malicious activity is often rare - legitimate software appears on many systems, malware appears on few.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="hunting-methodology.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        Hunting Methodology
+                    </a>
+                    <a href="hunting-queries.html" class="nav-link next">
+                        Hunting Queries
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSPM & CWPP - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="cloud">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+                            <span>Cloud Security</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item">Cloud Security Fundamentals</a>
+                        <a href="aws-security.html" class="nav-item">AWS Security</a>
+                        <a href="azure-security.html" class="nav-item">Azure Security</a>
+                        <a href="gcp-security.html" class="nav-item">GCP Security</a>
+                        <a href="multi-cloud.html" class="nav-item">Multi-Cloud Strategy</a>
+                        <a href="cspm.html" class="nav-item active">CSPM & CWPP</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="fundamentals.html">Cloud Security</a>
+                    <span class="separator">/</span>
+                    <span class="current">CSPM & CWPP</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>CSPM & CWPP</h1>
+                    <p class="subtitle">Cloud Security Posture Management and Cloud Workload Protection Platforms—continuous assessment, misconfiguration detection, and runtime protection for cloud environments.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Understanding CSPM & CWPP</h2>
+                    
+                    <div class="grid-2">
+                        <div class="info-box">
+                            <h4>📊 CSPM - Cloud Security Posture Management</h4>
+                            <p>Continuous assessment of cloud configuration against security best practices and compliance frameworks.</p>
+                            <ul>
+                                <li>Misconfiguration detection</li>
+                                <li>Compliance monitoring (CIS, PCI, SOC2)</li>
+                                <li>Identity risk assessment</li>
+                                <li>Attack path analysis</li>
+                                <li>Secure score tracking</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4>🛡️ CWPP - Cloud Workload Protection</h4>
+                            <p>Runtime protection for cloud workloads including VMs, containers, and serverless functions.</p>
+                            <ul>
+                                <li>Vulnerability management</li>
+                                <li>Runtime threat detection</li>
+                                <li>Container security</li>
+                                <li>Serverless protection</li>
+                                <li>File integrity monitoring</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>CSPM vs CWPP Focus Areas</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Aspect</th>
+                                <th>CSPM</th>
+                                <th>CWPP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Primary Focus</strong></td>
+                                <td>Configuration & posture</td>
+                                <td>Workload runtime security</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Detection Type</strong></td>
+                                <td>Point-in-time assessment</td>
+                                <td>Continuous runtime monitoring</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Data Source</strong></td>
+                                <td>Cloud APIs, configuration</td>
+                                <td>Agent telemetry, system calls</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Example Finding</strong></td>
+                                <td>"S3 bucket is public"</td>
+                                <td>"Cryptominer process detected"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Response</strong></td>
+                                <td>Remediate configuration</td>
+                                <td>Isolate/terminate workload</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Native Cloud CSPM Tools</h2>
+
+                    <h3>AWS Security Hub</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Capabilities</h4>
+                            <ul>
+                                <li>Aggregates findings from GuardDuty, Inspector, Macie</li>
+                                <li>CIS AWS Foundations Benchmark</li>
+                                <li>AWS Foundational Security Best Practices</li>
+                                <li>PCI DSS compliance checks</li>
+                                <li>Custom security standards</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Key Integrations</h4>
+                            <ul>
+                                <li>AWS Config (resource compliance)</li>
+                                <li>GuardDuty (threat detection)</li>
+                                <li>Inspector (vulnerability scanning)</li>
+                                <li>IAM Access Analyzer</li>
+                                <li>Third-party tools via ASFF</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>Microsoft Defender for Cloud</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>CSPM Features</h4>
+                            <ul>
+                                <li>Secure Score (0-100)</li>
+                                <li>Security recommendations</li>
+                                <li>Attack path analysis</li>
+                                <li>Cloud security graph</li>
+                                <li>Multi-cloud support (AWS, GCP)</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>CWPP Plans</h4>
+                            <ul>
+                                <li>Defender for Servers</li>
+                                <li>Defender for Containers</li>
+                                <li>Defender for Storage</li>
+                                <li>Defender for SQL</li>
+                                <li>Defender for Key Vault</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>GCP Security Command Center</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Standard Tier</h4>
+                            <ul>
+                                <li>Security Health Analytics</li>
+                                <li>Basic vulnerability findings</li>
+                                <li>Asset inventory</li>
+                                <li>Anomaly detection (limited)</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Premium Tier</h4>
+                            <ul>
+                                <li>Event Threat Detection</li>
+                                <li>Container Threat Detection</li>
+                                <li>VM Threat Detection</li>
+                                <li>Compliance monitoring</li>
+                                <li>Attack path simulation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Critical CSPM Findings</h2>
+
+                    <h3>High-Priority Misconfigurations</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Finding</th>
+                                <th>Risk</th>
+                                <th>Benchmark</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Storage</strong></td>
+                                <td>Public bucket/blob</td>
+                                <td>Data exposure</td>
+                                <td>CIS 2.1.1, 3.7</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Network</strong></td>
+                                <td>0.0.0.0/0 ingress on SSH/RDP</td>
+                                <td>Unauthorized access</td>
+                                <td>CIS 4.1, 4.2</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Identity</strong></td>
+                                <td>Root/admin without MFA</td>
+                                <td>Account takeover</td>
+                                <td>CIS 1.5, 1.10</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Logging</strong></td>
+                                <td>CloudTrail/Audit logs disabled</td>
+                                <td>No visibility</td>
+                                <td>CIS 3.1</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Encryption</strong></td>
+                                <td>Unencrypted storage/database</td>
+                                <td>Data at rest exposure</td>
+                                <td>CIS 2.1.2, 4.1.1</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Secrets</strong></td>
+                                <td>Hardcoded credentials in code</td>
+                                <td>Credential theft</td>
+                                <td>Various</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IAM</strong></td>
+                                <td>Overprivileged service accounts</td>
+                                <td>Blast radius</td>
+                                <td>CIS 1.16</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Detection: CSPM Finding Aggregation</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Sentinel KQL - Defender for Cloud Findings</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Aggregate CSPM findings by severity and category
+SecurityRecommendation
+| where RecommendationState == "Unhealthy"
+| summarize 
+    FindingCount = count(),
+    Resources = make_set(AssessedResourceId, 10)
+    by RecommendationDisplayName, RecommendationSeverity, Category = RecommendationCategory
+| order by 
+    case(RecommendationSeverity == "High", 1, RecommendationSeverity == "Medium", 2, 3),
+    FindingCount desc
+| project 
+    Severity = RecommendationSeverity,
+    Category,
+    Finding = RecommendationDisplayName,
+    AffectedResources = FindingCount,
+    SampleResources = Resources</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Track Secure Score Changes</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Monitor secure score degradation
+SecureScores
+| where TimeGenerated > ago(7d)
+| summarize Score = avg(PercentageScore) by bin(TimeGenerated, 1d), SubscriptionId
+| order by TimeGenerated asc
+| serialize
+| extend PreviousScore = prev(Score, 1)
+| extend ScoreChange = Score - PreviousScore
+| where ScoreChange < -5  // Alert on >5% drop
+| project TimeGenerated, SubscriptionId, Score, PreviousScore, ScoreChange
+| extend AlertSeverity = case(
+    ScoreChange < -10, "High",
+    ScoreChange < -5, "Medium",
+    "Low"
+)</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>CWPP Capabilities</h2>
+
+                    <h3>Runtime Threat Detection</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>VM/Server Protection</h4>
+                            <ul>
+                                <li>Fileless attack detection</li>
+                                <li>Cryptomining detection</li>
+                                <li>Anomalous process execution</li>
+                                <li>Network anomalies</li>
+                                <li>Malware detection</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Container Protection</h4>
+                            <ul>
+                                <li>Image vulnerability scanning</li>
+                                <li>Runtime behavior monitoring</li>
+                                <li>Container escape detection</li>
+                                <li>Privileged container alerts</li>
+                                <li>Network policy enforcement</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Serverless Protection</h4>
+                            <ul>
+                                <li>Function code scanning</li>
+                                <li>Excessive permission detection</li>
+                                <li>Dependency vulnerabilities</li>
+                                <li>Invocation anomalies</li>
+                                <li>Data exfiltration attempts</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>Container Security Detections</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detect Privileged Container Deployment</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Kubernetes audit logs - Privileged container
+KubeAuditLogs
+| where Verb in ("create", "update", "patch")
+| where ObjectRef_Resource == "pods"
+| extend PodSpec = parse_json(RequestObject)
+| mv-expand Container = PodSpec.spec.containers
+| where Container.securityContext.privileged == true
+    or Container.securityContext.capabilities.add has "SYS_ADMIN"
+    or PodSpec.spec.hostPID == true
+    or PodSpec.spec.hostNetwork == true
+| project 
+    TimeGenerated,
+    User = User_username,
+    Namespace = ObjectRef_Namespace,
+    PodName = ObjectRef_Name,
+    ContainerName = tostring(Container.name),
+    Image = tostring(Container.image),
+    Privileged = Container.securityContext.privileged,
+    HostPID = PodSpec.spec.hostPID,
+    HostNetwork = PodSpec.spec.hostNetwork
+| extend AlertSeverity = "High"
+| extend MITRE = "T1611 - Escape to Host"</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detect Container Running as Root</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Alert on containers without runAsNonRoot
+KubeAuditLogs
+| where Verb == "create"
+| where ObjectRef_Resource == "pods"
+| extend PodSpec = parse_json(RequestObject)
+| mv-expand Container = PodSpec.spec.containers
+| where isnull(Container.securityContext.runAsNonRoot) 
+    or Container.securityContext.runAsNonRoot == false
+| where isnull(Container.securityContext.runAsUser)
+    or Container.securityContext.runAsUser == 0
+| project 
+    TimeGenerated,
+    Namespace = ObjectRef_Namespace,
+    PodName = ObjectRef_Name,
+    ContainerName = tostring(Container.name),
+    Image = tostring(Container.image)
+| extend AlertSeverity = "Medium"</code></pre>
+                    </div>
+
+                    <h3>VM Threat Detection</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detect Cryptomining Activity</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Defender for Servers - Cryptomining Detection
+SecurityAlert
+| where ProviderName == "Azure Security Center"
+| where AlertType has_any (
+    "CryptoCurrency",
+    "MINING",
+    "Miner",
+    "STRATUM"
+)
+| extend 
+    ExtProps = parse_json(ExtendedProperties),
+    Entities = parse_json(Entities)
+| extend 
+    AffectedHost = tostring(ExtProps["Compromised Host"]),
+    ProcessName = tostring(ExtProps["Suspicious Process"]),
+    CommandLine = tostring(ExtProps["Suspicious Command Line"])
+| project 
+    TimeGenerated,
+    AlertName,
+    AffectedHost,
+    ProcessName,
+    CommandLine,
+    Description,
+    RemediationSteps
+| extend AlertSeverity = "High"
+| extend MITRE = "T1496 - Resource Hijacking"</code></pre>
+                    </div>
+
+                    <div class="info-box danger">
+                        <h4>🚨 Critical CWPP Alerts</h4>
+                        <ul>
+                            <li><strong>Container escape attempt</strong> - Process trying to access host namespace</li>
+                            <li><strong>Cryptominer detected</strong> - Known mining processes or network patterns</li>
+                            <li><strong>Reverse shell</strong> - Outbound connection with interactive shell</li>
+                            <li><strong>Suspicious process in container</strong> - Shells, download tools in app container</li>
+                            <li><strong>Sensitive file access</strong> - /etc/shadow, cloud credentials</li>
+                            <li><strong>Kernel module loaded</strong> - Rootkit installation attempt</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>CSPM/CWPP Tool Comparison</h2>
+
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Capability</th>
+                                <th>AWS Security Hub</th>
+                                <th>Defender for Cloud</th>
+                                <th>GCP SCC</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>CSPM</strong></td>
+                                <td>✓ (via Config rules)</td>
+                                <td>✓ Built-in</td>
+                                <td>✓ Built-in</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Multi-cloud</strong></td>
+                                <td>AWS only</td>
+                                <td>✓ AWS, GCP, GitHub</td>
+                                <td>GCP only</td>
+                            </tr>
+                            <tr>
+                                <td><strong>VM Protection</strong></td>
+                                <td>Inspector + GuardDuty</td>
+                                <td>✓ Defender for Servers</td>
+                                <td>✓ VM Threat Detection</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Container Security</strong></td>
+                                <td>Inspector + GuardDuty</td>
+                                <td>✓ Defender for Containers</td>
+                                <td>✓ Container Threat Detection</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Attack Path Analysis</strong></td>
+                                <td>Limited</td>
+                                <td>✓ Cloud security graph</td>
+                                <td>✓ Premium</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SIEM Integration</strong></td>
+                                <td>EventBridge → SIEM</td>
+                                <td>Native Sentinel</td>
+                                <td>Pub/Sub → Chronicle</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Third-Party CSPM/CWPP Solutions</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>CSPM Leaders</h4>
+                            <ul>
+                                <li>Wiz</li>
+                                <li>Orca Security</li>
+                                <li>Prisma Cloud (Palo Alto)</li>
+                                <li>Lacework</li>
+                                <li>Aqua Security</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Key Differentiators</h4>
+                            <ul>
+                                <li>Agentless scanning</li>
+                                <li>Graph-based attack paths</li>
+                                <li>Deep cloud context</li>
+                                <li>Code-to-cloud tracing</li>
+                                <li>Risk prioritization</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Detection Engineering with CSPM</h2>
+
+                    <h3>Building Detections from CSPM Findings</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Alert on New Critical Findings</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Alert when new critical CSPM findings appear
+let PreviousFindings = SecurityRecommendation
+| where TimeGenerated between (ago(2d) .. ago(1d))
+| where RecommendationState == "Unhealthy"
+| distinct AssessedResourceId, RecommendationName;
+//
+SecurityRecommendation
+| where TimeGenerated > ago(1d)
+| where RecommendationState == "Unhealthy"
+| where RecommendationSeverity == "High"
+| join kind=leftanti PreviousFindings on AssessedResourceId, RecommendationName
+// These are NEW high-severity findings
+| project 
+    TimeGenerated,
+    Finding = RecommendationDisplayName,
+    Severity = RecommendationSeverity,
+    Resource = AssessedResourceId,
+    Category = RecommendationCategory,
+    RemediationDescription
+| extend AlertSeverity = "High"
+| extend AlertType = "NewCSPMFinding"</code></pre>
+                    </div>
+
+                    <h3>Compliance Drift Detection</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Monitor CIS Benchmark Compliance</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Track CIS benchmark compliance over time
+SecurityRecommendation
+| where RecommendationDisplayName has "CIS"
+| summarize 
+    TotalControls = dcount(RecommendationName),
+    PassingControls = dcountif(RecommendationName, RecommendationState == "Healthy"),
+    FailingControls = dcountif(RecommendationName, RecommendationState == "Unhealthy")
+    by bin(TimeGenerated, 1d), SubscriptionId
+| extend CompliancePercent = round(100.0 * PassingControls / TotalControls, 1)
+| order by TimeGenerated asc
+| serialize
+| extend PreviousCompliance = prev(CompliancePercent, 1)
+| extend ComplianceDrift = CompliancePercent - PreviousCompliance
+| where ComplianceDrift < -5  // Alert on >5% compliance drop
+| project 
+    TimeGenerated,
+    SubscriptionId,
+    CompliancePercent,
+    PreviousCompliance,
+    ComplianceDrift,
+    PassingControls,
+    FailingControls</code></pre>
+                    </div>
+
+                    <h3>Correlate CSPM with Activity</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Find Who Created Misconfiguration</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Correlate CSPM finding with activity log to find responsible user
+let PublicStorageFinding = SecurityRecommendation
+| where RecommendationDisplayName has "public" and RecommendationDisplayName has "storage"
+| where RecommendationState == "Unhealthy"
+| extend StorageAccount = extract(@"storageAccounts/([^/]+)", 1, AssessedResourceId)
+| project StorageAccount, FindingTime = TimeGenerated;
+//
+AzureActivity
+| where OperationNameValue has "Microsoft.Storage/storageAccounts"
+| where ActivityStatusValue == "Success"
+| extend StorageAccount = extract(@"storageAccounts/([^/]+)", 1, ResourceId)
+| join kind=inner PublicStorageFinding on StorageAccount
+| where TimeGenerated < FindingTime  // Activity before finding
+| summarize arg_max(TimeGenerated, *) by StorageAccount  // Most recent change
+| project 
+    ConfigChangeTime = TimeGenerated,
+    FindingTime,
+    StorageAccount,
+    ResponsibleUser = Caller,
+    Operation = OperationNameValue</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What's the difference between CSPM and CWPP?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>CSPM (Cloud Security Posture Management)</strong> focuses on configuration and compliance. It continuously assesses cloud resources against security best practices (CIS benchmarks, PCI DSS, etc.) and identifies misconfigurations like public S3 buckets, missing encryption, or overprivileged IAM roles. CSPM is about "is this configured securely?"</p>
+                            <p><strong>CWPP (Cloud Workload Protection Platform)</strong> focuses on runtime security of workloads. It monitors VMs, containers, and serverless functions for active threats like malware, cryptomining, or container escapes. CWPP answers "is something bad happening right now?"</p>
+                            <p><strong>Key difference:</strong> CSPM is proactive/preventive (find issues before exploitation), CWPP is detective/reactive (detect attacks in progress). Most organizations need both.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you prioritize CSPM findings when there are thousands?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Prioritization framework:</strong></p>
+                            <ol>
+                                <li><strong>Exploitability:</strong> Is this misconfiguration internet-exposed? Can it be exploited remotely?</li>
+                                <li><strong>Business impact:</strong> What data/systems are at risk? Is it production or dev?</li>
+                                <li><strong>Attack path context:</strong> Does this finding enable further attacks? (e.g., public S3 with credentials)</li>
+                                <li><strong>Compliance requirements:</strong> Does it violate regulatory requirements (PCI, HIPAA)?</li>
+                            </ol>
+                            <p><strong>Practical approach:</strong></p>
+                            <ul>
+                                <li>Start with public exposure findings (storage, databases, management ports)</li>
+                                <li>Next address identity risks (no MFA, overprivileged accounts)</li>
+                                <li>Then logging gaps (can't detect attacks without visibility)</li>
+                                <li>Use attack path analysis to find findings that chain together</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you integrate CSPM/CWPP with detection engineering?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Integration points:</strong></p>
+                            <ul>
+                                <li><strong>SIEM ingestion:</strong> Send CSPM findings and CWPP alerts to Sentinel/Splunk for correlation</li>
+                                <li><strong>Alert on new findings:</strong> Detect when new critical misconfigurations appear</li>
+                                <li><strong>Compliance drift:</strong> Alert when secure score drops significantly</li>
+                                <li><strong>Context enrichment:</strong> Use CSPM data to enrich other detections (e.g., "this IAM activity targeted a public bucket")</li>
+                            </ul>
+                            <p><strong>Detection engineering value:</strong></p>
+                            <ul>
+                                <li>CSPM provides the "what could be exploited" context</li>
+                                <li>CWPP provides "what is being exploited" alerts</li>
+                                <li>Combining both enables prioritized, contextual detections</li>
+                                <li>Build playbooks that correlate CSPM findings with attack activity</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="multi-cloud.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        Multi-Cloud Strategy
+                    </a>
+                    <a href="../detection-engineering/fundamentals.html" class="nav-link next">
+                        Detection Fundamentals
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

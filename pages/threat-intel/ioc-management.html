@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOC Management - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <span class="logo-icon">⚡</span>
+                    <span class="logo-text">Detection<span class="logo-accent">Mastery</span></span>
+                </a>
+                <button class="sidebar-toggle" aria-label="Toggle sidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section expanded" data-section="threat-intel">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            <span>Threat Intel & Hunting</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item">TI Fundamentals</a>
+                        <a href="sources.html" class="nav-item">Intelligence Sources</a>
+                        <a href="ioc-management.html" class="nav-item active">IOC Management</a>
+                        <a href="operationalization.html" class="nav-item">TI Operationalization</a>
+                        <a href="hunting-methodology.html" class="nav-item">Hunting Methodology</a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+
+            <div class="content-wrapper">
+                <div class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="fundamentals.html">Threat Intelligence</a>
+                    <span class="separator">/</span>
+                    <span class="current">IOC Management</span>
+                </div>
+
+                <article class="content">
+                    <header class="content-header">
+                        <h1>IOC Management</h1>
+                        <p class="content-subtitle">Effective indicator of compromise lifecycle management for detection engineering</p>
+                    </header>
+
+                    <!-- IOC Types -->
+                    <section class="content-section">
+                        <h2>IOC Types & Characteristics</h2>
+                        
+                        <h3>Pyramid of Pain</h3>
+                        <p>David Bianco's Pyramid of Pain ranks IOC types by their impact on attackers when blocked. Higher-level indicators cause more pain because they're harder for attackers to change.</p>
+
+                        <div class="table-responsive">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>IOC Type</th>
+                                        <th>Attacker Pain Level</th>
+                                        <th>Detection Longevity</th>
+                                        <th>Examples</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge badge-red">TTPs</span></td>
+                                        <td>Tough! (Highest)</td>
+                                        <td>Years</td>
+                                        <td>Techniques, behaviors, attack patterns</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-orange">Tools</span></td>
+                                        <td>Challenging</td>
+                                        <td>Months to years</td>
+                                        <td>Cobalt Strike, Mimikatz, custom malware</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-yellow">Network Artifacts</span></td>
+                                        <td>Annoying</td>
+                                        <td>Weeks to months</td>
+                                        <td>User-agent strings, URI patterns, JA3</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-cyan">Host Artifacts</span></td>
+                                        <td>Annoying</td>
+                                        <td>Weeks to months</td>
+                                        <td>Registry keys, file paths, service names</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-blue">Domain Names</span></td>
+                                        <td>Simple</td>
+                                        <td>Days to weeks</td>
+                                        <td>C2 domains, phishing domains</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-purple">IP Addresses</span></td>
+                                        <td>Easy</td>
+                                        <td>Hours to days</td>
+                                        <td>C2 IPs, scanning IPs</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-gray">Hash Values</span></td>
+                                        <td>Trivial (Lowest)</td>
+                                        <td>Minutes to hours</td>
+                                        <td>MD5, SHA1, SHA256 file hashes</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="info-box info-tip">
+                            <div class="info-box-header">
+                                <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                <span>Detection Strategy Implication</span>
+                            </div>
+                            <p>Focus detection efforts on higher levels of the pyramid. While hash-based detections are easy to implement, TTP-based behavioral detections provide longer-lasting protection and are harder for attackers to evade.</p>
+                        </div>
+                    </section>
+
+                    <!-- IOC Lifecycle -->
+                    <section class="content-section">
+                        <h2>IOC Lifecycle Management</h2>
+                        
+                        <h3>Lifecycle Stages</h3>
+                        <div class="comparison-grid">
+                            <div class="comparison-card">
+                                <h4>1. Collection</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li>Automated feed ingestion (STIX/TAXII)</li>
+                                        <li>Manual import from reports</li>
+                                        <li>Internal IR findings</li>
+                                        <li>Community sharing platforms</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="comparison-card">
+                                <h4>2. Validation</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li>Format verification (valid IP, hash, domain)</li>
+                                        <li>Duplicate detection</li>
+                                        <li>Reputation checking across sources</li>
+                                        <li>False positive assessment</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="comparison-card">
+                                <h4>3. Enrichment</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li>WHOIS/DNS information</li>
+                                        <li>Geolocation data</li>
+                                        <li>Threat actor attribution</li>
+                                        <li>Related IOC correlation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="comparison-card">
+                                <h4>4. Operationalization</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li>SIEM rule creation</li>
+                                        <li>Firewall/proxy blocking</li>
+                                        <li>EDR watchlist addition</li>
+                                        <li>Alert configuration</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="comparison-card">
+                                <h4>5. Monitoring</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li>Alert effectiveness tracking</li>
+                                        <li>False positive monitoring</li>
+                                        <li>Hit rate analysis</li>
+                                        <li>Performance measurement</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="comparison-card">
+                                <h4>6. Expiration</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li>Time-based expiration policies</li>
+                                        <li>Stale indicator removal</li>
+                                        <li>Archive for historical reference</li>
+                                        <li>Feed cleanup</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- IOC Formats -->
+                    <section class="content-section">
+                        <h2>IOC Formats & Standards</h2>
+                        
+                        <h3>STIX (Structured Threat Information Expression)</h3>
+                        <p>STIX 2.1 is the dominant standard for threat intelligence exchange, providing rich context beyond simple IOCs.</p>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">JSON</span>
+                                <span class="code-title">STIX 2.1 Indicator Example</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>{
+    "type": "indicator",
+    "spec_version": "2.1",
+    "id": "indicator--8e2e2d2b-17d4-4cbf-938f-98ee46b3cd3f",
+    "created": "2024-01-15T13:22:11.000Z",
+    "modified": "2024-01-15T13:22:11.000Z",
+    "name": "APT29 Cobalt Strike C2 Domain",
+    "description": "Domain used for C2 communications by APT29 during SolarWinds campaign",
+    "indicator_types": ["malicious-activity"],
+    "pattern": "[domain-name:value = 'malicious-c2.example.com']",
+    "pattern_type": "stix",
+    "valid_from": "2024-01-01T00:00:00.000Z",
+    "valid_until": "2024-04-01T00:00:00.000Z",
+    "kill_chain_phases": [
+        {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "command-and-control"
+        }
+    ],
+    "confidence": 85,
+    "labels": ["c2", "cobalt-strike", "apt29"]
+}</code></pre>
+                        </div>
+
+                        <h3>STIX Domain Objects</h3>
+                        <div class="table-responsive">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Object Type</th>
+                                        <th>Purpose</th>
+                                        <th>Key Fields</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Indicator</strong></td>
+                                        <td>Observable pattern representing threat</td>
+                                        <td>pattern, valid_from, valid_until, confidence</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Malware</strong></td>
+                                        <td>Malicious software description</td>
+                                        <td>malware_types, is_family, capabilities</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Attack Pattern</strong></td>
+                                        <td>TTP description (often MITRE ATT&CK)</td>
+                                        <td>external_references, kill_chain_phases</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Threat Actor</strong></td>
+                                        <td>Attribution and adversary info</td>
+                                        <td>threat_actor_types, aliases, goals</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Campaign</strong></td>
+                                        <td>Attack campaign grouping</td>
+                                        <td>first_seen, last_seen, objective</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Intrusion Set</strong></td>
+                                        <td>Adversary behavior grouping</td>
+                                        <td>aliases, primary_motivation, goals</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3>OpenIOC Format</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">XML</span>
+                                <span class="code-title">OpenIOC Example</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;ioc xmlns="http://schemas.mandiant.com/2010/ioc" 
+     id="6d2a1b03-b216-4cd8-9a9e-8827af6ebf93"&gt;
+    &lt;short_description&gt;Cobalt Strike Beacon Detection&lt;/short_description&gt;
+    &lt;description&gt;Indicators for Cobalt Strike beacon malware&lt;/description&gt;
+    &lt;authored_date&gt;2024-01-15T10:00:00&lt;/authored_date&gt;
+    &lt;definition&gt;
+        &lt;Indicator operator="OR"&gt;
+            &lt;IndicatorItem condition="is"&gt;
+                &lt;Context document="FileItem" search="FileItem/Md5sum"/&gt;
+                &lt;Content type="md5"&gt;44d88612fea8a8f36de82e1278abb02f&lt;/Content&gt;
+            &lt;/IndicatorItem&gt;
+            &lt;IndicatorItem condition="contains"&gt;
+                &lt;Context document="ProcessItem" search="ProcessItem/name"/&gt;
+                &lt;Content type="string"&gt;rundll32.exe&lt;/Content&gt;
+            &lt;/IndicatorItem&gt;
+        &lt;/Indicator&gt;
+    &lt;/definition&gt;
+&lt;/ioc&gt;</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- SIEM Integration -->
+                    <section class="content-section">
+                        <h2>SIEM IOC Integration</h2>
+                        
+                        <h3>Sentinel - Threat Intelligence Integration</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">Query Threat Intelligence Indicators</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// View all active threat indicators
+ThreatIntelligenceIndicator
+| where TimeGenerated > ago(7d)
+| where ExpirationDateTime > now()
+| where Active == true
+| summarize 
+    Count = count(),
+    Sources = make_set(SourceSystem),
+    AvgConfidence = avg(ConfidenceScore)
+    by ThreatType, IndicatorType
+| order by Count desc
+
+// Match IPs against threat intelligence
+let TI_IPs = ThreatIntelligenceIndicator
+| where TimeGenerated > ago(7d)
+| where isnotempty(NetworkIP)
+| where ConfidenceScore >= 75
+| where Active == true
+| summarize LatestTime = arg_max(TimeGenerated, *) by NetworkIP
+| project NetworkIP, ThreatType, ConfidenceScore, Description;
+CommonSecurityLog
+| where TimeGenerated > ago(24h)
+| join kind=inner TI_IPs on $left.DestinationIP == $right.NetworkIP
+| project 
+    TimeGenerated,
+    DestinationIP,
+    ThreatType,
+    ConfidenceScore,
+    Description,
+    DeviceVendor,
+    DeviceAction,
+    SourceIP
+
+// Match domains against threat intelligence
+let TI_Domains = ThreatIntelligenceIndicator
+| where TimeGenerated > ago(7d)
+| where isnotempty(DomainName)
+| where ConfidenceScore >= 70
+| project DomainName, ThreatType, ConfidenceScore;
+DnsEvents
+| where TimeGenerated > ago(24h)
+| join kind=inner TI_Domains on $left.Name == $right.DomainName
+| project 
+    TimeGenerated,
+    Computer,
+    Name,
+    ThreatType,
+    ConfidenceScore,
+    IPAddresses</code></pre>
+                        </div>
+
+                        <h3>Sentinel Watchlists for Custom IOCs</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">Using Watchlists for IOC Matching</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// Create and query IOC watchlist
+// Watchlist: MaliciousIPs with columns: IPAddress, ThreatType, Source, DateAdded
+let WatchlistIPs = _GetWatchlist('MaliciousIPs')
+| project IPAddress, ThreatType, Source;
+CommonSecurityLog
+| where TimeGenerated > ago(24h)
+| where DestinationIP in (WatchlistIPs)
+| join kind=leftouter WatchlistIPs on $left.DestinationIP == $right.IPAddress
+| project 
+    TimeGenerated,
+    DestinationIP,
+    ThreatType,
+    Source,
+    DeviceVendor,
+    DeviceAction
+
+// Hash watchlist matching
+let MaliciousHashes = _GetWatchlist('MalwareHashes')
+| project SHA256 = tolower(SHA256Hash), MalwareName, Family;
+DeviceFileEvents
+| where TimeGenerated > ago(24h)
+| where ActionType in ("FileCreated", "FileModified")
+| extend SHA256Lower = tolower(SHA256)
+| join kind=inner MaliciousHashes on $left.SHA256Lower == $right.SHA256
+| project 
+    TimeGenerated,
+    DeviceName,
+    FileName,
+    FolderPath,
+    SHA256,
+    MalwareName,
+    Family,
+    InitiatingProcessFileName</code></pre>
+                        </div>
+
+                        <h3>Splunk - IOC Lookup Integration</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">SPL</span>
+                                <span class="code-title">Splunk IOC Matching</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>| Create IOC lookup table and match
+| inputlookup malicious_ips.csv
+| rename ip as malicious_ip, threat_type as ThreatType
+
+| Search and match against firewall logs
+index=firewall sourcetype=pan:traffic
+| lookup malicious_ips.csv ip as dest_ip OUTPUT threat_type confidence
+| where isnotnull(threat_type)
+| table _time src_ip dest_ip threat_type confidence action
+
+| Hash-based detection with lookup
+index=endpoint sourcetype=sysmon EventCode=1
+| lookup malware_hashes.csv sha256 as Hashes OUTPUT malware_family threat_actor
+| where isnotnull(malware_family)
+| table _time host Image Hashes malware_family threat_actor CommandLine
+
+| Automatic threat intel enrichment with ES
+| from datamodel:Intrusion_Detection.IDS_Attacks
+| `cim_filter`
+| lookup threat_intel_ip.csv src_ip OUTPUT threat_category, threat_source
+| lookup threat_intel_ip.csv dest_ip OUTPUT threat_category as dest_threat, threat_source as dest_source
+| where isnotnull(threat_category) OR isnotnull(dest_threat)</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- IOC Validation -->
+                    <section class="content-section">
+                        <h2>IOC Validation & Quality Control</h2>
+                        
+                        <h3>Validation Checks</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">Python</span>
+                                <span class="code-title">IOC Validation Functions</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>import re
+import hashlib
+import ipaddress
+from urllib.parse import urlparse
+
+class IOCValidator:
+    """Validate and normalize IOCs before ingestion"""
+    
+    # Known safe domains that should never be blocked
+    SAFE_DOMAINS = {
+        "google.com", "microsoft.com", "amazon.com", "cloudflare.com",
+        "akamai.com", "fastly.com", "windows.com", "office.com",
+        "github.com", "githubusercontent.com", "azure.com"
+    }
+    
+    # Known safe IP ranges (CDNs, major providers)
+    SAFE_IP_RANGES = [
+        "13.64.0.0/11",    # Azure
+        "52.0.0.0/8",      # AWS partial
+        "172.217.0.0/16",  # Google
+    ]
+    
+    @staticmethod
+    def validate_ipv4(ip):
+        """Validate IPv4 address format"""
+        try:
+            addr = ipaddress.IPv4Address(ip)
+            # Check for private/reserved ranges
+            if addr.is_private or addr.is_reserved or addr.is_loopback:
+                return {"valid": False, "reason": "Private/reserved IP"}
+            return {"valid": True, "normalized": str(addr)}
+        except ipaddress.AddressValueError:
+            return {"valid": False, "reason": "Invalid IPv4 format"}
+    
+    @staticmethod
+    def validate_domain(domain):
+        """Validate domain format and check against safelist"""
+        domain = domain.lower().strip()
+        
+        # Remove protocol if present
+        if domain.startswith(("http://", "https://")):
+            domain = urlparse(domain).netloc
+        
+        # Basic format validation
+        domain_pattern = r'^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$'
+        if not re.match(domain_pattern, domain):
+            return {"valid": False, "reason": "Invalid domain format"}
+        
+        # Check against safelist
+        for safe in IOCValidator.SAFE_DOMAINS:
+            if domain == safe or domain.endswith(f".{safe}"):
+                return {"valid": False, "reason": f"Safe domain: {safe}"}
+        
+        return {"valid": True, "normalized": domain}
+    
+    @staticmethod
+    def validate_hash(hash_value, hash_type=None):
+        """Validate hash format and detect type"""
+        hash_value = hash_value.lower().strip()
+        
+        patterns = {
+            "md5": (r'^[a-f0-9]{32}$', 32),
+            "sha1": (r'^[a-f0-9]{40}$', 40),
+            "sha256": (r'^[a-f0-9]{64}$', 64),
+            "sha512": (r'^[a-f0-9]{128}$', 128)
+        }
+        
+        # Auto-detect hash type
+        if hash_type is None:
+            for htype, (pattern, length) in patterns.items():
+                if len(hash_value) == length and re.match(pattern, hash_value):
+                    hash_type = htype
+                    break
+        
+        if hash_type and hash_type in patterns:
+            pattern, expected_len = patterns[hash_type]
+            if re.match(pattern, hash_value):
+                return {"valid": True, "type": hash_type, "normalized": hash_value}
+        
+        return {"valid": False, "reason": "Invalid hash format"}
+    
+    @staticmethod
+    def validate_url(url):
+        """Validate URL format"""
+        try:
+            result = urlparse(url)
+            if result.scheme in ("http", "https") and result.netloc:
+                # Extract and validate domain
+                domain_check = IOCValidator.validate_domain(result.netloc)
+                if not domain_check["valid"]:
+                    return domain_check
+                return {"valid": True, "normalized": url, "domain": result.netloc}
+            return {"valid": False, "reason": "Invalid URL scheme or missing netloc"}
+        except Exception as e:
+            return {"valid": False, "reason": str(e)}
+
+# Bulk validation
+def validate_ioc_list(iocs, ioc_type):
+    """Validate a list of IOCs and return valid/invalid counts"""
+    results = {"valid": [], "invalid": []}
+    
+    validators = {
+        "ip": IOCValidator.validate_ipv4,
+        "domain": IOCValidator.validate_domain,
+        "hash": IOCValidator.validate_hash,
+        "url": IOCValidator.validate_url
+    }
+    
+    validator = validators.get(ioc_type)
+    if not validator:
+        raise ValueError(f"Unknown IOC type: {ioc_type}")
+    
+    for ioc in iocs:
+        result = validator(ioc)
+        if result["valid"]:
+            results["valid"].append(result.get("normalized", ioc))
+        else:
+            results["invalid"].append({"ioc": ioc, "reason": result["reason"]})
+    
+    return results
+
+# Example usage
+ip_list = ["192.168.1.1", "8.8.8.8", "10.0.0.1", "invalid", "1.2.3.4"]
+result = validate_ioc_list(ip_list, "ip")
+print(f"Valid: {len(result['valid'])}, Invalid: {len(result['invalid'])}")</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Expiration Policies -->
+                    <section class="content-section">
+                        <h2>IOC Expiration Policies</h2>
+                        
+                        <p>IOCs have varying shelf lives based on type. Implement expiration policies to prevent stale indicators from causing false positives.</p>
+
+                        <div class="table-responsive">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>IOC Type</th>
+                                        <th>Recommended TTL</th>
+                                        <th>Rationale</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>IP Addresses</strong></td>
+                                        <td>7-30 days</td>
+                                        <td>Infrastructure frequently rotates; VPS/cloud IPs recycled</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Domains</strong></td>
+                                        <td>30-90 days</td>
+                                        <td>More persistent than IPs; domains may be sinkholed</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>File Hashes</strong></td>
+                                        <td>90-180 days</td>
+                                        <td>Polymorphic malware changes hashes; but static samples persist</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>URLs</strong></td>
+                                        <td>7-14 days</td>
+                                        <td>Phishing pages and malware distribution URLs rotate quickly</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>JA3/JA3S</strong></td>
+                                        <td>90-180 days</td>
+                                        <td>TLS fingerprints more stable but tool versions change</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>User-Agent Strings</strong></td>
+                                        <td>30-90 days</td>
+                                        <td>Tools get updated; legitimate browsers also update</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3>Sentinel IOC Expiration Query</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">Monitor Expired Indicators</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// Find expired indicators still generating alerts
+ThreatIntelligenceIndicator
+| where ExpirationDateTime < now()
+| where TimeGenerated > ago(30d)
+| summarize 
+    ExpiredCount = count(),
+    OldestExpiration = min(ExpirationDateTime),
+    NewestExpiration = max(ExpirationDateTime)
+    by SourceSystem, IndicatorType
+| order by ExpiredCount desc
+
+// Identify indicators approaching expiration
+ThreatIntelligenceIndicator
+| where ExpirationDateTime between (now() .. now() + 7d)
+| where Active == true
+| summarize 
+    ExpiringCount = count(),
+    IndicatorTypes = make_set(IndicatorType)
+    by SourceSystem
+| order by ExpiringCount desc
+
+// Clean up recommendations
+ThreatIntelligenceIndicator
+| where TimeGenerated > ago(90d)
+| summarize 
+    TotalIndicators = count(),
+    Expired = countif(ExpirationDateTime < now()),
+    ExpiringSoon = countif(ExpirationDateTime between (now() .. now()+7d)),
+    Active = countif(ExpirationDateTime > now() + 7d)
+    by SourceSystem
+| extend 
+    ExpiredPct = round(100.0 * Expired / TotalIndicators, 1),
+    CleanupRecommended = Expired > 1000</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- False Positive Management -->
+                    <section class="content-section">
+                        <h2>False Positive Management</h2>
+                        
+                        <div class="info-box info-warning">
+                            <div class="info-box-header">
+                                <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                <span>Common False Positive Causes</span>
+                            </div>
+                            <ul class="styled-list">
+                                <li><strong>Shared infrastructure:</strong> CDNs, cloud providers, shared hosting</li>
+                                <li><strong>Expired IOCs:</strong> Previously malicious infrastructure now legitimate</li>
+                                <li><strong>Overly broad indicators:</strong> Generic user-agents, common file names</li>
+                                <li><strong>Context-dependent IOCs:</strong> Tools used by both attackers and admins</li>
+                            </ul>
+                        </div>
+
+                        <h3>FP Tracking and Metrics</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">Track IOC False Positive Rates</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// Track FP rates by TI source
+SecurityAlert
+| where TimeGenerated > ago(30d)
+| where AlertType contains "TI" or Description contains "Threat Intelligence"
+| join kind=leftouter (
+    SecurityIncident
+    | where TimeGenerated > ago(30d)
+    | mv-expand AlertIds
+    | extend AlertId = tostring(AlertIds)
+    | project AlertId, IncidentStatus = Status, Classification
+) on $left.SystemAlertId == $right.AlertId
+| extend 
+    IsFalsePositive = Classification == "FalsePositive" or IncidentStatus == "Closed",
+    Source = extract("Source: ([^,]+)", 1, ExtendedProperties)
+| summarize 
+    TotalAlerts = count(),
+    FalsePositives = countif(IsFalsePositive),
+    TruePositives = countif(not(IsFalsePositive))
+    by Source
+| extend FPRate = round(100.0 * FalsePositives / TotalAlerts, 1)
+| order by FPRate desc
+
+// Identify specific noisy indicators
+let FP_Indicators = SecurityAlert
+| where TimeGenerated > ago(30d)
+| where AlertType contains "TI"
+| join kind=inner (
+    SecurityIncident
+    | where Classification == "FalsePositive"
+    | mv-expand AlertIds
+    | extend AlertId = tostring(AlertIds)
+) on $left.SystemAlertId == $right.AlertId
+| extend MatchedIOC = extract("Indicator: ([^,]+)", 1, ExtendedProperties)
+| summarize FP_Count = count() by MatchedIOC;
+FP_Indicators
+| where FP_Count >= 3
+| order by FP_Count desc</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Interview Q&A -->
+                    <section class="content-section">
+                        <h2>Interview Preparation</h2>
+                        
+                        <div class="expandable open">
+                            <div class="expandable-header">
+                                <span class="expandable-icon">▶</span>
+                                <h3>Q: How do you handle IOC lifecycle management?</h3>
+                            </div>
+                            <div class="expandable-content">
+                                <p><strong>Strong Answer:</strong> I manage IOCs through a structured lifecycle: Collection from automated feeds and manual sources, Validation to ensure proper format and check against safelists, Enrichment with context like WHOIS and threat actor attribution, Operationalization into SIEM rules and blocking lists, Monitoring for effectiveness and false positives, and Expiration based on IOC type - IPs get 7-30 days, domains 30-90 days, hashes 90-180 days. I track false positive rates by source and indicator to identify problematic feeds. The key is automation - manual IOC management doesn't scale. I use STIX/TAXII for automated ingestion and build validation scripts to catch common issues like private IPs or safe domains before they generate false positives.</p>
+                            </div>
+                        </div>
+
+                        <div class="expandable">
+                            <div class="expandable-header">
+                                <span class="expandable-icon">▶</span>
+                                <h3>Q: Explain the Pyramid of Pain and how it influences detection strategy.</h3>
+                            </div>
+                            <div class="expandable-content">
+                                <p><strong>Strong Answer:</strong> The Pyramid of Pain ranks IOC types by how much effort attackers need to change them. At the bottom, hash values are trivial to change - attackers just recompile. IP addresses are easy to rotate using cloud infrastructure. Domains take more effort but attackers still use DGA and bulletproof hosting. Moving up, artifacts like registry keys and network signatures are harder to change without breaking functionality. Tools require significant development effort to replace. At the top, TTPs - the tactics and techniques themselves - are the hardest to change because they represent how attackers accomplish objectives. This influences my detection strategy: while I still use hash and IP IOCs for quick wins, I invest more effort in behavioral detections based on TTPs. A detection for "credential dumping via LSASS access" survives longer than blocking a specific Mimikatz hash.</p>
+                            </div>
+                        </div>
+
+                        <div class="expandable">
+                            <div class="expandable-header">
+                                <span class="expandable-icon">▶</span>
+                                <h3>Q: How do you reduce false positives from threat intelligence feeds?</h3>
+                            </div>
+                            <div class="expandable-content">
+                                <p><strong>Strong Answer:</strong> False positives from TI feeds come from several sources, and I address each: First, I validate IOCs before ingestion - checking that IPs aren't private ranges or major CDNs, domains aren't legitimate services. Second, I apply confidence score thresholds - typically requiring 70-80% confidence before alerting. Third, I set appropriate expiration policies since old IOCs often become legitimate infrastructure. Fourth, I maintain allow-lists for known-good infrastructure in our environment. Fifth, I track FP rates by source and indicator - if a specific feed or IOC type generates many FPs, I adjust thresholds or drop the source. Finally, I correlate TI matches with other signals - a TI IP hit combined with suspicious behavior is more credible than the IP alone.</p>
+                            </div>
+                        </div>
+
+                        <div class="expandable">
+                            <div class="expandable-header">
+                                <span class="expandable-icon">▶</span>
+                                <h3>Q: What's STIX/TAXII and how do you use it?</h3>
+                            </div>
+                            <div class="expandable-content">
+                                <p><strong>Strong Answer:</strong> STIX (Structured Threat Information Expression) is a standardized format for representing threat intelligence, while TAXII (Trusted Automated Exchange of Intelligence Information) is the transport protocol for sharing it. STIX 2.1 uses JSON and defines objects like Indicators, Malware, Attack Patterns, and Threat Actors with relationships between them. The power is in the context - a STIX indicator includes not just the IOC but confidence scores, validity periods, kill chain phases, and related objects. In Sentinel, I configure TAXII connectors to automatically pull from feeds like MISP or commercial providers. The ThreatIntelligenceIndicator table then receives these indicators and I can write analytics rules that match them against network and endpoint logs. The structured format also enables me to prioritize based on confidence and filter by threat type or actor.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Navigation -->
+                    <nav class="page-nav">
+                        <a href="sources.html" class="nav-link prev">
+                            <span class="nav-label">Previous</span>
+                            <span class="nav-title">Intelligence Sources</span>
+                        </a>
+                        <a href="operationalization.html" class="nav-link next">
+                            <span class="nav-label">Next</span>
+                            <span class="nav-title">TI Operationalization</span>
+                        </a>
+                    </nav>
+                </article>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

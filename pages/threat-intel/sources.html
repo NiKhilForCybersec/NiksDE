@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligence Sources - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <span class="logo-icon">⚡</span>
+                    <span class="logo-text">Detection<span class="logo-accent">Mastery</span></span>
+                </a>
+                <button class="sidebar-toggle" aria-label="Toggle sidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section expanded" data-section="threat-intel">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            <span>Threat Intel & Hunting</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item">TI Fundamentals</a>
+                        <a href="sources.html" class="nav-item active">Intelligence Sources</a>
+                        <a href="ioc-management.html" class="nav-item">IOC Management</a>
+                        <a href="operationalization.html" class="nav-item">TI Operationalization</a>
+                        <a href="hunting-methodology.html" class="nav-item">Hunting Methodology</a>
+                    </div>
+                </div>
+                <div class="nav-section" data-section="detection">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                            <span>Detection Engineering</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../detection-engineering/fundamentals.html" class="nav-item">Fundamentals</a>
+                        <a href="../detection-engineering/sentinel-deep-dive.html" class="nav-item">Sentinel Deep Dive</a>
+                        <a href="../detection-engineering/splunk-comparison.html" class="nav-item">Splunk Comparison</a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+
+            <div class="content-wrapper">
+                <div class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="fundamentals.html">Threat Intelligence</a>
+                    <span class="separator">/</span>
+                    <span class="current">Intelligence Sources</span>
+                </div>
+
+                <article class="content">
+                    <header class="content-header">
+                        <h1>Intelligence Sources</h1>
+                        <p class="content-subtitle">Understanding and leveraging diverse threat intelligence sources for comprehensive detection coverage</p>
+                    </header>
+
+                    <!-- Source Categories Overview -->
+                    <section class="content-section">
+                        <h2>Intelligence Source Categories</h2>
+                        <p>Threat intelligence comes from diverse sources with varying levels of reliability, timeliness, and specificity. Understanding each category helps prioritize and weight intelligence during analysis.</p>
+                        
+                        <div class="table-responsive">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Source Types</th>
+                                        <th>Timeliness</th>
+                                        <th>Reliability</th>
+                                        <th>Cost</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge badge-cyan">Commercial</span></td>
+                                        <td>Recorded Future, Mandiant, CrowdStrike</td>
+                                        <td>Near real-time</td>
+                                        <td>High</td>
+                                        <td>$$$ - $$$$</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-green">OSINT</span></td>
+                                        <td>AlienVault OTX, VirusTotal, Shodan</td>
+                                        <td>Hours to days</td>
+                                        <td>Medium-High</td>
+                                        <td>Free - $$</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-purple">Government</span></td>
+                                        <td>CISA, FBI IC3, NCSC</td>
+                                        <td>Days to weeks</td>
+                                        <td>High</td>
+                                        <td>Free</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-orange">ISACs</span></td>
+                                        <td>FS-ISAC, Health-ISAC, MS-ISAC</td>
+                                        <td>Hours to days</td>
+                                        <td>High</td>
+                                        <td>Membership</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-blue">Internal</span></td>
+                                        <td>IR findings, honeypots, telemetry</td>
+                                        <td>Real-time</td>
+                                        <td>Highest</td>
+                                        <td>Operational</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Commercial Intelligence -->
+                    <section class="content-section">
+                        <h2>Commercial Intelligence Providers</h2>
+                        
+                        <h3>Major Providers Comparison</h3>
+                        <div class="comparison-grid">
+                            <div class="comparison-card">
+                                <h4>Recorded Future</h4>
+                                <div class="card-content">
+                                    <p><strong>Strengths:</strong></p>
+                                    <ul class="styled-list">
+                                        <li>Massive data collection from technical, open, and dark web</li>
+                                        <li>Strong machine learning for threat correlation</li>
+                                        <li>Excellent API for SIEM integration</li>
+                                        <li>Real-time alerting capabilities</li>
+                                    </ul>
+                                    <p><strong>Use Cases:</strong></p>
+                                    <ul class="styled-list">
+                                        <li>Brand monitoring and fraud detection</li>
+                                        <li>Vulnerability intelligence prioritization</li>
+                                        <li>Geopolitical risk analysis</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="comparison-card">
+                                <h4>Mandiant (Google)</h4>
+                                <div class="card-content">
+                                    <p><strong>Strengths:</strong></p>
+                                    <ul class="styled-list">
+                                        <li>Deep APT group tracking and attribution</li>
+                                        <li>Incident response-derived intelligence</li>
+                                        <li>Detailed malware analysis reports</li>
+                                        <li>Strong threat actor profiling</li>
+                                    </ul>
+                                    <p><strong>Use Cases:</strong></p>
+                                    <ul class="styled-list">
+                                        <li>APT hunting and detection</li>
+                                        <li>Strategic threat assessment</li>
+                                        <li>Executive briefings</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="comparison-card">
+                                <h4>CrowdStrike Falcon X</h4>
+                                <div class="card-content">
+                                    <p><strong>Strengths:</strong></p>
+                                    <ul class="styled-list">
+                                        <li>Endpoint-derived telemetry intelligence</li>
+                                        <li>Automated IOC enrichment</li>
+                                        <li>Integrated with EDR platform</li>
+                                        <li>Strong adversary tracking</li>
+                                    </ul>
+                                    <p><strong>Use Cases:</strong></p>
+                                    <ul class="styled-list">
+                                        <li>Real-time endpoint threat correlation</li>
+                                        <li>Malware family tracking</li>
+                                        <li>Attack technique intelligence</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3>Sentinel Integration - Threat Intelligence Platforms</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">Query Commercial TI Feed Data</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// Query imported threat indicators from TI platforms
+ThreatIntelligenceIndicator
+| where TimeGenerated > ago(24h)
+| where ConfidenceScore >= 75
+| summarize 
+    IndicatorCount = count(),
+    UniqueTypes = dcount(ThreatType),
+    Sources = make_set(SourceSystem)
+    by ThreatType, IndicatorType
+| order by IndicatorCount desc
+
+// Match indicators against network events
+let TI_IPs = ThreatIntelligenceIndicator
+| where TimeGenerated > ago(7d)
+| where isnotempty(NetworkIP)
+| where ConfidenceScore >= 80
+| distinct NetworkIP;
+CommonSecurityLog
+| where TimeGenerated > ago(24h)
+| where DestinationIP in (TI_IPs) or SourceIP in (TI_IPs)
+| extend MatchedIP = iff(DestinationIP in (TI_IPs), DestinationIP, SourceIP)
+| project TimeGenerated, DeviceVendor, DeviceAction, 
+    SourceIP, DestinationIP, MatchedIP
+| take 100</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- OSINT Sources -->
+                    <section class="content-section">
+                        <h2>Open Source Intelligence (OSINT)</h2>
+                        
+                        <h3>Key OSINT Platforms</h3>
+                        <div class="table-responsive">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Platform</th>
+                                        <th>Primary Value</th>
+                                        <th>API Available</th>
+                                        <th>Best For</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>VirusTotal</strong></td>
+                                        <td>File/URL/IP reputation</td>
+                                        <td>Yes (Free tier)</td>
+                                        <td>IOC validation, malware analysis</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>AlienVault OTX</strong></td>
+                                        <td>Community threat pulses</td>
+                                        <td>Yes (Free)</td>
+                                        <td>IOC feeds, campaign tracking</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Shodan</strong></td>
+                                        <td>Internet-facing asset discovery</td>
+                                        <td>Yes (Paid tiers)</td>
+                                        <td>Attack surface monitoring</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>URLhaus</strong></td>
+                                        <td>Malware distribution URLs</td>
+                                        <td>Yes (Free)</td>
+                                        <td>Malware URL detection</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>MalwareBazaar</strong></td>
+                                        <td>Malware sample repository</td>
+                                        <td>Yes (Free)</td>
+                                        <td>Hash IOCs, sample analysis</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>MISP</strong></td>
+                                        <td>Threat sharing platform</td>
+                                        <td>Yes (Self-hosted)</td>
+                                        <td>Community TI sharing</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>AbuseIPDB</strong></td>
+                                        <td>IP reputation reporting</td>
+                                        <td>Yes (Free tier)</td>
+                                        <td>Malicious IP blocking</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3>VirusTotal API Integration</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">Python</span>
+                                <span class="code-title">VirusTotal Lookup Function</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>import requests
+import hashlib
+from datetime import datetime
+
+class VirusTotalClient:
+    def __init__(self, api_key):
+        self.api_key = api_key
+        self.base_url = "https://www.virustotal.com/api/v3"
+        self.headers = {"x-apikey": api_key}
+    
+    def check_hash(self, file_hash):
+        """Check file hash against VirusTotal"""
+        url = f"{self.base_url}/files/{file_hash}"
+        response = requests.get(url, headers=self.headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            stats = data["data"]["attributes"]["last_analysis_stats"]
+            return {
+                "hash": file_hash,
+                "malicious": stats["malicious"],
+                "suspicious": stats["suspicious"],
+                "harmless": stats["harmless"],
+                "undetected": stats["undetected"],
+                "detection_rate": f"{stats['malicious']}/{sum(stats.values())}",
+                "verdict": "malicious" if stats["malicious"] > 3 else "clean"
+            }
+        elif response.status_code == 404:
+            return {"hash": file_hash, "verdict": "unknown"}
+        return None
+    
+    def check_ip(self, ip_address):
+        """Check IP reputation"""
+        url = f"{self.base_url}/ip_addresses/{ip_address}"
+        response = requests.get(url, headers=self.headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            attrs = data["data"]["attributes"]
+            return {
+                "ip": ip_address,
+                "country": attrs.get("country", "Unknown"),
+                "as_owner": attrs.get("as_owner", "Unknown"),
+                "reputation": attrs.get("reputation", 0),
+                "malicious_votes": attrs["last_analysis_stats"]["malicious"],
+                "harmless_votes": attrs["last_analysis_stats"]["harmless"]
+            }
+        return None
+
+# Usage example
+vt = VirusTotalClient("your-api-key")
+result = vt.check_hash("44d88612fea8a8f36de82e1278abb02f")
+print(f"Detection: {result['detection_rate']}")</code></pre>
+                        </div>
+
+                        <h3>AlienVault OTX Integration</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">Python</span>
+                                <span class="code-title">OTX Pulse Fetcher</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>from OTXv2 import OTXv2
+from datetime import datetime, timedelta
+
+class OTXFetcher:
+    def __init__(self, api_key):
+        self.otx = OTXv2(api_key)
+    
+    def get_recent_pulses(self, days=7):
+        """Fetch recent threat pulses"""
+        since = datetime.now() - timedelta(days=days)
+        pulses = self.otx.getall_iter(modified_since=since)
+        
+        results = []
+        for pulse in pulses:
+            indicators = []
+            for indicator in pulse.get("indicators", []):
+                indicators.append({
+                    "type": indicator["type"],
+                    "value": indicator["indicator"],
+                    "created": indicator.get("created")
+                })
+            
+            results.append({
+                "name": pulse["name"],
+                "description": pulse.get("description", ""),
+                "author": pulse["author_name"],
+                "created": pulse["created"],
+                "tags": pulse.get("tags", []),
+                "malware_families": pulse.get("malware_families", []),
+                "adversary": pulse.get("adversary", ""),
+                "indicator_count": len(indicators),
+                "indicators": indicators[:100]  # Limit for processing
+            })
+        return results
+    
+    def extract_iocs_by_type(self, pulses, ioc_type):
+        """Extract specific IOC types from pulses"""
+        iocs = set()
+        for pulse in pulses:
+            for indicator in pulse.get("indicators", []):
+                if indicator["type"] == ioc_type:
+                    iocs.add(indicator["value"])
+        return list(iocs)
+
+# Extract IOCs for SIEM ingestion
+otx = OTXFetcher("your-otx-key")
+pulses = otx.get_recent_pulses(days=7)
+
+# Get specific IOC types
+ipv4_iocs = otx.extract_iocs_by_type(pulses, "IPv4")
+domain_iocs = otx.extract_iocs_by_type(pulses, "domain")
+hash_iocs = otx.extract_iocs_by_type(pulses, "FileHash-SHA256")</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Government Sources -->
+                    <section class="content-section">
+                        <h2>Government Intelligence Sources</h2>
+                        
+                        <h3>Key Government Sources</h3>
+                        <div class="info-box info-tip">
+                            <div class="info-box-header">
+                                <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                <span>High Reliability Sources</span>
+                            </div>
+                            <p>Government sources provide well-vetted, actionable intelligence but may lag behind commercial providers in timeliness.</p>
+                        </div>
+
+                        <div class="comparison-grid">
+                            <div class="comparison-card">
+                                <h4>CISA (US)</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li><strong>Known Exploited Vulnerabilities (KEV)</strong> - Must-patch list</li>
+                                        <li><strong>Cybersecurity Advisories</strong> - APT activity reports</li>
+                                        <li><strong>Shields Up Alerts</strong> - Elevated threat notifications</li>
+                                        <li><strong>AIS</strong> - Automated Indicator Sharing (STIX/TAXII)</li>
+                                    </ul>
+                                    <p class="source-url">https://www.cisa.gov/topics/cyber-threats-and-advisories</p>
+                                </div>
+                            </div>
+                            <div class="comparison-card">
+                                <h4>NCSC (UK)</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li><strong>Weekly Threat Reports</strong> - UK-focused threats</li>
+                                        <li><strong>CiSP Platform</strong> - Information sharing portal</li>
+                                        <li><strong>Threat Intelligence Advisories</strong></li>
+                                        <li><strong>Early Warning Service</strong></li>
+                                    </ul>
+                                    <p class="source-url">https://www.ncsc.gov.uk/section/keep-up-to-date/threat-reports</p>
+                                </div>
+                            </div>
+                            <div class="comparison-card">
+                                <h4>CCCS (Canada)</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li><strong>Cyber Centre Alerts</strong> - Canadian threat advisories</li>
+                                        <li><strong>Joint Cybersecurity Advisories</strong></li>
+                                        <li><strong>National Threat Reports</strong></li>
+                                        <li><strong>Protected Critical Infrastructure</strong></li>
+                                    </ul>
+                                    <p class="source-url">https://cyber.gc.ca/en/alerts-advisories</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3>CISA KEV Integration</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">Python</span>
+                                <span class="code-title">CISA KEV Feed Parser</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>import requests
+from datetime import datetime
+
+def fetch_cisa_kev():
+    """Fetch CISA Known Exploited Vulnerabilities catalog"""
+    url = "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
+    response = requests.get(url)
+    data = response.json()
+    
+    vulnerabilities = []
+    for vuln in data["vulnerabilities"]:
+        vulnerabilities.append({
+            "cve_id": vuln["cveID"],
+            "vendor": vuln["vendorProject"],
+            "product": vuln["product"],
+            "name": vuln["vulnerabilityName"],
+            "date_added": vuln["dateAdded"],
+            "due_date": vuln["dueDate"],
+            "known_ransomware": vuln.get("knownRansomwareCampaignUse", "Unknown"),
+            "notes": vuln.get("notes", "")
+        })
+    
+    return {
+        "catalog_version": data["catalogVersion"],
+        "date_released": data["dateReleased"],
+        "total_count": data["count"],
+        "vulnerabilities": vulnerabilities
+    }
+
+def get_overdue_kev(vulnerabilities):
+    """Find KEVs past their remediation due date"""
+    today = datetime.now().date()
+    overdue = []
+    
+    for vuln in vulnerabilities:
+        due_date = datetime.strptime(vuln["due_date"], "%Y-%m-%d").date()
+        if due_date < today:
+            vuln["days_overdue"] = (today - due_date).days
+            overdue.append(vuln)
+    
+    return sorted(overdue, key=lambda x: x["days_overdue"], reverse=True)
+
+# Fetch and process
+kev_data = fetch_cisa_kev()
+print(f"Total KEV entries: {kev_data['total_count']}")
+
+# Get overdue vulnerabilities
+overdue = get_overdue_kev(kev_data["vulnerabilities"])
+print(f"Overdue KEVs: {len(overdue)}")</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- ISAC Sources -->
+                    <section class="content-section">
+                        <h2>Information Sharing and Analysis Centers (ISACs)</h2>
+                        
+                        <p>ISACs provide sector-specific threat intelligence through trusted community sharing. Membership provides access to vetted, industry-relevant intelligence.</p>
+
+                        <div class="table-responsive">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>ISAC</th>
+                                        <th>Sector</th>
+                                        <th>Key Benefits</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>FS-ISAC</strong></td>
+                                        <td>Financial Services</td>
+                                        <td>Real-time fraud alerts, financial sector TTPs, regulatory intelligence</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Health-ISAC</strong></td>
+                                        <td>Healthcare</td>
+                                        <td>Healthcare-targeted threats, PHI protection intelligence</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>MS-ISAC</strong></td>
+                                        <td>State/Local Government</td>
+                                        <td>Government-targeted threats, election security</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>E-ISAC</strong></td>
+                                        <td>Energy/Electricity</td>
+                                        <td>Critical infrastructure threats, ICS/SCADA intelligence</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>IT-ISAC</strong></td>
+                                        <td>Information Technology</td>
+                                        <td>Software supply chain, IT infrastructure threats</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Auto-ISAC</strong></td>
+                                        <td>Automotive</td>
+                                        <td>Connected vehicle security, manufacturing threats</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="info-box info-warning">
+                            <div class="info-box-header">
+                                <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                <span>Membership Requirements</span>
+                            </div>
+                            <p>ISACs typically require organizational membership. Individual practitioners should coordinate through their security leadership to establish ISAC relationships.</p>
+                        </div>
+                    </section>
+
+                    <!-- Internal Intelligence -->
+                    <section class="content-section">
+                        <h2>Internal Intelligence Sources</h2>
+                        
+                        <p>The most valuable and reliable intelligence often comes from within your own organization. These sources provide context-specific, validated intelligence.</p>
+
+                        <h3>Internal Intelligence Types</h3>
+                        <div class="comparison-grid">
+                            <div class="comparison-card">
+                                <h4>Incident Response Findings</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li>Confirmed IOCs from actual incidents</li>
+                                        <li>Attacker TTPs observed in your environment</li>
+                                        <li>Malware samples from incidents</li>
+                                        <li>Lateral movement patterns</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="comparison-card">
+                                <h4>Honeypot/Deception Data</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li>Attack patterns against decoys</li>
+                                        <li>Credential abuse attempts</li>
+                                        <li>Scanning and enumeration TTPs</li>
+                                        <li>Attacker tooling identification</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="comparison-card">
+                                <h4>Telemetry Analysis</h4>
+                                <div class="card-content">
+                                    <ul class="styled-list">
+                                        <li>Baseline deviation detection</li>
+                                        <li>Anomalous behavior patterns</li>
+                                        <li>Failed attack attempts</li>
+                                        <li>Environmental trends</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3>Converting IR Findings to Detections</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">Detection from IR Findings - Lateral Movement via WMI</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// Detection derived from internal IR - WMI lateral movement
+// Context: Observed during incident IR-2024-0042
+let IR_Finding = "Attacker used WMI for lateral movement via wmiprvse.exe";
+let SuspiciousParents = dynamic(["cmd.exe", "powershell.exe", "wscript.exe"]);
+DeviceProcessEvents
+| where TimeGenerated > ago(24h)
+| where InitiatingProcessFileName =~ "wmiprvse.exe"
+| where FileName in~ ("cmd.exe", "powershell.exe", "net.exe", "whoami.exe")
+| where not(InitiatingProcessCommandLine has_any ("sccm", "configmgr", "intune"))
+| project 
+    TimeGenerated,
+    DeviceName,
+    FileName,
+    ProcessCommandLine,
+    InitiatingProcessFileName,
+    InitiatingProcessCommandLine,
+    AccountName
+| extend IRReference = "IR-2024-0042"
+
+// Honeypot credentials detection - internal intelligence
+let HoneypotAccounts = dynamic(["svc_backup_old", "admin_test", "sqlservice_bkp"]);
+SecurityEvent
+| where TimeGenerated > ago(24h)
+| where EventID in (4624, 4625, 4768, 4769)
+| where TargetUserName in~ (HoneypotAccounts)
+| project 
+    TimeGenerated,
+    EventID,
+    TargetUserName,
+    IpAddress,
+    WorkstationName,
+    LogonType
+| extend AlertSeverity = "Critical", 
+    IntelSource = "Internal Deception"</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Dark Web Intelligence -->
+                    <section class="content-section">
+                        <h2>Dark Web & Underground Intelligence</h2>
+                        
+                        <div class="info-box info-danger">
+                            <div class="info-box-header">
+                                <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                                <span>Critical Considerations</span>
+                            </div>
+                            <p>Dark web monitoring should be conducted through specialized providers or dedicated teams with proper authorization. Direct access to underground forums may have legal implications.</p>
+                        </div>
+
+                        <h3>Dark Web Intelligence Value</h3>
+                        <div class="table-responsive">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Intelligence Type</th>
+                                        <th>Value for Detection</th>
+                                        <th>Source Method</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Credential Dumps</strong></td>
+                                        <td>Detect compromised accounts before abuse</td>
+                                        <td>Commercial providers (SpyCloud, Flashpoint)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Initial Access Brokers</strong></td>
+                                        <td>Early warning of compromised access</td>
+                                        <td>Dark web monitoring services</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Ransomware Leak Sites</strong></td>
+                                        <td>Breach notification, victim awareness</td>
+                                        <td>Automated monitoring tools</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Zero-Day Markets</strong></td>
+                                        <td>Emerging vulnerability awareness</td>
+                                        <td>Specialized intel providers</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Malware Sales</strong></td>
+                                        <td>New malware family indicators</td>
+                                        <td>Threat intel platforms</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3>Breach Credential Monitoring Detection</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <span class="code-title">Monitor Logins from Breached Credentials</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// Assume breached credentials are imported to a watchlist
+let BreachedAccounts = _GetWatchlist('BreachedCredentials')
+| project AccountUPN = tolower(Email);
+// Monitor for successful logins from breached accounts
+SigninLogs
+| where TimeGenerated > ago(24h)
+| where ResultType == 0  // Successful login
+| extend AccountUPN = tolower(UserPrincipalName)
+| where AccountUPN in (BreachedAccounts)
+| project 
+    TimeGenerated,
+    UserPrincipalName,
+    IPAddress,
+    Location,
+    AppDisplayName,
+    DeviceDetail,
+    ConditionalAccessStatus
+| extend 
+    AlertTitle = "Login from Account in Breach Database",
+    AlertSeverity = "High",
+    RecommendedAction = "Force password reset and review account activity"</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Source Evaluation -->
+                    <section class="content-section">
+                        <h2>Intelligence Source Evaluation</h2>
+                        
+                        <h3>Admiralty Rating System</h3>
+                        <p>Use standardized ratings to evaluate and communicate intelligence reliability.</p>
+
+                        <div class="table-responsive">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Source Reliability</th>
+                                        <th>Rating</th>
+                                        <th>Information Credibility</th>
+                                        <th>Rating</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Completely reliable</td>
+                                        <td><span class="badge badge-green">A</span></td>
+                                        <td>Confirmed by other sources</td>
+                                        <td><span class="badge badge-green">1</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Usually reliable</td>
+                                        <td><span class="badge badge-cyan">B</span></td>
+                                        <td>Probably true</td>
+                                        <td><span class="badge badge-cyan">2</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fairly reliable</td>
+                                        <td><span class="badge badge-blue">C</span></td>
+                                        <td>Possibly true</td>
+                                        <td><span class="badge badge-blue">3</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Not usually reliable</td>
+                                        <td><span class="badge badge-orange">D</span></td>
+                                        <td>Doubtful</td>
+                                        <td><span class="badge badge-orange">4</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Unreliable</td>
+                                        <td><span class="badge badge-red">E</span></td>
+                                        <td>Improbable</td>
+                                        <td><span class="badge badge-red">5</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cannot be judged</td>
+                                        <td><span class="badge badge-gray">F</span></td>
+                                        <td>Cannot be judged</td>
+                                        <td><span class="badge badge-gray">6</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p>Example: "A-1" indicates completely reliable source with confirmed information. "C-3" indicates fairly reliable source with possibly true information.</p>
+                    </section>
+
+                    <!-- Interview Q&A -->
+                    <section class="content-section">
+                        <h2>Interview Preparation</h2>
+                        
+                        <div class="expandable open">
+                            <div class="expandable-header">
+                                <span class="expandable-icon">▶</span>
+                                <h3>Q: What OSINT sources do you use for threat intelligence?</h3>
+                            </div>
+                            <div class="expandable-content">
+                                <p><strong>Strong Answer:</strong> I leverage multiple OSINT sources based on the intelligence need. For IOC validation and file reputation, VirusTotal is my primary source - I use it to check suspicious hashes and URLs before blocking. AlienVault OTX provides community-contributed threat pulses that often contain IOCs from recent campaigns. For attack surface awareness, I use Shodan to identify exposed assets. URLhaus and MalwareBazaar from abuse.ch are excellent for malware-specific IOCs. I also monitor CISA advisories religiously, especially the KEV catalog which helps prioritize patching. The key is understanding each source's strengths - VirusTotal for reputation, OTX for campaign context, Shodan for external visibility. I typically correlate indicators across multiple sources before acting to reduce false positives.</p>
+                            </div>
+                        </div>
+
+                        <div class="expandable">
+                            <div class="expandable-header">
+                                <span class="expandable-icon">▶</span>
+                                <h3>Q: How do you evaluate the quality of threat intelligence?</h3>
+                            </div>
+                            <div class="expandable-content">
+                                <p><strong>Strong Answer:</strong> I use several criteria: First, source reliability - is it from a vetted provider, government agency, or internal IR? Second, timeliness - older IOCs have diminishing value as attackers rotate infrastructure. Third, context - raw IOCs without attack context are less actionable than intelligence that explains the "why" and "how". Fourth, relevance - does this threat target my industry or technology stack? Fifth, actionability - can I actually use this to create a detection or take defensive action? I also track false positive rates from different feeds to weight their reliability. For formal documentation, I sometimes use the Admiralty rating system to communicate confidence levels. The best intelligence passes multiple quality checks and correlates with other sources.</p>
+                            </div>
+                        </div>
+
+                        <div class="expandable">
+                            <div class="expandable-header">
+                                <span class="expandable-icon">▶</span>
+                                <h3>Q: How do you integrate threat intelligence into your SIEM?</h3>
+                            </div>
+                            <div class="expandable-content">
+                                <p><strong>Strong Answer:</strong> In Sentinel, I use the Threat Intelligence blade to ingest STIX/TAXII feeds from commercial providers like Recorded Future or open sources like OTX. The ThreatIntelligenceIndicator table stores these IOCs, and I create analytics rules that match indicators against log data - comparing firewall logs against malicious IPs, proxy logs against malicious domains, and endpoint logs against file hashes. For real-time matching, I use the TI map analytics templates that automatically correlate across data sources. I also maintain watchlists for high-priority IOCs requiring immediate attention. The key considerations are setting appropriate confidence score thresholds (I typically require 70%+), handling IOC expiration to prevent stale data, and tuning to reduce noise from broad indicators. I track TI-generated alerts separately to measure feed effectiveness.</p>
+                            </div>
+                        </div>
+
+                        <div class="expandable">
+                            <div class="expandable-header">
+                                <span class="expandable-icon">▶</span>
+                                <h3>Q: What's the value of internal intelligence vs external feeds?</h3>
+                            </div>
+                            <div class="expandable-content">
+                                <p><strong>Strong Answer:</strong> Internal intelligence is often more valuable because it's contextual and validated. IOCs from your own incident response are confirmed relevant to your environment and represent actual attacker activity you've faced. Honeypot data shows what attackers specifically target in your infrastructure. Baseline deviations from your telemetry reveal anomalies unique to your environment that external feeds can't provide. External feeds provide broader coverage - they warn about threats you haven't encountered yet - but require filtering for relevance. The best approach combines both: external feeds for awareness and proactive defense, internal intelligence for precision and context. I prioritize internal findings for high-severity detections and use external feeds for broader coverage and validation.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Navigation -->
+                    <nav class="page-nav">
+                        <a href="fundamentals.html" class="nav-link prev">
+                            <span class="nav-label">Previous</span>
+                            <span class="nav-title">TI Fundamentals</span>
+                        </a>
+                        <a href="ioc-management.html" class="nav-link next">
+                            <span class="nav-label">Next</span>
+                            <span class="nav-title">IOC Management</span>
+                        </a>
+                    </nav>
+                </article>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Preparation - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="references">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                            <span>References</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="kql-cheatsheet.html" class="nav-item">KQL Cheatsheet</a>
+                        <a href="spl-cheatsheet.html" class="nav-item">SPL Cheatsheet</a>
+                        <a href="regex-mastery.html" class="nav-item">Regex Reference</a>
+                        <a href="windows-events.html" class="nav-item">Windows Events</a>
+                        <a href="mitre-quick-ref.html" class="nav-item">MITRE Quick Ref</a>
+                        <a href="interview-prep.html" class="nav-item active">Interview Prep</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="kql-cheatsheet.html">References</a>
+                    <span class="separator">/</span>
+                    <span class="current">Interview Preparation</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>Detection Engineering Interview Preparation</h1>
+                    <p class="subtitle">Common interview questions, technical scenarios, and preparation strategies for detection engineering and security operations roles.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Technical Questions</h2>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Walk me through how you would detect a phishing attack.</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Detection approach:</strong></p>
+                            <ul>
+                                <li><strong>Email gateway:</strong> Suspicious sender domains, failed SPF/DKIM/DMARC, URL reputation</li>
+                                <li><strong>User behavior:</strong> Clicks on links from external senders, downloads from email</li>
+                                <li><strong>Endpoint:</strong> Office spawning PowerShell/cmd, macro execution, suspicious child processes</li>
+                                <li><strong>Network:</strong> Connections to newly registered domains, beaconing patterns</li>
+                                <li><strong>Post-compromise:</strong> Credential harvesting attempts, lateral movement</li>
+                            </ul>
+                            <p><strong>Example KQL:</strong></p>
+                            <pre>EmailEvents
+| where SenderFromDomain !endswith "company.com"
+| where UrlCount > 0
+| join EmailUrlInfo on NetworkMessageId
+| where UrlDomain in (ThreatIntelligenceIndicator | where ThreatType == "Phishing" | project DomainName)</pre>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you reduce false positives in detection rules?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Strategies:</strong></p>
+                            <ul>
+                                <li><strong>Baseline analysis:</strong> Understand normal behavior before alerting on anomalies</li>
+                                <li><strong>Whitelisting:</strong> Exclude known-good activity (admin accounts, scheduled tasks)</li>
+                                <li><strong>Threshold tuning:</strong> Adjust count/time thresholds based on environment</li>
+                                <li><strong>Context enrichment:</strong> Add user/asset context to filter benign activity</li>
+                                <li><strong>Multi-signal correlation:</strong> Require multiple indicators before alerting</li>
+                                <li><strong>Time-based filtering:</strong> Exclude maintenance windows, business hours considerations</li>
+                            </ul>
+                            <p><strong>Process:</strong> Monitor false positive rate, categorize FP reasons, implement targeted exclusions, document tuning rationale.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Explain the difference between SIEM and EDR.</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr><th>Aspect</th><th>SIEM</th><th>EDR</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Scope</td><td>Enterprise-wide log aggregation</td><td>Endpoint-focused</td></tr>
+                                    <tr><td>Data</td><td>Logs from multiple sources</td><td>Deep endpoint telemetry</td></tr>
+                                    <tr><td>Detection</td><td>Correlation rules, analytics</td><td>Behavioral analysis, ML</td></tr>
+                                    <tr><td>Response</td><td>Alert generation, workflow</td><td>Isolation, remediation</td></tr>
+                                    <tr><td>Examples</td><td>Sentinel, Splunk, Chronicle</td><td>Defender, CrowdStrike, Cortex</td></tr>
+                                </tbody>
+                            </table>
+                            <p><strong>Together:</strong> EDR provides deep endpoint visibility and response; SIEM correlates EDR data with network, cloud, and identity logs for full picture.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What is MITRE ATT&CK and how do you use it?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Definition:</strong> Knowledge base of adversary tactics, techniques, and procedures (TTPs) based on real-world observations.</p>
+                            <p><strong>Structure:</strong> 14 Tactics (why) → Techniques (how) → Sub-techniques (specific implementation)</p>
+                            <p><strong>Detection engineering uses:</strong></p>
+                            <ul>
+                                <li><strong>Coverage mapping:</strong> Map detection rules to techniques</li>
+                                <li><strong>Gap analysis:</strong> Identify techniques without detection coverage</li>
+                                <li><strong>Prioritization:</strong> Focus on prevalent techniques for your threat profile</li>
+                                <li><strong>Testing:</strong> Validate detections with Atomic Red Team tests</li>
+                                <li><strong>Reporting:</strong> Communicate coverage to stakeholders</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Write a detection for Kerberoasting.</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Attack:</strong> Request TGS tickets for service accounts to crack offline (T1558.003)</p>
+                            <p><strong>Detection indicators:</strong></p>
+                            <ul>
+                                <li>Event ID 4769 (Kerberos Service Ticket Request)</li>
+                                <li>Encryption type 0x17 (RC4) - weaker, preferred by attackers</li>
+                                <li>High volume from single user</li>
+                                <li>Targeting service accounts (SPNs)</li>
+                            </ul>
+                            <p><strong>KQL:</strong></p>
+                            <pre>SecurityEvent
+| where EventID == 4769
+| where TicketEncryptionType == "0x17"  // RC4
+| where ServiceName !endswith "$"  // Not machine accounts
+| summarize RequestCount = count(), 
+            UniqueServices = dcount(ServiceName)
+            by AccountName, IpAddress, bin(TimeGenerated, 5m)
+| where RequestCount > 10 or UniqueServices > 5</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Scenario Questions</h2>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: An alert fires for PowerShell downloading a file. Walk me through your investigation.</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Step 1: Alert triage</strong></p>
+                            <ul>
+                                <li>Who: User account, admin or standard?</li>
+                                <li>What: Full command line, source URL</li>
+                                <li>Where: Endpoint name, business unit</li>
+                                <li>When: Time, during business hours?</li>
+                            </ul>
+                            <p><strong>Step 2: Context gathering</strong></p>
+                            <ul>
+                                <li>Parent process (how was PS launched?)</li>
+                                <li>User's recent activity</li>
+                                <li>Is this user/host known for admin scripts?</li>
+                            </ul>
+                            <p><strong>Step 3: IOC analysis</strong></p>
+                            <ul>
+                                <li>URL reputation (VirusTotal, URLhaus)</li>
+                                <li>Downloaded file hash (if available)</li>
+                                <li>Domain age and registration</li>
+                            </ul>
+                            <p><strong>Step 4: Scope assessment</strong></p>
+                            <ul>
+                                <li>Any other hosts connecting to same URL?</li>
+                                <li>Did the file execute?</li>
+                                <li>Post-download activity?</li>
+                            </ul>
+                            <p><strong>Step 5: Decision</strong></p>
+                            <ul>
+                                <li>Benign: Document, add exclusion if recurring legitimate activity</li>
+                                <li>Malicious: Escalate, contain, investigate further</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: You need to improve detection coverage for ransomware. How do you approach this?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>1. Research ransomware TTPs:</strong></p>
+                            <ul>
+                                <li>Initial access: Phishing, RDP brute force, exploits</li>
+                                <li>Execution: PowerShell, WMI, scheduled tasks</li>
+                                <li>Persistence: Services, registry, scheduled tasks</li>
+                                <li>Defense evasion: Disable AV, delete backups</li>
+                                <li>Impact: Mass file encryption, ransom note</li>
+                            </ul>
+                            <p><strong>2. Map to MITRE ATT&CK:</strong></p>
+                            <ul>
+                                <li>T1486 (Data Encrypted for Impact)</li>
+                                <li>T1490 (Inhibit System Recovery)</li>
+                                <li>T1562 (Impair Defenses)</li>
+                            </ul>
+                            <p><strong>3. Build detections:</strong></p>
+                            <ul>
+                                <li>Shadow copy deletion (vssadmin, wmic)</li>
+                                <li>Backup deletion patterns</li>
+                                <li>Mass file rename operations</li>
+                                <li>Known ransomware file extensions</li>
+                                <li>Disable Windows Defender commands</li>
+                            </ul>
+                            <p><strong>4. Test and validate:</strong></p>
+                            <ul>
+                                <li>Use Atomic Red Team tests</li>
+                                <li>Purple team exercises</li>
+                                <li>Validate against known samples (sandboxed)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Behavioral Questions</h2>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Tell me about a detection rule you built that had significant impact.</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>STAR Format:</strong></p>
+                            <ul>
+                                <li><strong>Situation:</strong> What was the security gap or problem?</li>
+                                <li><strong>Task:</strong> What was your specific responsibility?</li>
+                                <li><strong>Action:</strong> What detection did you build? (Be technical)</li>
+                                <li><strong>Result:</strong> What was the measurable impact?</li>
+                            </ul>
+                            <p><strong>Example structure:</strong></p>
+                            <p>"We had no visibility into [attack type]. I researched the TTPs, built a detection using [data source] that looks for [indicators]. After tuning, it detected [X incidents] in the first month, including [specific example]. False positive rate is under [X%]."</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you stay current with threats and detection techniques?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Resources to mention:</strong></p>
+                            <ul>
+                                <li>Threat intel reports (Mandiant, CrowdStrike, Microsoft)</li>
+                                <li>MITRE ATT&CK updates</li>
+                                <li>Security blogs (SpecterOps, Red Canary, Splunk)</li>
+                                <li>Twitter/X security community</li>
+                                <li>Conferences (BSides, DEF CON, Blue Team Con)</li>
+                                <li>Sigma rules repository</li>
+                                <li>Vendor documentation and updates</li>
+                            </ul>
+                            <p><strong>Practical application:</strong> "When I see a new technique, I assess if we have visibility, test if existing detections catch it, and build new detections if needed."</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Questions to Ask Interviewers</h2>
+
+                    <div class="info-box tip">
+                        <h4>💡 Smart Questions to Ask</h4>
+                        <ul>
+                            <li>What SIEM/EDR platforms do you use?</li>
+                            <li>How is detection engineering structured? Dedicated team or shared?</li>
+                            <li>What's your detection-to-incident ratio?</li>
+                            <li>How do you measure detection effectiveness?</li>
+                            <li>What's the biggest detection gap you're trying to solve?</li>
+                            <li>How does detection engineering work with threat intel and IR?</li>
+                            <li>Is there a detection-as-code or CI/CD approach?</li>
+                            <li>What does success look like in this role at 6 months?</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Quick Reference: Key Concepts</h2>
+
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Concept</th>
+                                <th>Key Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>MTTD</strong></td>
+                                <td>Mean Time to Detect - time from attack to alert</td>
+                            </tr>
+                            <tr>
+                                <td><strong>MTTR</strong></td>
+                                <td>Mean Time to Respond - time from alert to containment</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Precision</strong></td>
+                                <td>True Positives / (True Positives + False Positives)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Recall</strong></td>
+                                <td>True Positives / (True Positives + False Negatives)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sigma</strong></td>
+                                <td>Generic signature format for SIEM systems</td>
+                            </tr>
+                            <tr>
+                                <td><strong>YARA</strong></td>
+                                <td>Pattern matching for malware identification</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IoC vs IoA</strong></td>
+                                <td>Indicator of Compromise (artifact) vs Attack (behavior)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="mitre-quick-ref.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        MITRE Quick Reference
+                    </a>
+                    <a href="../detection-engineering/fundamentals.html" class="nav-link next">
+                        Detection Fundamentals
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

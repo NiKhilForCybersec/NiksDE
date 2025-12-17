@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOC Collaboration - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="ir">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path></svg>
+                            <span>Incident Response</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="ir-support.html" class="nav-item">Detection Engineering for IR</a>
+                        <a href="forensics.html" class="nav-item">Forensic Artifacts</a>
+                        <a href="soc-collaboration.html" class="nav-item active">SOC Collaboration</a>
+                        <a href="communication.html" class="nav-item">IR Communication</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="ir-support.html">Incident Response</a>
+                    <span class="separator">/</span>
+                    <span class="current">SOC Collaboration</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>SOC Collaboration</h1>
+                    <p class="subtitle">Effective collaboration between detection engineers and SOC analysts—feedback loops, knowledge transfer, and continuous improvement processes.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Detection Engineering & SOC Relationship</h2>
+                    
+                    <p>Detection engineers and SOC analysts have a symbiotic relationship—engineers create detections, analysts validate them in production. Effective collaboration is essential for high-quality, actionable alerts.</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Feedback Loop</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                Detection Engineering Lifecycle                   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│   ┌──────────────┐     ┌──────────────┐     ┌──────────────┐   │
+│   │  Detection   │────▶│   Deploy     │────▶│    SOC       │   │
+│   │  Engineer    │     │  to SIEM     │     │   Triage     │   │
+│   └──────────────┘     └──────────────┘     └──────┬───────┘   │
+│          ▲                                          │            │
+│          │                                          ▼            │
+│          │         ┌─────────────────────────────────┐          │
+│          │         │      Feedback Collection        │          │
+│          │         │                                 │          │
+│          │         │  • False positive reports       │          │
+│          │         │  • Missed detection reports     │          │
+│          │         │  • Context/enrichment requests  │          │
+│          │         │  • Threshold adjustments        │          │
+│          │         │  • New use case requests        │          │
+│          │         └─────────────────┬───────────────┘          │
+│          │                           │                           │
+│          └───────────────────────────┘                          │
+│                                                                   │
+└─────────────────────────────────────────────────────────────────┘</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Feedback Collection</h2>
+
+                    <h3>Structured Feedback Form</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Description</th>
+                                <th>Options</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Alert ID</strong></td>
+                                <td>Unique identifier of the alert</td>
+                                <td>Auto-populated</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Detection Rule</strong></td>
+                                <td>Name of the detection that fired</td>
+                                <td>Auto-populated</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Feedback Type</strong></td>
+                                <td>Category of feedback</td>
+                                <td>False Positive, Needs Tuning, Missing Context, Good Detection</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Root Cause</strong></td>
+                                <td>Why this was a false positive</td>
+                                <td>Benign Activity, Known Application, Test/Scan, Misconfiguration</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Suggested Fix</strong></td>
+                                <td>Analyst recommendation</td>
+                                <td>Free text</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Priority</strong></td>
+                                <td>How urgent is the fix</td>
+                                <td>Critical, High, Medium, Low</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Tracking Feedback</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Detection Feedback Analysis</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Analyze detection feedback from SOC
+// Assumes feedback is stored in custom log
+DetectionFeedback_CL
+| where TimeGenerated > ago(30d)
+| summarize 
+    TotalFeedback = count(),
+    FalsePositives = countif(FeedbackType_s == "False Positive"),
+    NeedsTuning = countif(FeedbackType_s == "Needs Tuning"),
+    GoodDetections = countif(FeedbackType_s == "Good Detection")
+    by DetectionRule_s
+| extend FP_Rate = round(100.0 * FalsePositives / TotalFeedback, 1)
+| where TotalFeedback > 10  // Minimum sample size
+| order by FP_Rate desc
+| project 
+    DetectionRule = DetectionRule_s,
+    Total = TotalFeedback,
+    FP_Percent = strcat(FP_Rate, "%"),
+    FalsePositives,
+    GoodDetections,
+    Action = case(
+        FP_Rate > 50, "🔴 Needs immediate tuning",
+        FP_Rate > 25, "🟡 Review and tune",
+        FP_Rate > 10, "🟢 Monitor",
+        "✅ Healthy"
+    )</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Knowledge Transfer</h2>
+
+                    <h3>Detection Documentation for SOC</h3>
+                    <div class="info-box tip">
+                        <h4>💡 What SOC Analysts Need to Know</h4>
+                        <ul>
+                            <li><strong>What it detects:</strong> Plain language description of the behavior</li>
+                            <li><strong>Why it matters:</strong> Attack context, MITRE mapping</li>
+                            <li><strong>True positive indicators:</strong> What makes this real vs FP</li>
+                            <li><strong>Investigation steps:</strong> What to check next</li>
+                            <li><strong>Response actions:</strong> Escalation criteria, containment</li>
+                            <li><strong>Known false positives:</strong> Common benign scenarios</li>
+                        </ul>
+                    </div>
+
+                    <h3>Detection Runbook Template</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>SOC Runbook Example</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>## Detection: Suspicious PowerShell Encoded Command
+
+### Overview
+Detects PowerShell execution with base64-encoded command line arguments,
+commonly used by attackers to obfuscate malicious scripts.
+
+### MITRE ATT&CK
+- T1059.001 - Command and Scripting Interpreter: PowerShell
+- T1027 - Obfuscated Files or Information
+
+### Severity: High
+
+### Investigation Steps
+1. **Decode the command**: Use CyberChef or PowerShell to decode base64
+2. **Review decoded content**: Look for suspicious functions (Invoke-Expression, 
+   DownloadString, Net.WebClient)
+3. **Check parent process**: What launched PowerShell? (Word, Excel = suspicious)
+4. **Review user context**: Is this a privileged user? IT admin?
+5. **Check host reputation**: Any other alerts on this host?
+
+### True Positive Indicators
+- Decoded content contains suspicious keywords
+- Parent process is Office application or browser
+- Connects to external IP/domain
+- Creates/modifies files in unusual locations
+- User is not IT/developer
+
+### Known False Positives
+- SCCM/Intune deployments (parent: ccmexec.exe)
+- Legitimate admin scripts (verify with IT)
+- Some enterprise backup software
+
+### Response Actions
+- **Confirmed malicious**: Isolate host, disable user, escalate to IR
+- **Suspicious**: Contact user, gather additional context
+- **Benign**: Document, add exclusion if recurring</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Collaboration Processes</h2>
+
+                    <h3>Regular Touchpoints</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Weekly Review</h4>
+                            <ul>
+                                <li>Top false positive rules</li>
+                                <li>New detection requests</li>
+                                <li>Tuning priorities</li>
+                                <li>Upcoming deployments</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Monthly Metrics</h4>
+                            <ul>
+                                <li>Alert volume by detection</li>
+                                <li>False positive rates</li>
+                                <li>Mean time to triage</li>
+                                <li>Detection coverage gaps</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Quarterly Planning</h4>
+                            <ul>
+                                <li>New detection priorities</li>
+                                <li>Log source additions</li>
+                                <li>MITRE coverage goals</li>
+                                <li>Automation opportunities</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>Detection Request Process</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection Request Workflow</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>1. Request Submission
+   └── SOC/Threat Intel/IR submits use case
+       ├── Behavior to detect
+       ├── Business justification
+       ├── MITRE technique (if known)
+       └── Priority level
+
+2. Triage (Detection Engineer)
+   └── Assess feasibility
+       ├── Required log sources available?
+       ├── Detection logic complexity
+       ├── Estimated false positive rate
+       └── Priority vs backlog
+
+3. Development
+   └── Build detection
+       ├── Write query
+       ├── Test against historical data
+       ├── Document runbook
+       └── Peer review
+
+4. Deployment
+   └── Staged rollout
+       ├── Deploy to staging (if available)
+       ├── Deploy to production (low severity)
+       ├── Monitor for 1-2 weeks
+       └── Adjust thresholds
+
+5. Handoff
+   └── Transfer to SOC
+       ├── Walkthrough session
+       ├── Runbook review
+       ├── Q&A
+       └── Feedback channel setup</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Metrics for Collaboration</h2>
+
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Definition</th>
+                                <th>Target</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>FP Rate by Rule</strong></td>
+                                <td>% of alerts closed as false positive</td>
+                                <td>&lt;20%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Feedback Response Time</strong></td>
+                                <td>Time from feedback to rule update</td>
+                                <td>&lt;5 business days</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Detection Request Lead Time</strong></td>
+                                <td>Time from request to production</td>
+                                <td>&lt;2 weeks</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SOC Satisfaction Score</strong></td>
+                                <td>Quarterly survey rating</td>
+                                <td>&gt;4/5</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Runbook Coverage</strong></td>
+                                <td>% of detections with runbooks</td>
+                                <td>100%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you handle a SOC request to disable a noisy detection?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Process:</strong></p>
+                            <ol>
+                                <li><strong>Gather data:</strong> What's the FP rate? What's causing the noise?</li>
+                                <li><strong>Understand impact:</strong> What real threats would we miss if disabled?</li>
+                                <li><strong>Explore alternatives:</strong> Can we tune instead of disable?</li>
+                                <li><strong>Risk decision:</strong> If tuning isn't possible, document risk of disabling</li>
+                                <li><strong>Compromise:</strong> Maybe reduce severity, add exceptions for known benign</li>
+                            </ol>
+                            <p><strong>Key principle:</strong> Never simply disable—always understand the tradeoff and document the decision.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you prioritize tuning requests from SOC?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Prioritization factors:</strong></p>
+                            <ul>
+                                <li><strong>Volume:</strong> High-volume FP rules consume most SOC time</li>
+                                <li><strong>Severity:</strong> High-severity rules create more work per alert</li>
+                                <li><strong>FP rate:</strong> Rules with >50% FP rate need immediate attention</li>
+                                <li><strong>Detection value:</strong> Critical detections need to stay enabled</li>
+                                <li><strong>Fix complexity:</strong> Quick wins first for morale</li>
+                            </ul>
+                            <p><strong>Formula:</strong> Priority = (Alert Volume × FP Rate × Severity Weight) / Fix Effort</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="forensics.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        Forensic Artifacts
+                    </a>
+                    <a href="communication.html" class="nav-link next">
+                        IR Communication
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

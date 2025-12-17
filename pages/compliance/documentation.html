@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Documentation - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="compliance">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                            <span>Compliance & Frameworks</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="framework-overview.html" class="nav-item">Framework Overview</a>
+                        <a href="nist-csf.html" class="nav-item">NIST CSF</a>
+                        <a href="nist-800-53.html" class="nav-item">NIST 800-53</a>
+                        <a href="iso-27001.html" class="nav-item">ISO 27001</a>
+                        <a href="gdpr.html" class="nav-item">GDPR & Privacy</a>
+                        <a href="other-frameworks.html" class="nav-item">PCI-DSS, SOC 2, HIPAA</a>
+                        <a href="documentation.html" class="nav-item active">Security Documentation</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="framework-overview.html">Compliance</a>
+                    <span class="separator">/</span>
+                    <span class="current">Security Documentation</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>Security Documentation</h1>
+                    <p class="subtitle">Essential documentation for detection engineering—detection rule documentation, runbooks, procedures, and audit evidence generation.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Documentation Types</h2>
+                    
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Document Type</th>
+                                <th>Purpose</th>
+                                <th>Audience</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Detection Rules</strong></td>
+                                <td>Rule logic, MITRE mapping, tuning history</td>
+                                <td>Detection engineers, auditors</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Runbooks</strong></td>
+                                <td>Step-by-step investigation procedures</td>
+                                <td>SOC analysts</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Playbooks</strong></td>
+                                <td>Automated response workflows</td>
+                                <td>SOAR platform, engineers</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Architecture Docs</strong></td>
+                                <td>SIEM design, data flow, integrations</td>
+                                <td>Engineers, architects, auditors</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Metrics Reports</strong></td>
+                                <td>KPIs, coverage, effectiveness</td>
+                                <td>Management, auditors</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Detection Rule Documentation</h2>
+
+                    <h3>Rule Documentation Template</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>detection-rule-template.yaml</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code># Detection Rule Documentation Template
+---
+metadata:
+  id: DET-2024-0042
+  name: "Suspicious PowerShell Encoded Command"
+  version: "1.3"
+  status: production  # draft | testing | production | deprecated
+  created: 2024-01-15
+  modified: 2024-02-20
+  author: "Security Team"
+  reviewer: "Senior Engineer"
+
+description:
+  summary: "Detects PowerShell execution with base64 encoded commands"
+  details: |
+    Attackers frequently use encoded PowerShell commands to evade 
+    detection and execute malicious code. This rule identifies 
+    common encoding patterns used in attacks.
+  
+  false_positives:
+    - "Legitimate admin scripts using encoding"
+    - "SCCM/Intune deployments"
+    - "Vendor software installations"
+
+mitre_attack:
+  tactics:
+    - TA0002  # Execution
+    - TA0005  # Defense Evasion
+  techniques:
+    - T1059.001  # PowerShell
+    - T1027      # Obfuscated Files or Information
+
+compliance:
+  - { framework: "NIST 800-53", control: "SI-4" }
+  - { framework: "ISO 27001", control: "A.8.16" }
+  - { framework: "PCI DSS", control: "10.4" }
+
+detection:
+  platform: "Microsoft Sentinel"
+  language: "KQL"
+  query: |
+    DeviceProcessEvents
+    | where ProcessCommandLine has_any ("-enc", "-EncodedCommand")
+    | where ProcessCommandLine matches regex @"[A-Za-z0-9+/=]{50,}"
+    | project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
+  
+  data_sources:
+    - "DeviceProcessEvents (MDE)"
+    - "SecurityEvent (Windows)"
+  
+  frequency: "Real-time"
+  lookback: "5 minutes"
+
+severity: high
+priority: 2
+
+response:
+  runbook_link: "https://wiki.internal/runbooks/powershell-encoded"
+  playbook: "Enrichment-PowerShell"
+  
+  initial_actions:
+    - "Decode the base64 command"
+    - "Check VirusTotal for command hash"
+    - "Review recent activity from same host"
+  
+  escalation:
+    - condition: "Malicious payload confirmed"
+      action: "Escalate to Tier 2, isolate host"
+
+tuning_history:
+  - date: 2024-01-20
+    change: "Added exclusion for SCCM"
+    reason: "High FP from software deployments"
+    
+  - date: 2024-02-15
+    change: "Increased regex length threshold from 40 to 50"
+    reason: "Reduce FP from short legitimate encodings"
+
+testing:
+  last_tested: 2024-02-01
+  test_method: "Atomic Red Team T1059.001"
+  result: "Pass - detected in 12 seconds"
+
+metrics:
+  alerts_30d: 47
+  true_positives: 38
+  false_positives: 9
+  precision: 0.81</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Runbook Template</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Runbook: PowerShell Encoded Command Investigation</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code># RUNBOOK: Suspicious PowerShell Encoded Command
+## Alert ID: DET-2024-0042
+
+### Overview
+This runbook guides investigation of PowerShell encoded command alerts.
+
+---
+
+## Step 1: Initial Triage (5 min)
+1. Review alert details:
+   - [ ] Host name and user
+   - [ ] Timestamp
+   - [ ] Full command line
+   
+2. Quick context check:
+   - [ ] Is this a known admin/IT user?
+   - [ ] Is this during a maintenance window?
+   - [ ] Has this host triggered similar alerts before?
+
+**If known admin during maintenance → Document and close as FP**
+
+---
+
+## Step 2: Decode Command (5 min)
+1. Extract base64 string from command line
+2. Decode using:
+   ```powershell
+   [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String("BASE64_STRING"))
+   ```
+3. Analyze decoded content:
+   - [ ] Download cradles (IEX, Invoke-Expression)?
+   - [ ] Network connections?
+   - [ ] File operations?
+   - [ ] Registry modifications?
+
+**If malicious content → Proceed to Step 4 (Escalation)**
+
+---
+
+## Step 3: Context Investigation (10 min)
+1. Query related activity on host:
+   ```kql
+   DeviceProcessEvents
+   | where DeviceName == "HOSTNAME"
+   | where TimeGenerated between (datetime(ALERT_TIME)-1h .. datetime(ALERT_TIME)+1h)
+   | project TimeGenerated, FileName, ProcessCommandLine, AccountName
+   ```
+
+2. Check for:
+   - [ ] Parent process (how was PowerShell launched?)
+   - [ ] Child processes spawned
+   - [ ] Network connections from this process
+   - [ ] Files created/modified
+
+3. User activity review:
+   - [ ] Normal login times?
+   - [ ] Expected location?
+   - [ ] Recent password change?
+
+---
+
+## Step 4: Response Actions
+### Confirmed Malicious:
+1. [ ] Isolate host (if business-critical, get approval)
+2. [ ] Disable user account (if compromised)
+3. [ ] Block IOCs (IPs, domains, hashes)
+4. [ ] Create incident ticket
+5. [ ] Escalate to Tier 2/IR team
+
+### Confirmed Benign:
+1. [ ] Document findings
+2. [ ] Add exclusion if legitimate recurring activity
+3. [ ] Close alert as False Positive
+
+---
+
+## Escalation Criteria
+Escalate immediately if:
+- Confirmed malware execution
+- Data exfiltration indicators
+- Lateral movement detected
+- Executive/VIP endpoint
+- Multiple hosts affected
+
+---
+
+## Related Resources
+- MITRE ATT&CK: [T1059.001](https://attack.mitre.org/techniques/T1059/001/)
+- Detection Rule: DET-2024-0042
+- SOAR Playbook: Enrichment-PowerShell
+
+---
+**Last Updated:** 2024-02-20 | **Owner:** Detection Engineering</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Audit Evidence Generation</h2>
+
+                    <h3>Automated Compliance Reports</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Generate Audit Evidence</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Generate compliance evidence for AU-6 / A.8.16 / PCI 10.4
+// Monthly Detection Effectiveness Report
+
+let ReportPeriod = 30d;
+
+// 1. Active Detection Rules
+let ActiveRules = SecurityAlert
+| where TimeGenerated > ago(ReportPeriod)
+| summarize LastFired = max(TimeGenerated) by AlertName
+| count;
+
+// 2. Alerts Generated
+let AlertsGenerated = SecurityAlert
+| where TimeGenerated > ago(ReportPeriod)
+| summarize TotalAlerts = count(), 
+            HighSeverity = countif(AlertSeverity == "High"),
+            MediumSeverity = countif(AlertSeverity == "Medium"),
+            LowSeverity = countif(AlertSeverity == "Low");
+
+// 3. Alerts Reviewed (Incidents)
+let AlertsReviewed = SecurityIncident
+| where TimeGenerated > ago(ReportPeriod)
+| where Status in ("Closed", "Resolved")
+| count;
+
+// 4. Mean Time to Detect
+let MTTD = SecurityIncident
+| where TimeGenerated > ago(ReportPeriod)
+| extend DetectionTime = datetime_diff('minute', CreatedTime, FirstActivityTime)
+| summarize AvgMTTD_Minutes = avg(DetectionTime);
+
+// 5. Log Sources Active
+let LogSources = union withsource=TableName *
+| where TimeGenerated > ago(1d)
+| summarize LastEvent = max(TimeGenerated) by TableName
+| count;
+
+// Compile Report
+print 
+    ReportTitle = "Monthly Detection Compliance Report",
+    Period = strcat(format_datetime(ago(ReportPeriod), 'yyyy-MM-dd'), " to ", format_datetime(now(), 'yyyy-MM-dd')),
+    ActiveDetectionRules = toscalar(ActiveRules),
+    TotalAlertsGenerated = toscalar(AlertsGenerated | project TotalAlerts),
+    AlertsReviewed = toscalar(AlertsReviewed),
+    ReviewRate = strcat(round(100.0 * toscalar(AlertsReviewed) / toscalar(AlertsGenerated | project TotalAlerts), 1), "%"),
+    MeanTimeToDetect = strcat(toscalar(MTTD | project AvgMTTD_Minutes), " minutes"),
+    ActiveLogSources = toscalar(LogSources),
+    GeneratedBy = "Automated Compliance Report",
+    GeneratedAt = now()</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Documentation Best Practices</h2>
+
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>✅ Do</h4>
+                            <ul>
+                                <li>Version control all documentation</li>
+                                <li>Include last updated date</li>
+                                <li>Link detection rules to runbooks</li>
+                                <li>Document tuning decisions</li>
+                                <li>Keep runbooks actionable</li>
+                                <li>Automate evidence generation</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>❌ Don't</h4>
+                            <ul>
+                                <li>Let documentation go stale</li>
+                                <li>Write runbooks that require tribal knowledge</li>
+                                <li>Skip compliance mappings</li>
+                                <li>Forget to document false positives</li>
+                                <li>Store docs in inaccessible locations</li>
+                                <li>Make docs too long to be useful</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you document detection rules?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Key elements:</strong></p>
+                            <ul>
+                                <li><strong>Metadata:</strong> ID, name, version, status, author</li>
+                                <li><strong>Description:</strong> What it detects, why it matters</li>
+                                <li><strong>MITRE mapping:</strong> Tactics and techniques</li>
+                                <li><strong>Compliance:</strong> Which controls it supports</li>
+                                <li><strong>Logic:</strong> Query, data sources, frequency</li>
+                                <li><strong>Response:</strong> Runbook link, initial actions</li>
+                                <li><strong>Tuning history:</strong> Changes and rationale</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What metrics should detection teams track?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Operational metrics:</strong></p>
+                            <ul>
+                                <li>Alert volume by severity</li>
+                                <li>False positive rate</li>
+                                <li>Mean time to detect (MTTD)</li>
+                                <li>Mean time to respond (MTTR)</li>
+                            </ul>
+                            <p><strong>Coverage metrics:</strong></p>
+                            <ul>
+                                <li>MITRE ATT&CK coverage percentage</li>
+                                <li>Log source coverage</li>
+                                <li>Detection rules per data source</li>
+                            </ul>
+                            <p><strong>Compliance metrics:</strong></p>
+                            <ul>
+                                <li>Alerts reviewed within SLA</li>
+                                <li>Documentation completeness</li>
+                                <li>Audit findings remediated</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="other-frameworks.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        PCI-DSS, SOC 2, HIPAA
+                    </a>
+                    <a href="../detection-engineering/fundamentals.html" class="nav-link next">
+                        Detection Fundamentals
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPL Cheatsheet - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="references">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                            <span>References</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="kql-cheatsheet.html" class="nav-item">KQL Cheatsheet</a>
+                        <a href="spl-cheatsheet.html" class="nav-item active">SPL Cheatsheet</a>
+                        <a href="regex-mastery.html" class="nav-item">Regex Reference</a>
+                        <a href="windows-events.html" class="nav-item">Windows Events</a>
+                        <a href="mitre-quick-ref.html" class="nav-item">MITRE Quick Ref</a>
+                        <a href="interview-prep.html" class="nav-item">Interview Prep</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="kql-cheatsheet.html">References</a>
+                    <span class="separator">/</span>
+                    <span class="current">SPL Cheatsheet</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>Splunk SPL Cheatsheet</h1>
+                    <p class="subtitle">Essential Splunk Search Processing Language commands for security detection and analysis.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Basic Search Structure</h2>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>SPL Search Pipeline</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>index=security sourcetype=WinEventLog:Security EventCode=4625
+| fields _time, Account_Name, Source_Network_Address
+| where Account_Name != "SYSTEM"
+| stats count by Account_Name, Source_Network_Address
+| where count > 10
+| sort -count</code></pre>
+                    </div>
+
+                    <table class="styled-table">
+                        <thead>
+                            <tr><th>Component</th><th>Description</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>index=</code></td><td>Specify data index</td></tr>
+                            <tr><td><code>sourcetype=</code></td><td>Filter by data source type</td></tr>
+                            <tr><td><code>|</code></td><td>Pipe to next command</td></tr>
+                            <tr><td><code>fields</code></td><td>Select specific fields</td></tr>
+                            <tr><td><code>where</code></td><td>Filter results</td></tr>
+                            <tr><td><code>stats</code></td><td>Aggregate data</td></tr>
+                            <tr><td><code>sort</code></td><td>Order results</td></tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Search Commands</h2>
+
+                    <h3>Filtering</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Filter Commands</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Time range
+index=security earliest=-24h latest=now
+
+// Field exists
+index=security src_ip=*
+
+// Field equals
+index=security EventCode=4625
+
+// Multiple values (OR)
+index=security EventCode IN (4624, 4625, 4648)
+
+// Wildcards
+index=security user=admin*
+
+// NOT
+index=security NOT EventCode=4624
+
+// Regex match
+index=security | regex user="^admin\d+"
+
+// Search within results
+index=security | search EventCode=4625
+
+// Where clause (after pipe)
+| where count > 10
+| where isnotnull(src_ip)
+| where like(user, "admin%")
+| where match(user, "admin\d+")</code></pre>
+                    </div>
+
+                    <h3>Field Manipulation</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Field Commands</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Select fields
+| fields _time, user, src_ip, action
+| fields - _raw  // Exclude field
+
+// Rename fields
+| rename Account_Name AS user, Source_Network_Address AS src_ip
+
+// Create new field
+| eval status=if(action=="success", "OK", "FAIL")
+| eval risk_score=count*10
+| eval domain=mvindex(split(email,"@"),1)
+
+// Convert types
+| eval bytes=tonumber(bytes_str)
+| eval time_str=strftime(_time, "%Y-%m-%d %H:%M:%S")
+
+// Extract fields (regex)
+| rex field=_raw "user=(?<username>\w+)"
+| rex field=url "https?://(?<domain>[^/]+)"
+
+// Multiple value fields
+| eval ports=mvappend(src_port, dest_port)
+| mvexpand ports</code></pre>
+                    </div>
+
+                    <h3>Aggregation (stats)</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Stats Commands</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Basic aggregation
+| stats count by user
+| stats count, sum(bytes), avg(duration) by src_ip
+| stats dc(user) AS unique_users by src_ip  // Distinct count
+| stats values(action) AS actions by user   // List unique values
+| stats list(action) AS all_actions by user // List all values
+| stats first(action), last(action) by user
+| stats earliest(_time), latest(_time) by user
+
+// Time-based aggregation
+| timechart span=1h count by action
+| timechart span=5m avg(response_time)
+
+// Top/rare values
+| top 10 user
+| top user by src_ip
+| rare action
+
+// Event stats (preserves events)
+| eventstats count AS total_count by user
+| eventstats avg(duration) AS avg_duration
+
+// Stream stats (running totals)
+| streamstats count AS running_count by user
+| streamstats window=5 avg(value) AS moving_avg</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Security Detection Patterns</h2>
+
+                    <h3>Failed Login Detection</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Brute Force Detection</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>index=wineventlog sourcetype=WinEventLog:Security EventCode=4625
+| bin _time span=5m
+| stats count AS failed_attempts, 
+        dc(Account_Name) AS unique_accounts,
+        values(Account_Name) AS targeted_accounts
+        by Source_Network_Address, _time
+| where failed_attempts > 10
+| eval attack_type=if(unique_accounts>5, "Password Spray", "Brute Force")
+| table _time, Source_Network_Address, attack_type, failed_attempts, targeted_accounts</code></pre>
+                    </div>
+
+                    <h3>Suspicious Process</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>PowerShell Encoded Command</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>index=sysmon EventCode=1 
+    (Image="*\\powershell.exe" OR Image="*\\pwsh.exe")
+    (CommandLine="*-enc*" OR CommandLine="*-EncodedCommand*")
+| rex field=CommandLine "(?i)-e(nc|ncodedcommand)?\s+(?<encoded_cmd>[A-Za-z0-9+/=]+)"
+| eval decoded=base64decode(encoded_cmd)
+| table _time, ComputerName, User, CommandLine, decoded
+| where isnotnull(decoded)</code></pre>
+                    </div>
+
+                    <h3>Lateral Movement</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>RDP Lateral Movement</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>index=wineventlog sourcetype=WinEventLog:Security EventCode=4624 Logon_Type=10
+| eval src_host=if(Source_Network_Address=="-", "local", Source_Network_Address)
+| where src_host!="local"
+| stats count, 
+        dc(ComputerName) AS unique_targets,
+        values(ComputerName) AS targets
+        by Account_Name, src_host
+| where unique_targets > 3
+| sort -unique_targets</code></pre>
+                    </div>
+
+                    <h3>Data Exfiltration</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Large Outbound Transfers</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>index=network sourcetype=firewall action=allowed direction=outbound
+| stats sum(bytes_out) AS total_bytes by src_ip, dest_ip
+| eval GB=round(total_bytes/1024/1024/1024, 2)
+| where GB > 1
+| lookup asset_lookup ip AS src_ip OUTPUT hostname, department
+| table src_ip, hostname, department, dest_ip, GB
+| sort -GB</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Lookup Tables</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Using Lookups</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Basic lookup
+| lookup threat_intel_ip ip AS src_ip OUTPUT threat_type, confidence
+
+// Output all fields
+| lookup asset_inventory ip AS src_ip
+
+// Lookup with default
+| lookup user_department user OUTPUT department
+| fillnull department value="Unknown"
+
+// Input lookup (search lookup directly)
+| inputlookup threat_intel_domains.csv
+| search threat_type="malware"
+
+// Output lookup (save results)
+| outputlookup new_iocs.csv</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Subsearches & Joins</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Subsearches</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Subsearch (results feed into main search)
+index=security EventCode=4625 
+    [search index=security EventCode=4624 Logon_Type=10
+     | dedup Account_Name
+     | fields Account_Name]
+
+// Join
+index=security EventCode=4625
+| join Account_Name 
+    [search index=hr_data 
+     | fields employee_id, Account_Name, department]
+
+// Append (union)
+index=security EventCode=4625 
+| append [search index=linux_auth action=failed]
+| stats count by user, src_ip</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>SPL vs KQL Quick Reference</h2>
+
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Operation</th>
+                                <th>SPL</th>
+                                <th>KQL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Filter</td>
+                                <td><code>| where field="value"</code></td>
+                                <td><code>| where field == "value"</code></td>
+                            </tr>
+                            <tr>
+                                <td>Contains</td>
+                                <td><code>field=*value*</code></td>
+                                <td><code>field has "value"</code></td>
+                            </tr>
+                            <tr>
+                                <td>Count by</td>
+                                <td><code>| stats count by field</code></td>
+                                <td><code>| summarize count() by field</code></td>
+                            </tr>
+                            <tr>
+                                <td>Distinct count</td>
+                                <td><code>| stats dc(field)</code></td>
+                                <td><code>| summarize dcount(field)</code></td>
+                            </tr>
+                            <tr>
+                                <td>Time bucket</td>
+                                <td><code>| bin _time span=1h</code></td>
+                                <td><code>| bin(TimeGenerated, 1h)</code></td>
+                            </tr>
+                            <tr>
+                                <td>Rename</td>
+                                <td><code>| rename old AS new</code></td>
+                                <td><code>| project new=old</code></td>
+                            </tr>
+                            <tr>
+                                <td>Create field</td>
+                                <td><code>| eval new=expression</code></td>
+                                <td><code>| extend new=expression</code></td>
+                            </tr>
+                            <tr>
+                                <td>Sort</td>
+                                <td><code>| sort -field</code></td>
+                                <td><code>| order by field desc</code></td>
+                            </tr>
+                            <tr>
+                                <td>Limit</td>
+                                <td><code>| head 10</code></td>
+                                <td><code>| take 10</code></td>
+                            </tr>
+                            <tr>
+                                <td>Regex extract</td>
+                                <td><code>| rex field=x "(?&lt;name&gt;pattern)"</code></td>
+                                <td><code>| extend name=extract("pattern",1,x)</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Enterprise Security Notable Events</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Working with Notable Events</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Search notable events
+index=notable
+| where status!="5"  // Not closed
+| stats count by rule_name, urgency
+| sort -count
+
+// Create notable event (in correlation search)
+| sendalert notable param.rule_title="Brute Force Detected" 
+                    param.rule_description="Multiple failed logins"
+                    param.security_domain="access"
+                    param.severity="high"
+
+// Risk-based alerting
+index=risk
+| stats sum(risk_score) AS total_risk by risk_object
+| where total_risk > 100</code></pre>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="kql-cheatsheet.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        KQL Cheatsheet
+                    </a>
+                    <a href="regex-mastery.html" class="nav-link next">
+                        Regex Reference
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

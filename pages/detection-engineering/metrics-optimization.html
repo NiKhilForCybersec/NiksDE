@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detection Metrics & Optimization - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar" id="sidebar"></nav>
+        <div class="main-wrapper">
+            <header class="top-bar">
+                <button class="menu-toggle" id="menuToggle">☰</button>
+                <div class="breadcrumb">Detection Engineering / Metrics & Optimization</div>
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search documentation...">
+                </div>
+            </header>
+            <main class="content">
+                <div class="content-header">
+                    <h1>Detection Metrics & Optimization</h1>
+                    <p class="subtitle">Measuring detection effectiveness, managing alert fatigue, and continuously improving security coverage</p>
+                </div>
+
+                <!-- Key Metrics Overview -->
+                <section class="doc-section">
+                    <h2>Detection Program Metrics</h2>
+                    <p>Effective detection engineering requires quantifiable metrics to measure program health, justify investment, and drive continuous improvement.</p>
+                    
+                    <div class="comparison-grid">
+                        <div class="comparison-card sentinel-card">
+                            <h4>Coverage Metrics</h4>
+                            <ul>
+                                <li><strong>MITRE Coverage %</strong> - Techniques with detections</li>
+                                <li><strong>Data Source Coverage</strong> - % of sources with rules</li>
+                                <li><strong>Asset Coverage</strong> - % of assets generating logs</li>
+                                <li><strong>Detection Depth</strong> - Rules per technique</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card splunk-card">
+                            <h4>Quality Metrics</h4>
+                            <ul>
+                                <li><strong>True Positive Rate</strong> - Accurate alerts</li>
+                                <li><strong>False Positive Rate</strong> - Noise level</li>
+                                <li><strong>Mean Time to Detect</strong> - Detection speed</li>
+                                <li><strong>Alert-to-Incident Ratio</strong> - Signal quality</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Operational Metrics</h4>
+                            <ul>
+                                <li><strong>Alert Volume</strong> - Daily/weekly counts</li>
+                                <li><strong>Analyst Capacity</strong> - Alerts per analyst</li>
+                                <li><strong>Mean Time to Triage</strong> - Response speed</li>
+                                <li><strong>Rule Health</strong> - Broken/outdated rules</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Alert Quality Metrics -->
+                <section class="doc-section">
+                    <h2>Alert Quality Measurement</h2>
+                    
+                    <h3>True/False Positive Tracking</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Alert Quality Analysis</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Calculate True/False Positive rates by rule
+SecurityIncident
+| where TimeGenerated > ago(30d)
+| extend 
+    RuleName = tostring(parse_json(tostring(AlertIds))[0]),
+    Classification = case(
+        Status == "Closed" and Classification == "TruePositive", "TP",
+        Status == "Closed" and Classification == "FalsePositive", "FP",
+        Status == "Closed" and Classification == "BenignPositive", "BP",
+        Status == "Active", "Open",
+        "Other"
+    )
+| summarize 
+    TotalAlerts = count(),
+    TruePositives = countif(Classification == "TP"),
+    FalsePositives = countif(Classification == "FP"),
+    BenignPositives = countif(Classification == "BP"),
+    OpenAlerts = countif(Classification == "Open")
+    by RuleName
+| extend 
+    TP_Rate = round(100.0 * TruePositives / TotalAlerts, 1),
+    FP_Rate = round(100.0 * FalsePositives / TotalAlerts, 1),
+    Signal_Quality = case(
+        TP_Rate >= 80, "Excellent",
+        TP_Rate >= 60, "Good",
+        TP_Rate >= 40, "Needs Tuning",
+        "Poor - Review Required"
+    )
+| project RuleName, TotalAlerts, TruePositives, FalsePositives, TP_Rate, FP_Rate, Signal_Quality
+| order by FP_Rate desc</code></pre>
+                    </div>
+
+                    <h3>Alert Quality Thresholds</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Excellent</th>
+                                    <th>Good</th>
+                                    <th>Needs Work</th>
+                                    <th>Critical</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>True Positive Rate</strong></td>
+                                    <td>> 80%</td>
+                                    <td>60-80%</td>
+                                    <td>40-60%</td>
+                                    <td>< 40%</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>False Positive Rate</strong></td>
+                                    <td>< 10%</td>
+                                    <td>10-25%</td>
+                                    <td>25-50%</td>
+                                    <td>> 50%</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Alert-to-Incident Ratio</strong></td>
+                                    <td>< 5:1</td>
+                                    <td>5-10:1</td>
+                                    <td>10-20:1</td>
+                                    <td>> 20:1</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Analyst Alerts/Day</strong></td>
+                                    <td>< 20</td>
+                                    <td>20-50</td>
+                                    <td>50-100</td>
+                                    <td>> 100</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Rule Performance Dashboard</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Weekly Rule Performance</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Weekly detection performance summary
+let WeeklyAlerts = SecurityAlert
+| where TimeGenerated > ago(7d)
+| summarize 
+    AlertCount = count(),
+    UniqueEntities = dcount(Entities),
+    AvgSeverity = avg(case(
+        AlertSeverity == "High", 3,
+        AlertSeverity == "Medium", 2,
+        AlertSeverity == "Low", 1,
+        0
+    ))
+    by AlertName, bin(TimeGenerated, 1d);
+let WeeklyIncidents = SecurityIncident
+| where TimeGenerated > ago(7d)
+| summarize 
+    IncidentCount = count(),
+    TP_Count = countif(Classification == "TruePositive"),
+    FP_Count = countif(Classification == "FalsePositive")
+    by Title;
+WeeklyAlerts
+| summarize 
+    TotalAlerts = sum(AlertCount),
+    AvgDailyAlerts = avg(AlertCount),
+    PeakDayAlerts = max(AlertCount),
+    UniqueEntitiesAffected = sum(UniqueEntities)
+    by AlertName
+| join kind=leftouter WeeklyIncidents on $left.AlertName == $right.Title
+| extend 
+    TP_Rate = iff(IncidentCount > 0, round(100.0 * TP_Count / IncidentCount, 1), 0.0),
+    Trend = case(
+        AvgDailyAlerts > 10, "🔴 High Volume",
+        AvgDailyAlerts > 5, "🟡 Moderate",
+        "🟢 Healthy"
+    )
+| project AlertName, TotalAlerts, AvgDailyAlerts, TP_Rate, Trend
+| order by TotalAlerts desc</code></pre>
+                    </div>
+                </section>
+
+                <!-- Coverage Analysis -->
+                <section class="doc-section">
+                    <h2>Detection Coverage Analysis</h2>
+                    
+                    <h3>MITRE ATT&CK Coverage</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - MITRE Coverage Assessment</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Assess detection coverage against MITRE framework
+let AllTechniques = datatable(TacticName:string, TechniqueID:string, TechniqueName:string)[
+    "Initial Access", "T1566", "Phishing",
+    "Initial Access", "T1190", "Exploit Public App",
+    "Execution", "T1059.001", "PowerShell",
+    "Execution", "T1059.003", "Windows Command Shell",
+    "Persistence", "T1547.001", "Registry Run Keys",
+    "Persistence", "T1053", "Scheduled Task",
+    "Privilege Escalation", "T1548", "Abuse Elevation Control",
+    "Defense Evasion", "T1070", "Indicator Removal",
+    "Credential Access", "T1003", "OS Credential Dumping",
+    "Discovery", "T1087", "Account Discovery",
+    "Lateral Movement", "T1021", "Remote Services",
+    "Collection", "T1005", "Data from Local System",
+    "Command and Control", "T1071", "Application Layer Protocol",
+    "Exfiltration", "T1041", "Exfiltration Over C2",
+    "Impact", "T1486", "Data Encrypted for Impact"
+    // Add complete technique list
+];
+let DetectionRules = SecurityAlert
+| where TimeGenerated > ago(90d)
+| extend Techniques = parse_json(Techniques)
+| mv-expand Technique = Techniques
+| extend TechniqueID = tostring(Technique)
+| distinct TechniqueID;
+AllTechniques
+| join kind=leftouter DetectionRules on TechniqueID
+| extend HasDetection = isnotempty(TechniqueID1)
+| summarize 
+    TotalTechniques = count(),
+    CoveredTechniques = countif(HasDetection),
+    UncoveredTechniques = countif(not(HasDetection))
+    by TacticName
+| extend CoveragePercent = round(100.0 * CoveredTechniques / TotalTechniques, 1)
+| order by case(
+    TacticName == "Initial Access", 1,
+    TacticName == "Execution", 2,
+    TacticName == "Persistence", 3,
+    TacticName == "Privilege Escalation", 4,
+    99
+)</code></pre>
+                    </div>
+
+                    <h3>Data Source Coverage</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Log Source Health</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Monitor data source health and coverage
+union withsource=TableName *
+| where TimeGenerated > ago(24h)
+| summarize 
+    EventCount = count(),
+    LastEvent = max(TimeGenerated),
+    DistinctSources = dcount(coalesce(Computer, DeviceName, _ResourceId)),
+    AvgEventsPerHour = count() / 24.0
+    by TableName
+| extend 
+    DataHealth = case(
+        datetime_diff('hour', now(), LastEvent) > 4, "🔴 Stale Data",
+        datetime_diff('hour', now(), LastEvent) > 1, "🟡 Delayed",
+        "🟢 Healthy"
+    ),
+    VolumeCategory = case(
+        AvgEventsPerHour > 100000, "Very High",
+        AvgEventsPerHour > 10000, "High",
+        AvgEventsPerHour > 1000, "Medium",
+        "Low"
+    )
+| project TableName, EventCount, LastEvent, DistinctSources, DataHealth, VolumeCategory
+| order by EventCount desc</code></pre>
+                    </div>
+
+                    <h3>Asset Coverage Gaps</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Missing Asset Detection</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Identify assets not generating expected logs
+let KnownAssets = 
+    // Get all known devices from MDE
+    DeviceInfo
+    | where TimeGenerated > ago(7d)
+    | distinct DeviceName, DeviceId, OSPlatform
+    | extend AssetSource = "MDE";
+let LoggingAssets = 
+    union 
+    (SecurityEvent | where TimeGenerated > ago(24h) | distinct Computer),
+    (Syslog | where TimeGenerated > ago(24h) | distinct Computer),
+    (DeviceEvents | where TimeGenerated > ago(24h) | distinct DeviceName)
+    | extend HasLogs = true;
+KnownAssets
+| join kind=leftouter LoggingAssets on $left.DeviceName == $right.Computer
+| where isempty(HasLogs)
+| extend 
+    GapType = case(
+        OSPlatform contains "Windows", "Windows - No Security Events",
+        OSPlatform contains "Linux", "Linux - No Syslog",
+        "Unknown Platform"
+    ),
+    LastSeen = ago(7d)
+| project DeviceName, OSPlatform, GapType, LastSeen
+| take 100</code></pre>
+                    </div>
+                </section>
+
+                <!-- Detection Tuning -->
+                <section class="doc-section">
+                    <h2>Detection Tuning Strategies</h2>
+                    
+                    <h3>Identifying High-Noise Rules</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - False Positive Analysis</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Identify rules generating most false positives
+SecurityIncident
+| where TimeGenerated > ago(30d)
+| where Classification == "FalsePositive" or Classification == "BenignPositive"
+| extend 
+    RuleName = Title,
+    // Extract common FP sources
+    Entities = parse_json(tostring(Entities))
+| mv-expand Entity = Entities
+| extend 
+    EntityType = tostring(Entity.Type),
+    EntityValue = tostring(Entity.Name)
+| summarize 
+    FP_Count = count(),
+    UniqueEntities = dcount(EntityValue),
+    TopEntities = make_set(EntityValue, 10)
+    by RuleName, EntityType
+| where FP_Count > 5
+| extend 
+    TuningRecommendation = case(
+        FP_Count > 50 and UniqueEntities < 5, "Add entity exclusion list",
+        FP_Count > 50 and UniqueEntities > 20, "Rule logic needs review",
+        FP_Count > 20, "Consider threshold adjustment",
+        "Monitor"
+    )
+| project RuleName, EntityType, FP_Count, UniqueEntities, TopEntities, TuningRecommendation
+| order by FP_Count desc</code></pre>
+                    </div>
+
+                    <h3>Building Exclusion Lists</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Generate Exclusion Candidates</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Generate exclusion list from confirmed FPs
+let ConfirmedFPs = SecurityIncident
+| where TimeGenerated > ago(90d)
+| where Classification == "FalsePositive"
+| extend Entities = parse_json(tostring(Entities))
+| mv-expand Entity = Entities
+| extend 
+    EntityType = tostring(Entity.Type),
+    EntityValue = tostring(Entity.Name),
+    RuleName = Title;
+// Aggregate to find systematic FPs
+ConfirmedFPs
+| summarize 
+    FP_Occurrences = count(),
+    AffectedRules = make_set(RuleName, 10),
+    RuleCount = dcount(RuleName)
+    by EntityType, EntityValue
+| where FP_Occurrences >= 3  // Seen 3+ times as FP
+| extend 
+    ExclusionConfidence = case(
+        FP_Occurrences >= 10 and RuleCount >= 3, "High - Add to global exclusion",
+        FP_Occurrences >= 5, "Medium - Add to rule-specific exclusion",
+        "Low - Monitor"
+    ),
+    // Format for watchlist import
+    WatchlistEntry = strcat(EntityType, ",", EntityValue, ",", FP_Occurrences)
+| where ExclusionConfidence != "Low"
+| project EntityType, EntityValue, FP_Occurrences, RuleCount, ExclusionConfidence
+| order by FP_Occurrences desc</code></pre>
+                    </div>
+
+                    <h3>Threshold Optimization</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Threshold Analysis</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Analyze event distribution for threshold tuning
+// Example: Failed login threshold analysis
+SecurityEvent
+| where TimeGenerated > ago(7d)
+| where EventID == 4625
+| summarize FailedLogins = count() by TargetAccount, bin(TimeGenerated, 1h)
+| summarize 
+    AvgHourlyFailures = avg(FailedLogins),
+    MedianFailures = percentile(FailedLogins, 50),
+    P90_Failures = percentile(FailedLogins, 90),
+    P95_Failures = percentile(FailedLogins, 95),
+    P99_Failures = percentile(FailedLogins, 99),
+    MaxFailures = max(FailedLogins)
+    by TargetAccount
+| extend 
+    // Suggest threshold based on distribution
+    SuggestedThreshold = case(
+        P95_Failures < 5, 5,
+        P95_Failures < 10, 10,
+        P95_Failures < 20, toint(P95_Failures * 1.5),
+        toint(P99_Failures)
+    ),
+    AccountType = case(
+        TargetAccount contains "svc", "Service Account",
+        TargetAccount contains "admin", "Admin Account",
+        "User Account"
+    )
+| project TargetAccount, AccountType, AvgHourlyFailures, P95_Failures, P99_Failures, SuggestedThreshold
+| order by P99_Failures desc
+| take 50</code></pre>
+                    </div>
+
+                    <div class="info-box tip">
+                        <h4>Tuning Best Practices</h4>
+                        <ul>
+                            <li><strong>Document every exclusion</strong> - Include ticket reference, reason, and review date</li>
+                            <li><strong>Time-bound exclusions</strong> - Set expiration dates for temporary exclusions</li>
+                            <li><strong>Whitelist minimally</strong> - Use most specific criteria (account + process + path)</li>
+                            <li><strong>Test in shadow mode</strong> - Run tuned rules in parallel before replacing</li>
+                            <li><strong>Regular review cadence</strong> - Monthly review of top FP generators</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Mean Time to Detect -->
+                <section class="doc-section">
+                    <h2>Mean Time to Detect (MTTD)</h2>
+                    
+                    <h3>Measuring Detection Speed</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - MTTD Calculation</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Calculate Mean Time to Detect for incidents
+SecurityIncident
+| where TimeGenerated > ago(90d)
+| where Classification == "TruePositive"
+| extend 
+    // Get first alert time from related alerts
+    AlertTimes = parse_json(tostring(AlertIds)),
+    IncidentCreated = CreatedTime
+| mv-expand AlertId = AlertTimes
+| join kind=leftouter (
+    SecurityAlert
+    | project AlertId = SystemAlertId, AlertGenerated = TimeGenerated
+) on AlertId
+| summarize 
+    FirstAlertTime = min(AlertGenerated),
+    IncidentCreated = max(IncidentCreated)
+    by IncidentNumber, Title
+| extend 
+    // Estimate activity start (if available from investigation)
+    DetectionDelayMinutes = datetime_diff('minute', FirstAlertTime, IncidentCreated)
+| summarize 
+    AvgMTTD_Minutes = avg(DetectionDelayMinutes),
+    MedianMTTD = percentile(DetectionDelayMinutes, 50),
+    P90_MTTD = percentile(DetectionDelayMinutes, 90),
+    IncidentCount = count()
+    by Title
+| extend 
+    MTTD_Status = case(
+        AvgMTTD_Minutes < 5, "🟢 Excellent",
+        AvgMTTD_Minutes < 15, "🟢 Good",
+        AvgMTTD_Minutes < 60, "🟡 Acceptable",
+        "🔴 Needs Improvement"
+    )
+| project Title, IncidentCount, AvgMTTD_Minutes, MedianMTTD, P90_MTTD, MTTD_Status
+| order by AvgMTTD_Minutes desc</code></pre>
+                    </div>
+
+                    <h3>Detection Latency by Stage</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Stage</th>
+                                    <th>Description</th>
+                                    <th>Target</th>
+                                    <th>Optimization</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Log Generation</strong></td>
+                                    <td>Time from activity to log creation</td>
+                                    <td>< 1 sec</td>
+                                    <td>Enable detailed logging, Sysmon</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Log Collection</strong></td>
+                                    <td>Agent to SIEM transport</td>
+                                    <td>< 30 sec</td>
+                                    <td>Agent buffering, network optimization</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Log Ingestion</strong></td>
+                                    <td>SIEM parsing and indexing</td>
+                                    <td>< 1 min</td>
+                                    <td>Parser optimization, scaling</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Rule Execution</strong></td>
+                                    <td>Detection rule evaluation</td>
+                                    <td>< 5 min</td>
+                                    <td>Scheduled vs. near-real-time rules</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Alert Delivery</strong></td>
+                                    <td>Alert to analyst notification</td>
+                                    <td>< 1 min</td>
+                                    <td>Priority routing, automation</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Detection Program Health -->
+                <section class="doc-section">
+                    <h2>Detection Program Health Dashboard</h2>
+                    
+                    <h3>Weekly Health Report Query</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Weekly Health Summary</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Comprehensive weekly detection health report
+let WeekStart = startofweek(now());
+let PrevWeekStart = startofweek(now()) - 7d;
+// Current week metrics
+let CurrentWeek = SecurityAlert
+| where TimeGenerated >= WeekStart
+| summarize 
+    CW_AlertCount = count(),
+    CW_UniqueRules = dcount(AlertName),
+    CW_HighSeverity = countif(AlertSeverity == "High"),
+    CW_UniqueEntities = dcount(Entities);
+// Previous week for comparison
+let PreviousWeek = SecurityAlert
+| where TimeGenerated >= PrevWeekStart and TimeGenerated < WeekStart
+| summarize 
+    PW_AlertCount = count(),
+    PW_UniqueRules = dcount(AlertName),
+    PW_HighSeverity = countif(AlertSeverity == "High");
+// Incident metrics
+let IncidentMetrics = SecurityIncident
+| where TimeGenerated >= WeekStart
+| summarize 
+    IncidentCount = count(),
+    TP_Count = countif(Classification == "TruePositive"),
+    FP_Count = countif(Classification == "FalsePositive"),
+    AvgTimeToClose = avg(datetime_diff('hour', ClosedTime, CreatedTime));
+// Combine metrics
+CurrentWeek
+| extend dummy = 1
+| join kind=inner (PreviousWeek | extend dummy = 1) on dummy
+| join kind=inner (IncidentMetrics | extend dummy = 1) on dummy
+| extend 
+    AlertTrend = iff(CW_AlertCount > PW_AlertCount * 1.2, "📈 Increasing", 
+                iff(CW_AlertCount < PW_AlertCount * 0.8, "📉 Decreasing", "➡️ Stable")),
+    TP_Rate = round(100.0 * TP_Count / IncidentCount, 1),
+    WeekOverWeekChange = round(100.0 * (CW_AlertCount - PW_AlertCount) / PW_AlertCount, 1)
+| project 
+    pack(
+        "Period", "Current Week",
+        "Total Alerts", CW_AlertCount,
+        "Week-over-Week Change", strcat(WeekOverWeekChange, "%"),
+        "Alert Trend", AlertTrend,
+        "High Severity Alerts", CW_HighSeverity,
+        "Unique Rules Triggered", CW_UniqueRules,
+        "Incidents Created", IncidentCount,
+        "True Positive Rate", strcat(TP_Rate, "%"),
+        "Avg Hours to Close", round(AvgTimeToClose, 1)
+    )</code></pre>
+                    </div>
+
+                    <h3>Rule Health Monitoring</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Identify Broken/Silent Rules</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Find rules that haven't triggered recently (may be broken)
+let AllRules = datatable(RuleName:string, ExpectedFrequency:string)[
+    "Brute Force Attack", "Daily",
+    "Malware Detection", "Daily",
+    "Suspicious PowerShell", "Weekly",
+    "Lateral Movement", "Weekly",
+    "Data Exfiltration", "Monthly"
+    // Add all your rules
+];
+let RecentAlerts = SecurityAlert
+| where TimeGenerated > ago(30d)
+| summarize 
+    LastTriggered = max(TimeGenerated),
+    TriggerCount = count()
+    by AlertName;
+AllRules
+| join kind=leftouter RecentAlerts on $left.RuleName == $right.AlertName
+| extend 
+    DaysSinceLastTrigger = datetime_diff('day', now(), LastTriggered),
+    Status = case(
+        isnull(LastTriggered), "🔴 Never Triggered",
+        ExpectedFrequency == "Daily" and DaysSinceLastTrigger > 3, "🔴 Possibly Broken",
+        ExpectedFrequency == "Weekly" and DaysSinceLastTrigger > 14, "🟡 Check Required",
+        ExpectedFrequency == "Monthly" and DaysSinceLastTrigger > 60, "🟡 Check Required",
+        "🟢 Healthy"
+    )
+| project RuleName, ExpectedFrequency, LastTriggered, DaysSinceLastTrigger, TriggerCount, Status
+| where Status != "🟢 Healthy"
+| order by DaysSinceLastTrigger desc</code></pre>
+                    </div>
+                </section>
+
+                <!-- Continuous Improvement -->
+                <section class="doc-section">
+                    <h2>Continuous Improvement Framework</h2>
+                    
+                    <h3>Detection Maturity Model</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Level</th>
+                                    <th>Characteristics</th>
+                                    <th>Metrics Focus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>1 - Initial</strong></td>
+                                    <td>Default vendor rules, reactive, no metrics</td>
+                                    <td>Establish baseline alert volume</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>2 - Developing</strong></td>
+                                    <td>Some custom rules, basic tuning, FP tracking</td>
+                                    <td>TP/FP rates, alert-to-incident ratio</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>3 - Defined</strong></td>
+                                    <td>MITRE-mapped coverage, systematic tuning</td>
+                                    <td>Coverage %, MTTD, rule health</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>4 - Managed</strong></td>
+                                    <td>Quantitative goals, regular review cadence</td>
+                                    <td>Trend analysis, efficiency metrics</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>5 - Optimizing</strong></td>
+                                    <td>Continuous improvement, automation, ML-assisted</td>
+                                    <td>Detection ROI, attack simulation results</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Monthly Review Checklist</h3>
+                    <div class="info-box info">
+                        <h4>Detection Engineering Review Items</h4>
+                        <ol>
+                            <li><strong>Top 10 FP generators</strong> - Review and tune high-noise rules</li>
+                            <li><strong>Coverage gaps</strong> - Map new threats to MITRE, assess gaps</li>
+                            <li><strong>Rule health</strong> - Check for broken/silent rules</li>
+                            <li><strong>Data source health</strong> - Verify all sources ingesting</li>
+                            <li><strong>New detections</strong> - Review threat intel for new rules</li>
+                            <li><strong>Exclusion review</strong> - Audit exclusions, remove stale ones</li>
+                            <li><strong>Performance metrics</strong> - Track MTTD, TP rate trends</li>
+                            <li><strong>Analyst feedback</strong> - Gather SOC input on alert quality</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <!-- Interview Questions -->
+                <section class="doc-section">
+                    <h2>Interview Questions & Answers</h2>
+                    
+                    <div class="qa-accordion">
+                        <div class="qa-item">
+                            <button class="qa-question">How do you measure the effectiveness of your detection program?</button>
+                            <div class="qa-answer">
+                                <p><strong>Answer:</strong> I use a multi-dimensional measurement approach:</p>
+                                <ol>
+                                    <li><strong>Coverage metrics:</strong>
+                                        <ul>
+                                            <li>MITRE ATT&CK technique coverage percentage</li>
+                                            <li>Data source coverage (% of assets sending logs)</li>
+                                            <li>Detection depth (multiple rules per technique)</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Quality metrics:</strong>
+                                        <ul>
+                                            <li>True Positive rate (target: >70%)</li>
+                                            <li>False Positive rate (target: <20%)</li>
+                                            <li>Alert-to-incident ratio (target: <10:1)</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Timeliness:</strong>
+                                        <ul>
+                                            <li>Mean Time to Detect (MTTD)</li>
+                                            <li>Log ingestion latency</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Validation:</strong>
+                                        <ul>
+                                            <li>Purple team exercise results</li>
+                                            <li>Atomic Red Team test pass rate</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                                <p>I present these in a monthly dashboard and track trends over time.</p>
+                            </div>
+                        </div>
+
+                        <div class="qa-item">
+                            <button class="qa-question">How do you handle alert fatigue in a SOC environment?</button>
+                            <div class="qa-answer">
+                                <p><strong>Answer:</strong> Alert fatigue is a critical problem I address systematically:</p>
+                                <ol>
+                                    <li><strong>Measure the problem:</strong>
+                                        <ul>
+                                            <li>Track alerts per analyst per day (target: <50)</li>
+                                            <li>Identify top 10 noisy rules weekly</li>
+                                            <li>Calculate time spent on FPs vs TPs</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Tuning strategies:</strong>
+                                        <ul>
+                                            <li>Build watchlists for known-good entities</li>
+                                            <li>Adjust thresholds based on baseline analysis</li>
+                                            <li>Add context-specific exclusions (not blanket)</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Alert consolidation:</strong>
+                                        <ul>
+                                            <li>Group related alerts into single incidents</li>
+                                            <li>Suppress duplicate alerts within time windows</li>
+                                            <li>Use risk scoring to prioritize</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Automation:</strong>
+                                        <ul>
+                                            <li>Auto-close known FP patterns</li>
+                                            <li>Auto-enrich with context</li>
+                                            <li>Playbook automation for routine investigation</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="qa-item">
+                            <button class="qa-question">Describe your process for tuning a noisy detection rule.</button>
+                            <div class="qa-answer">
+                                <p><strong>Answer:</strong> My systematic tuning process:</p>
+                                <ol>
+                                    <li><strong>Quantify the problem:</strong>
+                                        <ul>
+                                            <li>How many alerts in last 30 days?</li>
+                                            <li>What % are FPs?</li>
+                                            <li>What are the common FP patterns?</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Analyze FP root causes:</strong>
+                                        <ul>
+                                            <li>Specific users/accounts triggering?</li>
+                                            <li>Specific processes/applications?</li>
+                                            <li>Time patterns (business hours, backups)?</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Design the fix:</strong>
+                                        <ul>
+                                            <li>Exclusion list for specific entities</li>
+                                            <li>Threshold adjustment</li>
+                                            <li>Additional conditions (combine criteria)</li>
+                                            <li>Time-based suppression</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Test before deploy:</strong>
+                                        <ul>
+                                            <li>Run tuned rule in parallel (shadow mode)</li>
+                                            <li>Compare TP/FP rates</li>
+                                            <li>Verify TPs still trigger</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Document and monitor:</strong>
+                                        <ul>
+                                            <li>Record exclusion rationale</li>
+                                            <li>Set review date</li>
+                                            <li>Monitor post-deployment</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="qa-item">
+                            <button class="qa-question">What KPIs would you establish for a new detection engineering program?</button>
+                            <div class="qa-answer">
+                                <p><strong>Answer:</strong> For a new program, I'd establish phased KPIs:</p>
+                                <p><strong>Phase 1 - Foundation (Months 1-3):</strong></p>
+                                <ul>
+                                    <li>Data source onboarding: 100% critical assets logging</li>
+                                    <li>Baseline alert volume established</li>
+                                    <li>Initial MITRE coverage assessment complete</li>
+                                </ul>
+                                <p><strong>Phase 2 - Quality (Months 4-6):</strong></p>
+                                <ul>
+                                    <li>True Positive rate: >50% initially, >70% by month 6</li>
+                                    <li>Alert-to-incident ratio: <15:1</li>
+                                    <li>Analyst daily alert load: <100</li>
+                                </ul>
+                                <p><strong>Phase 3 - Maturity (Months 7-12):</strong></p>
+                                <ul>
+                                    <li>MITRE coverage: >60% of high-priority techniques</li>
+                                    <li>MTTD: <15 minutes for critical detections</li>
+                                    <li>Rule health: <5% broken/silent rules</li>
+                                    <li>Purple team detection rate: >80%</li>
+                                </ul>
+                                <p>I'd track these in a dashboard with weekly updates and monthly reviews.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Navigation -->
+                <div class="doc-navigation">
+                    <a href="use-case-framework.html" class="nav-link prev">
+                        <span class="arrow">←</span>
+                        <span>Use Case Framework</span>
+                    </a>
+                    <a href="../log-analysis/fundamentals.html" class="nav-link next">
+                        <span>Log Analysis Fundamentals</span>
+                        <span class="arrow">→</span>
+                    </a>
+                </div>
+            </main>
+            <footer class="footer">
+                <p>Detection Engineering Mastery © 2024 | Building world-class detection capabilities</p>
+            </footer>
+        </div>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+    <script>
+        document.querySelectorAll('.qa-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const isOpen = answer.style.maxHeight;
+                document.querySelectorAll('.qa-answer').forEach(a => a.style.maxHeight = null);
+                document.querySelectorAll('.qa-question').forEach(q => q.classList.remove('active'));
+                if (!isOpen) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    button.classList.add('active');
+                }
+            });
+        });
+        function copyCode(btn) {
+            const code = btn.parentElement.nextElementSibling.querySelector('code').innerText;
+            navigator.clipboard.writeText(code);
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = 'Copy', 2000);
+        }
+    </script>
+</body>
+</html>

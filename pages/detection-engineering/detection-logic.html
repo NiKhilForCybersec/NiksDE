@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detection Logic Design | Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Detection Engineering</h2>
+            <span class="sidebar-subtitle">Mastery Guide</span>
+        </div>
+        <div class="sidebar-search">
+            <input type="text" id="sidebar-search" placeholder="Search topics...">
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="detection">
+                    <span>Detection Engineering</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="detection-items">
+                    <li><a href="fundamentals.html">Detection Fundamentals</a></li>
+                    <li><a href="sentinel-deep-dive.html">Microsoft Sentinel Deep Dive</a></li>
+                    <li><a href="splunk-comparison.html">Splunk Comparison</a></li>
+                    <li><a href="detection-logic.html" class="active">Detection Logic Design</a></li>
+                    <li><a href="mitre-mapping.html">MITRE ATT&CK Mapping</a></li>
+                    <li><a href="use-case-framework.html">Use Case Framework</a></li>
+                    <li><a href="metrics-optimization.html">Metrics & Optimization</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="log-analysis">
+                    <span>Log Analysis</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="log-analysis-items">
+                    <li><a href="../log-analysis/fundamentals.html">Log Analysis Fundamentals</a></li>
+                    <li><a href="../log-analysis/network-logs.html">Network Logs</a></li>
+                    <li><a href="../log-analysis/endpoint-logs.html">Endpoint Logs</a></li>
+                    <li><a href="../log-analysis/cloud-logs.html">Cloud Platform Logs</a></li>
+                    <li><a href="../log-analysis/regex-mastery.html">Regex Mastery</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="threat-intel">
+                    <span>Threat Intelligence</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="threat-intel-items">
+                    <li><a href="../threat-intel/ti-fundamentals.html">TI Fundamentals</a></li>
+                    <li><a href="../threat-intel/ti-sources.html">Intelligence Sources</a></li>
+                    <li><a href="../threat-intel/ioc-management.html">IOC Management</a></li>
+                    <li><a href="../threat-intel/hunting-methodology.html">Hunting Methodology</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="sap">
+                    <span>SAP Security</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="sap-items">
+                    <li><a href="../sap-security/sap-overview.html">SAP Overview</a></li>
+                    <li><a href="../sap-security/sap-architecture.html">SAP Architecture</a></li>
+                    <li><a href="../sap-security/sap-modules.html">Modules & Services</a></li>
+                    <li><a href="../sap-security/security-fundamentals.html">Security Fundamentals</a></li>
+                    <li><a href="../sap-security/log-types.html">SAP Log Types</a></li>
+                    <li><a href="../sap-security/siem-integration.html">SIEM Integration</a></li>
+                    <li><a href="../sap-security/threat-detection.html">Threat Detection</a></li>
+                    <li><a href="../sap-security/compliance.html">Compliance & Audit</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="vuln">
+                    <span>Vulnerability Management</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="vuln-items">
+                    <li><a href="../vulnerability-mgmt/fundamentals.html">VM Fundamentals</a></li>
+                    <li><a href="../vulnerability-mgmt/qualys-deep-dive.html">Qualys Deep Dive</a></li>
+                    <li><a href="../vulnerability-mgmt/tenable-nessus.html">Tenable & Nessus</a></li>
+                    <li><a href="../vulnerability-mgmt/risk-prioritization.html">Risk Prioritization</a></li>
+                    <li><a href="../vulnerability-mgmt/remediation.html">Remediation Workflows</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="cloud">
+                    <span>Cloud Security</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="cloud-items">
+                    <li><a href="../cloud-security/aws-security.html">AWS Security</a></li>
+                    <li><a href="../cloud-security/azure-security.html">Azure Security</a></li>
+                    <li><a href="../cloud-security/gcp-security.html">GCP Security</a></li>
+                    <li><a href="../cloud-security/multi-cloud.html">Multi-Cloud Strategy</a></li>
+                    <li><a href="../cloud-security/cspm-cwpp.html">CSPM & CWPP</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="automation">
+                    <span>Automation & Scripting</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="automation-items">
+                    <li><a href="../automation/python-security.html">Python for Security</a></li>
+                    <li><a href="../automation/powershell-security.html">PowerShell for Security</a></li>
+                    <li><a href="../automation/bash-security.html">Bash for Security</a></li>
+                    <li><a href="../automation/soar-platforms.html">SOAR Platforms</a></li>
+                    <li><a href="../automation/api-integration.html">API Integration</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="compliance">
+                    <span>Compliance & Frameworks</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="compliance-items">
+                    <li><a href="../compliance/framework-overview.html">Framework Overview</a></li>
+                    <li><a href="../compliance/iso-27001.html">ISO 27001</a></li>
+                    <li><a href="../compliance/nist-csf.html">NIST CSF & 800-53</a></li>
+                    <li><a href="../compliance/gdpr.html">GDPR</a></li>
+                    <li><a href="../compliance/documentation.html">Documentation Standards</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="incident">
+                    <span>Incident Response</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="incident-items">
+                    <li><a href="../incident-response/soc-collaboration.html">SOC Collaboration</a></li>
+                    <li><a href="../incident-response/ir-support.html">IR Support Role</a></li>
+                    <li><a href="../incident-response/forensic-requirements.html">Forensic Requirements</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="references">
+                    <span>References & Cheat Sheets</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="references-items">
+                    <li><a href="../references/kql-cheatsheet.html">KQL Cheat Sheet</a></li>
+                    <li><a href="../references/spl-cheatsheet.html">SPL Cheat Sheet</a></li>
+                    <li><a href="../references/regex-cheatsheet.html">Regex Cheat Sheet</a></li>
+                    <li><a href="../references/windows-events.html">Windows Event IDs</a></li>
+                    <li><a href="../references/mitre-reference.html">MITRE ATT&CK Reference</a></li>
+                    <li><a href="../references/interview-prep.html">Interview Preparation</a></li>
+                </ul>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+        
+        <nav class="breadcrumb">
+            <a href="../../index.html">Home</a> &gt;
+            <a href="fundamentals.html">Detection Engineering</a> &gt;
+            <span>Detection Logic Design</span>
+        </nav>
+
+        <header class="page-header">
+            <h1>Detection Logic Design</h1>
+            <p class="page-subtitle">Building robust, maintainable, and effective detection rules</p>
+        </header>
+
+        <section class="content-section">
+            <h2>Detection Rule Anatomy</h2>
+            <p>Every detection rule consists of core components that work together to identify malicious or suspicious activity. Understanding this anatomy is essential for writing effective detections.</p>
+
+            <div class="info-box info">
+                <div class="info-box-header">
+                    <span class="info-icon">ℹ️</span>
+                    <span>Rule Components</span>
+                </div>
+                <div class="info-box-content">
+                    <p><strong>Data Source:</strong> The log source(s) queried by the rule</p>
+                    <p><strong>Detection Logic:</strong> The conditions that trigger the alert</p>
+                    <p><strong>Entity Mapping:</strong> Key entities (user, host, IP) for investigation</p>
+                    <p><strong>Severity & Confidence:</strong> Risk assessment of the detection</p>
+                    <p><strong>Response Actions:</strong> Automated or manual response steps</p>
+                </div>
+            </div>
+
+            <h3>Detection Logic Types</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Logic Type</th>
+                        <th>Description</th>
+                        <th>Use Cases</th>
+                        <th>False Positive Risk</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Signature-Based</strong></td>
+                        <td>Match specific known patterns</td>
+                        <td>Known malware hashes, IOCs</td>
+                        <td>Low</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Threshold-Based</strong></td>
+                        <td>Alert when count exceeds limit</td>
+                        <td>Brute force, data exfiltration</td>
+                        <td>Medium</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Anomaly-Based</strong></td>
+                        <td>Deviation from baseline</td>
+                        <td>Insider threat, novel attacks</td>
+                        <td>High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Correlation-Based</strong></td>
+                        <td>Multiple events form pattern</td>
+                        <td>Attack chains, lateral movement</td>
+                        <td>Low-Medium</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Behavioral</strong></td>
+                        <td>Sequence matches known TTP</td>
+                        <td>MITRE ATT&CK techniques</td>
+                        <td>Medium</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section">
+            <h2>Building Signature-Based Detections</h2>
+            <p>Signature detections match specific known indicators with high confidence. They're ideal for detecting known threats but require continuous updates.</p>
+
+            <h3>IOC Matching Patterns</h3>
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">Hash-Based Detection</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Detect known malicious file hashes
+let MaliciousHashes = dynamic([
+    "44d88612fea8a8f36de82e1278abb02f",  // EICAR test
+    "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f",
+    "e99a18c428cb38d5f260853678922e03"
+]);
+DeviceFileEvents
+| where ActionType == "FileCreated"
+| where MD5 in (MaliciousHashes) or SHA256 in (MaliciousHashes)
+| extend ThreatType = "Known Malware Hash Match"
+| project 
+    TimeGenerated,
+    DeviceName,
+    FileName,
+    FolderPath,
+    MD5,
+    SHA256,
+    InitiatingProcessFileName,
+    InitiatingProcessAccountName</code></pre>
+            </div>
+
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">Domain/IP IOC Detection with Watchlist</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Match network connections against threat intelligence
+let ThreatIOCs = _GetWatchlist('ThreatIntelIOCs');
+DeviceNetworkEvents
+| where ActionType == "ConnectionSuccess"
+| extend RemoteDomain = tostring(parse_url(RemoteUrl).Host)
+| join kind=inner (
+    ThreatIOCs
+    | where IOCType in ("domain", "ip")
+    | project IOCValue, ThreatActor, Campaign, Confidence
+) on $left.RemoteIP == $right.IOCValue 
+    or $left.RemoteDomain == $right.IOCValue
+| project
+    TimeGenerated,
+    DeviceName,
+    RemoteIP,
+    RemoteDomain,
+    RemotePort,
+    ThreatActor,
+    Campaign,
+    Confidence,
+    InitiatingProcessFileName</code></pre>
+            </div>
+
+            <h3>Command Line Pattern Detection</h3>
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">Suspicious Command Patterns</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Detect encoded PowerShell commands
+DeviceProcessEvents
+| where FileName =~ "powershell.exe" or FileName =~ "pwsh.exe"
+| where ProcessCommandLine has_any (
+    "-enc", "-encoded", "-encodedcommand",
+    "-ec", "-e ", "FromBase64String",
+    "IEX", "Invoke-Expression",
+    "DownloadString", "DownloadFile",
+    "-nop", "-noprofile",
+    "-w hidden", "-windowstyle hidden"
+)
+| extend 
+    EncodingUsed = ProcessCommandLine has_any ("-enc", "-encoded", "Base64"),
+    DownloadAttempt = ProcessCommandLine has_any ("DownloadString", "DownloadFile"),
+    HiddenExecution = ProcessCommandLine has_any ("hidden", "-w h")
+| project
+    TimeGenerated,
+    DeviceName,
+    AccountName,
+    ProcessCommandLine,
+    EncodingUsed,
+    DownloadAttempt,
+    HiddenExecution,
+    InitiatingProcessFileName,
+    InitiatingProcessCommandLine</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Threshold-Based Detections</h2>
+            <p>Threshold detections trigger when activity exceeds normal limits. They're effective for detecting volume-based attacks like brute force or data exfiltration.</p>
+
+            <h3>Key Considerations</h3>
+            <div class="info-box warning">
+                <div class="info-box-header">
+                    <span class="info-icon">⚠️</span>
+                    <span>Threshold Tuning Challenges</span>
+                </div>
+                <div class="info-box-content">
+                    <p><strong>Too Low:</strong> Excessive false positives from normal activity</p>
+                    <p><strong>Too High:</strong> Missing actual attacks that stay below threshold</p>
+                    <p><strong>Solution:</strong> Use dynamic thresholds based on historical baselines</p>
+                </div>
+            </div>
+
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">Static Threshold - Brute Force Detection</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Detect brute force attempts with static threshold
+let FailedLoginThreshold = 10;
+let TimeWindow = 5m;
+SigninLogs
+| where ResultType != "0"  // Non-successful logins
+| where ResultType in ("50126", "50053", "50055", "50056")  // Password-related failures
+| summarize 
+    FailedAttempts = count(),
+    DistinctUsers = dcount(UserPrincipalName),
+    TargetUsers = make_set(UserPrincipalName, 10),
+    FirstAttempt = min(TimeGenerated),
+    LastAttempt = max(TimeGenerated)
+    by IPAddress, bin(TimeGenerated, TimeWindow)
+| where FailedAttempts >= FailedLoginThreshold
+| extend 
+    AttackType = iff(DistinctUsers > 5, "Password Spray", "Brute Force"),
+    AttackDuration = datetime_diff('second', LastAttempt, FirstAttempt)
+| project
+    TimeGenerated,
+    IPAddress,
+    AttackType,
+    FailedAttempts,
+    DistinctUsers,
+    TargetUsers,
+    AttackDuration</code></pre>
+            </div>
+
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">Dynamic Threshold - Anomalous Data Transfer</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Detect unusual data transfer volumes using baseline
+let LookbackPeriod = 30d;
+let AnomalyWindow = 1d;
+let ZScoreThreshold = 3.0;
+// Calculate baseline statistics per user
+let Baseline = DeviceNetworkEvents
+| where TimeGenerated between (ago(LookbackPeriod) .. ago(AnomalyWindow))
+| where ActionType == "ConnectionSuccess"
+| summarize 
+    AvgBytesOut = avg(SentBytes),
+    StdDevBytesOut = stdev(SentBytes),
+    TotalEvents = count()
+    by AccountName = InitiatingProcessAccountName
+| where TotalEvents > 50;  // Minimum activity for baseline
+// Check recent activity against baseline
+DeviceNetworkEvents
+| where TimeGenerated > ago(AnomalyWindow)
+| where ActionType == "ConnectionSuccess"
+| summarize 
+    RecentBytesOut = sum(SentBytes),
+    ConnectionCount = count()
+    by AccountName = InitiatingProcessAccountName
+| join kind=inner Baseline on AccountName
+| extend 
+    ZScore = (RecentBytesOut - AvgBytesOut) / StdDevBytesOut
+| where ZScore > ZScoreThreshold
+| project
+    AccountName,
+    RecentBytesOut,
+    AvgBytesOut,
+    ZScore,
+    ConnectionCount,
+    AnomalyRisk = case(
+        ZScore > 5, "Critical",
+        ZScore > 4, "High",
+        ZScore > 3, "Medium",
+        "Low"
+    )</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Correlation-Based Detections</h2>
+            <p>Correlation detections combine multiple events or data sources to identify attack patterns that individual events wouldn't reveal.</p>
+
+            <h3>Event Correlation Patterns</h3>
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">Failed Login Followed by Success (Credential Compromise)</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Detect successful login after multiple failures from different IP
+let TimeWindow = 1h;
+let FailedThreshold = 5;
+// Get failed logins
+let FailedLogins = SigninLogs
+| where TimeGenerated > ago(TimeWindow)
+| where ResultType != "0"
+| summarize 
+    FailedCount = count(),
+    FailedIPs = make_set(IPAddress, 10),
+    FirstFailed = min(TimeGenerated)
+    by UserPrincipalName
+| where FailedCount >= FailedThreshold;
+// Find successful logins after failures from different IP
+SigninLogs
+| where TimeGenerated > ago(TimeWindow)
+| where ResultType == "0"
+| join kind=inner FailedLogins on UserPrincipalName
+| where TimeGenerated > FirstFailed
+| where not(IPAddress in (FailedIPs))
+| project
+    TimeGenerated,
+    UserPrincipalName,
+    SuccessfulIP = IPAddress,
+    SuccessfulLocation = Location,
+    FailedAttempts = FailedCount,
+    FailedSourceIPs = FailedIPs,
+    TimeSinceFirstFail = datetime_diff('minute', TimeGenerated, FirstFailed)
+| extend AlertSeverity = "High"</code></pre>
+            </div>
+
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">Cross-Source Correlation - Malware Execution Chain</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Correlate email attachment > file creation > process execution
+let TimeWindow = 30m;
+// Step 1: Email with attachment received
+let SuspiciousEmails = EmailAttachmentInfo
+| where TimeGenerated > ago(1d)
+| where FileType has_any ("exe", "dll", "ps1", "bat", "vbs", "js", "hta")
+| project 
+    EmailTime = TimeGenerated,
+    RecipientEmail = RecipientEmailAddress,
+    AttachmentName = FileName,
+    AttachmentSHA256 = SHA256,
+    SenderAddress;
+// Step 2: File created matching attachment
+let FileCreations = DeviceFileEvents
+| where TimeGenerated > ago(1d)
+| where ActionType == "FileCreated"
+| project 
+    FileTime = TimeGenerated,
+    DeviceName,
+    FilePath = FolderPath,
+    FileName,
+    FileSHA256 = SHA256,
+    AccountName = InitiatingProcessAccountName;
+// Step 3: Process executed from file
+let ProcessExecutions = DeviceProcessEvents
+| where TimeGenerated > ago(1d)
+| project 
+    ProcessTime = TimeGenerated,
+    DeviceName,
+    ProcessName = FileName,
+    ProcessPath = FolderPath,
+    ProcessSHA256 = SHA256,
+    ProcessCommandLine,
+    ParentProcess = InitiatingProcessFileName;
+// Correlate the chain
+SuspiciousEmails
+| join kind=inner (FileCreations) on $left.AttachmentSHA256 == $right.FileSHA256
+| where FileTime between (EmailTime .. (EmailTime + TimeWindow))
+| join kind=inner (ProcessExecutions) on $left.FileSHA256 == $right.ProcessSHA256
+| where ProcessTime between (FileTime .. (FileTime + TimeWindow))
+| project
+    Stage1_EmailReceived = EmailTime,
+    Stage2_FileCreated = FileTime,
+    Stage3_ProcessExecuted = ProcessTime,
+    RecipientEmail,
+    SenderAddress,
+    AttachmentName,
+    DeviceName,
+    ProcessCommandLine,
+    TotalChainTime = datetime_diff('minute', ProcessTime, EmailTime)</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Behavioral Detections</h2>
+            <p>Behavioral detections identify suspicious sequences of actions that match known attack techniques, regardless of specific IOCs.</p>
+
+            <h3>Living Off the Land Detection</h3>
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">LOLBAS Detection - Suspicious Native Tool Usage</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Detect Living Off the Land Binaries and Scripts
+let LOLBins = dynamic([
+    "certutil.exe", "bitsadmin.exe", "mshta.exe", 
+    "regsvr32.exe", "rundll32.exe", "wmic.exe",
+    "cscript.exe", "wscript.exe", "msiexec.exe",
+    "installutil.exe", "regasm.exe", "regsvcs.exe"
+]);
+let SuspiciousArgs = dynamic([
+    "http://", "https://", "ftp://",
+    "-decode", "-encode", "-urlcache",
+    "/transfer", "scrobj.dll", "javascript:",
+    "vbscript:", "/i:http", "process call create"
+]);
+DeviceProcessEvents
+| where FileName in~ (LOLBins)
+| where ProcessCommandLine has_any (SuspiciousArgs)
+| extend 
+    Technique = case(
+        FileName =~ "certutil.exe" and ProcessCommandLine has_any ("decode", "encode", "urlcache"), "T1140/T1105 - Deobfuscation/Ingress Tool Transfer",
+        FileName =~ "bitsadmin.exe" and ProcessCommandLine has "transfer", "T1197 - BITS Jobs",
+        FileName =~ "mshta.exe", "T1218.005 - Mshta",
+        FileName =~ "regsvr32.exe" and ProcessCommandLine has_any ("scrobj", "/i:http"), "T1218.010 - Regsvr32",
+        FileName =~ "rundll32.exe" and ProcessCommandLine has_any ("javascript", "vbscript"), "T1218.011 - Rundll32",
+        FileName =~ "wmic.exe" and ProcessCommandLine has "process call create", "T1047 - WMI",
+        "Unknown LOLBin Abuse"
+    ),
+    NetworkActivity = ProcessCommandLine has_any ("http://", "https://", "ftp://")
+| project
+    TimeGenerated,
+    DeviceName,
+    AccountName,
+    FileName,
+    ProcessCommandLine,
+    Technique,
+    NetworkActivity,
+    InitiatingProcessFileName,
+    InitiatingProcessCommandLine</code></pre>
+            </div>
+
+            <h3>Credential Access Behavior</h3>
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">LSASS Access Detection</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Detect suspicious access to LSASS process (credential dumping)
+DeviceProcessEvents
+| where FileName =~ "lsass.exe"
+| where ActionType == "ProcessAccessed"
+// Filter out known legitimate processes
+| where InitiatingProcessFileName !in~ (
+    "MsMpEng.exe",      // Windows Defender
+    "csrss.exe",        // Client Server Runtime
+    "svchost.exe",      // Service Host
+    "lsass.exe",        // Self-reference
+    "MRT.exe",          // Malicious Software Removal Tool
+    "taskmgr.exe"       // Task Manager
+)
+// Identify suspicious access patterns
+| extend 
+    SuspiciousTool = InitiatingProcessFileName in~ (
+        "procdump.exe", "mimikatz.exe", "dumpert.exe",
+        "nanodump.exe", "pypykatz.exe"
+    ),
+    UnexpectedParent = InitiatingProcessFileName in~ (
+        "cmd.exe", "powershell.exe", "pwsh.exe",
+        "wscript.exe", "cscript.exe"
+    ),
+    FromTemp = InitiatingProcessFolderPath has_any ("temp", "tmp", "appdata")
+| where SuspiciousTool or UnexpectedParent or FromTemp
+| project
+    TimeGenerated,
+    DeviceName,
+    InitiatingProcessFileName,
+    InitiatingProcessFolderPath,
+    InitiatingProcessCommandLine,
+    InitiatingProcessAccountName,
+    RiskIndicators = strcat(
+        iff(SuspiciousTool, "KnownDumpTool ", ""),
+        iff(UnexpectedParent, "UnexpectedParent ", ""),
+        iff(FromTemp, "TempLocation", "")
+    )</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Detection Rule Best Practices</h2>
+            
+            <h3>Writing Maintainable Rules</h3>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h4 class="sentinel-color">✓ Good Practices</h4>
+                    <ul>
+                        <li>Use meaningful variable names</li>
+                        <li>Add comments explaining logic</li>
+                        <li>Use watchlists for IOCs (easy updates)</li>
+                        <li>Include entity mapping for investigation</li>
+                        <li>Set appropriate severity levels</li>
+                        <li>Define clear response playbooks</li>
+                        <li>Include MITRE ATT&CK mapping</li>
+                        <li>Test with historical data first</li>
+                    </ul>
+                </div>
+                <div class="comparison-card">
+                    <h4 class="splunk-color">✗ Anti-Patterns</h4>
+                    <ul>
+                        <li>Hardcoding IOCs in query</li>
+                        <li>Overly complex single queries</li>
+                        <li>Missing exclusions for known good</li>
+                        <li>No documentation of logic</li>
+                        <li>Static thresholds without review</li>
+                        <li>Ignoring time windows</li>
+                        <li>No false positive tracking</li>
+                        <li>Missing entity context</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Rule Documentation Template</h3>
+            <div class="code-block" data-language="yaml">
+                <div class="code-header">
+                    <span class="code-lang">YAML</span>
+                    <span class="code-title">Detection Rule Documentation</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>name: "Suspicious PowerShell Encoded Command"
+id: "DET-PS-001"
+version: 1.2
+author: "Detection Engineering Team"
+created: "2024-01-15"
+modified: "2024-06-20"
+
+description: |
+  Detects PowerShell execution with encoded commands, commonly used
+  by attackers to obfuscate malicious scripts and evade detection.
+
+data_sources:
+  - Microsoft Defender for Endpoint
+  - Windows Security Events (4688)
+
+mitre_attack:
+  tactics:
+    - Execution
+    - Defense Evasion
+  techniques:
+    - T1059.001  # PowerShell
+    - T1027     # Obfuscated Files or Information
+
+severity: Medium
+confidence: High
+
+false_positives:
+  - IT automation scripts
+  - Software deployment tools
+  - System administration tasks
+  
+exclusions:
+  - process_path: "C:\\Program Files\\Microsoft Configuration Manager\\"
+  - parent_process: "sccm-client.exe"
+  - user_account: "SYSTEM" (when parent is scheduled task)
+
+response_actions:
+  - Isolate endpoint if high-risk process tree
+  - Collect memory dump for analysis
+  - Check for persistence mechanisms
+  - Correlate with network connections
+
+kql_query: |
+  DeviceProcessEvents
+  | where FileName =~ "powershell.exe"
+  | where ProcessCommandLine has_any ("-enc", "-encoded")
+  // Rule logic continues...
+
+testing:
+  last_tested: "2024-06-15"
+  test_method: "Red team exercise"
+  detection_rate: "95%"
+  false_positive_rate: "2%"</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Tuning and Optimization</h2>
+            
+            <h3>False Positive Reduction Strategies</h3>
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">Building Exclusion Lists from FP Analysis</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Analyze false positives to build exclusions
+let FalsePositiveIncidents = SecurityIncident
+| where TimeGenerated > ago(90d)
+| where Classification == "FalsePositive"
+| where Title has "Suspicious PowerShell"
+| project IncidentNumber;
+// Extract common patterns from FP alerts
+SecurityAlert
+| where TimeGenerated > ago(90d)
+| where SystemAlertId in (
+    (FalsePositiveIncidents | project IncidentNumber)
+)
+| extend AlertEntities = parse_json(Entities)
+| mv-expand AlertEntities
+| where AlertEntities.Type == "process"
+| extend 
+    ProcessName = tostring(AlertEntities.Name),
+    ProcessPath = tostring(AlertEntities.Directory),
+    CommandLine = tostring(AlertEntities.CommandLine),
+    ParentProcess = tostring(AlertEntities.ParentProcessName)
+| summarize 
+    OccurrenceCount = count(),
+    SampleCommandLines = make_set(CommandLine, 5)
+    by ProcessPath, ParentProcess
+| where OccurrenceCount > 3
+| order by OccurrenceCount desc</code></pre>
+            </div>
+
+            <h3>Detection Coverage Analysis</h3>
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">MITRE Coverage Assessment</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Assess detection coverage across MITRE ATT&CK
+let MITRETechniques = externaldata(TechniqueID: string, TechniqueName: string, Tactic: string)
+[@"https://your-storage/mitre-techniques.csv"] with (format="csv", ignoreFirstRecord=true);
+let ActiveRules = SecurityAlert
+| where TimeGenerated > ago(30d)
+| distinct AlertType
+| extend RuleTechniques = extract_all(@"T\d{4}(\.\d{3})?", AlertType);
+// Count techniques covered
+let CoveredTechniques = ActiveRules
+| mv-expand RuleTechnique = RuleTechniques
+| summarize RuleCount = count() by TechniqueID = tostring(RuleTechnique);
+MITRETechniques
+| join kind=leftouter CoveredTechniques on TechniqueID
+| extend 
+    CoverageStatus = iff(isnotempty(RuleCount), "Covered", "Gap"),
+    RuleCount = coalesce(RuleCount, 0)
+| summarize 
+    TotalTechniques = count(),
+    CoveredCount = countif(CoverageStatus == "Covered"),
+    GapCount = countif(CoverageStatus == "Gap")
+    by Tactic
+| extend CoveragePercent = round(100.0 * CoveredCount / TotalTechniques, 1)</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Interview Preparation</h2>
+            <div class="expandable-section">
+                <button class="expandable-header">
+                    <span>Common Interview Questions</span>
+                    <span class="expand-icon">+</span>
+                </button>
+                <div class="expandable-content">
+                    <div class="qa-item">
+                        <p class="qa-question">Q: How do you approach writing a new detection rule?</p>
+                        <p class="qa-answer">A: I follow a structured process: 1) Research the threat/technique using MITRE ATT&CK and threat intelligence, 2) Identify required data sources and validate availability, 3) Design the detection logic starting broad then refining, 4) Test against historical data and red team artifacts, 5) Document the rule with exclusions and response playbook, 6) Deploy with monitoring for false positives, 7) Iterate based on real-world performance.</p>
+                    </div>
+                    <div class="qa-item">
+                        <p class="qa-question">Q: How do you handle false positives?</p>
+                        <p class="qa-answer">A: I analyze FPs systematically: categorize the root cause (legitimate behavior, misconfiguration, overly broad logic), determine if exclusions can be safely added without creating detection gaps, update watchlists or add conditional logic for edge cases, document all exclusions with justification, and track FP rates over time. I avoid simply increasing thresholds without understanding why.</p>
+                    </div>
+                    <div class="qa-item">
+                        <p class="qa-question">Q: What's the difference between threshold and anomaly-based detection?</p>
+                        <p class="qa-answer">A: Threshold detection uses fixed limits (e.g., >10 failed logins) - simple but requires manual tuning and misses sophisticated attacks. Anomaly detection establishes baselines and alerts on deviations using statistical methods like Z-scores - more adaptive but requires sufficient data for baselines and can generate noise during legitimate changes. I often combine both: thresholds catch obvious attacks while anomalies catch subtle deviations.</p>
+                    </div>
+                    <div class="qa-item">
+                        <p class="qa-question">Q: How do you prioritize which detections to build?</p>
+                        <p class="qa-answer">A: I use risk-based prioritization: 1) Map current coverage to MITRE ATT&CK to identify gaps, 2) Assess threat landscape relevant to the organization (industry, known targeting), 3) Consider data source availability, 4) Factor in detection feasibility and FP risk, 5) Align with regulatory requirements, 6) Review incident history for recurring blind spots. High-impact techniques with available data and manageable FP rates get priority.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="page-navigation">
+            <a href="splunk-comparison.html" class="nav-prev">← Splunk Comparison</a>
+            <a href="mitre-mapping.html" class="nav-next">MITRE ATT&CK Mapping →</a>
+        </div>
+    </main>
+
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

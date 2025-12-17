@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAP Security Fundamentals - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="sap-security">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                            <span>SAP Security</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="sap-overview.html" class="nav-item">SAP Overview</a>
+                        <a href="architecture.html" class="nav-item">Architecture</a>
+                        <a href="modules-services.html" class="nav-item">Modules & Services</a>
+                        <a href="security-fundamentals.html" class="nav-item active">Security Fundamentals</a>
+                        <a href="log-types.html" class="nav-item">Log Types</a>
+                        <a href="threat-detection.html" class="nav-item">Threat Detection</a>
+                        <a href="siem-integration.html" class="nav-item">SIEM Integration</a>
+                        <a href="compliance.html" class="nav-item">SAP Compliance</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="sap-overview.html">SAP Security</a>
+                    <span class="separator">/</span>
+                    <span class="current">Security Fundamentals</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>SAP Security Fundamentals</h1>
+                    <p class="subtitle">Core security concepts—authorization model, roles and profiles, SoD (Segregation of Duties), and common vulnerabilities.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Authorization Model</h2>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>SAP Authorization Hierarchy</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>SAP Authorization Structure:
+
+USER
+  │
+  ├── ROLES (Composite roles contain single roles)
+  │     │
+  │     └── PROFILES (Technical authorizations)
+  │           │
+  │           └── AUTHORIZATION OBJECTS
+  │                 │
+  │                 └── AUTHORIZATION FIELDS
+  │                       │
+  │                       └── VALUES (allowed values)
+
+Example:
+User: JSMITH
+└── Role: Z_FI_AP_PROCESSOR
+    └── Profile: Z_FI_AP_PROCESSOR
+        └── Auth Object: F_BKPF_BUK (Company Code Authorization)
+            ├── Field: ACTVT (Activity) = 01, 02, 03
+            └── Field: BUKRS (Company Code) = 1000, 2000</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Critical Authorization Objects</h2>
+
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Object</th>
+                                <th>Description</th>
+                                <th>Risk</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>S_TCODE</strong></td>
+                                <td>Transaction code authorization</td>
+                                <td>Controls which transactions user can execute</td>
+                            </tr>
+                            <tr>
+                                <td><strong>S_USER_GRP</strong></td>
+                                <td>User group authorization</td>
+                                <td>Can allow user to modify other users</td>
+                            </tr>
+                            <tr>
+                                <td><strong>S_TABU_DIS</strong></td>
+                                <td>Table maintenance</td>
+                                <td>Direct data modification via SE16</td>
+                            </tr>
+                            <tr>
+                                <td><strong>S_DEVELOP</strong></td>
+                                <td>ABAP development</td>
+                                <td>Code changes, debug access</td>
+                            </tr>
+                            <tr>
+                                <td><strong>S_RFC</strong></td>
+                                <td>RFC access</td>
+                                <td>Remote function execution</td>
+                            </tr>
+                            <tr>
+                                <td><strong>S_ADMI_FCD</strong></td>
+                                <td>System administration</td>
+                                <td>Critical admin functions</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Segregation of Duties (SoD)</h2>
+
+                    <p>SoD prevents single user from having conflicting access that enables fraud.</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Common SoD Conflicts</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>HIGH-RISK SOD VIOLATIONS:
+
+Vendor Master + Payment Processing
+├── FK01 (Create Vendor) + F110 (Payment Run)
+└── Risk: Create fake vendor, process payment to self
+
+Purchase Order + Goods Receipt
+├── ME21N (Create PO) + MIGO (Goods Receipt)
+└── Risk: Approve own purchases, confirm fake receipts
+
+User Administration + Role Assignment
+├── SU01 (User Maint) + PFCG (Role Maint)
+└── Risk: Create user and assign excessive privileges
+
+Development + Transport Release
+├── SE38 (ABAP Dev) + STMS (Transport)
+└── Risk: Develop and release malicious code to production
+
+GL Posting + Period Close
+├── FB01 (GL Posting) + FAGL_FC (Period Close)
+└── Risk: Make entries and close period to hide fraud</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Default/High-Risk Accounts</h2>
+
+                    <div class="info-box danger">
+                        <h4>🚨 Critical Default Accounts</h4>
+                        <table class="styled-table">
+                            <tr><td><strong>SAP*</strong></td><td>Super user with SAP_ALL</td><td>Must be locked/secured</td></tr>
+                            <tr><td><strong>DDIC</strong></td><td>Data dictionary user</td><td>Needs S_DEVELOP</td></tr>
+                            <tr><td><strong>EARLYWATCH</strong></td><td>SAP support access</td><td>Should be locked</td></tr>
+                            <tr><td><strong>SAPCPIC</strong></td><td>CPI-C communications</td><td>RFC access</td></tr>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What is SAP SoD and why is it important?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Segregation of Duties:</strong> Security principle that prevents a single person from having conflicting access that could enable fraud or errors.</p>
+                            <p><strong>Example:</strong> Someone who can create vendors shouldn't also process payments - they could create a fake vendor and pay themselves.</p>
+                            <p><strong>Detection:</strong> Monitor for users with conflicting transaction access, especially in financial processes.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="modules-services.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        Modules & Services
+                    </a>
+                    <a href="log-types.html" class="nav-link next">
+                        Log Types
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

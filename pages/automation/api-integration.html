@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Integration - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="automation">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                            <span>Automation & Scripting</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item">Automation Fundamentals</a>
+                        <a href="python-security.html" class="nav-item">Python for Security</a>
+                        <a href="powershell-security.html" class="nav-item">PowerShell for Security</a>
+                        <a href="bash-security.html" class="nav-item">Bash for Security</a>
+                        <a href="soar.html" class="nav-item">SOAR Platforms</a>
+                        <a href="api-integration.html" class="nav-item active">API Integration</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="fundamentals.html">Automation</a>
+                    <span class="separator">/</span>
+                    <span class="current">API Integration</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>Security API Integration</h1>
+                    <p class="subtitle">REST API integration patterns for security tools, authentication methods, rate limiting, and practical examples for SIEM, EDR, and threat intel APIs.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>API Authentication Methods</h2>
+                    
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Description</th>
+                                <th>Common Use</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>API Key</strong></td>
+                                <td>Static key in header or query param</td>
+                                <td>VirusTotal, AbuseIPDB, Shodan</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Bearer Token</strong></td>
+                                <td>OAuth 2.0 access token</td>
+                                <td>Microsoft Graph, many SaaS</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Basic Auth</strong></td>
+                                <td>Base64 encoded user:pass</td>
+                                <td>Legacy APIs, some on-prem</td>
+                            </tr>
+                            <tr>
+                                <td><strong>OAuth 2.0 Client Credentials</strong></td>
+                                <td>App-to-app authentication</td>
+                                <td>Azure, AWS, enterprise APIs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>HMAC Signature</strong></td>
+                                <td>Request signing with secret</td>
+                                <td>AWS Signature v4, some APIs</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>OAuth 2.0 Client Credentials Flow</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Python - OAuth 2.0 Token Acquisition</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>import requests
+from datetime import datetime, timedelta
+
+class OAuth2Client:
+    def __init__(self, tenant_id: str, client_id: str, client_secret: str, scope: str):
+        self.tenant_id = tenant_id
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.scope = scope
+        self.token = None
+        self.token_expiry = None
+    
+    def get_token(self) -> str:
+        """Get access token, refreshing if expired"""
+        if self.token and self.token_expiry and datetime.utcnow() < self.token_expiry:
+            return self.token
+        
+        # Request new token
+        response = requests.post(
+            f"https://login.microsoftonline.com/{self.tenant_id}/oauth2/v2.0/token",
+            data={
+                'grant_type': 'client_credentials',
+                'client_id': self.client_id,
+                'client_secret': self.client_secret,
+                'scope': self.scope
+            }
+        )
+        response.raise_for_status()
+        
+        data = response.json()
+        self.token = data['access_token']
+        self.token_expiry = datetime.utcnow() + timedelta(seconds=data['expires_in'] - 60)
+        
+        return self.token
+    
+    def request(self, method: str, url: str, **kwargs) -> requests.Response:
+        """Make authenticated request"""
+        headers = kwargs.pop('headers', {})
+        headers['Authorization'] = f'Bearer {self.get_token()}'
+        return requests.request(method, url, headers=headers, **kwargs)
+
+# Usage
+client = OAuth2Client(
+    tenant_id='your-tenant-id',
+    client_id='your-client-id',
+    client_secret='your-client-secret',
+    scope='https://graph.microsoft.com/.default'
+)
+
+# Make API call
+response = client.request('GET', 'https://graph.microsoft.com/v1.0/users')
+print(response.json())</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Common Security APIs</h2>
+
+                    <h3>Microsoft Security APIs</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Microsoft Defender for Endpoint API</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>import requests
+
+class MDE_Client:
+    def __init__(self, tenant_id: str, client_id: str, client_secret: str):
+        self.base_url = "https://api.securitycenter.microsoft.com/api"
+        self.token = self._get_token(tenant_id, client_id, client_secret)
+    
+    def _get_token(self, tenant_id, client_id, client_secret):
+        response = requests.post(
+            f"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token",
+            data={
+                'grant_type': 'client_credentials',
+                'client_id': client_id,
+                'client_secret': client_secret,
+                'scope': 'https://api.securitycenter.microsoft.com/.default'
+            }
+        )
+        return response.json()['access_token']
+    
+    def _request(self, method, endpoint, **kwargs):
+        headers = {'Authorization': f'Bearer {self.token}'}
+        return requests.request(method, f"{self.base_url}{endpoint}", headers=headers, **kwargs)
+    
+    def get_alerts(self, filter_query: str = None) -> list:
+        """Get security alerts"""
+        params = {'$filter': filter_query} if filter_query else {}
+        response = self._request('GET', '/alerts', params=params)
+        return response.json().get('value', [])
+    
+    def get_machines(self) -> list:
+        """Get all machines"""
+        response = self._request('GET', '/machines')
+        return response.json().get('value', [])
+    
+    def isolate_machine(self, machine_id: str, comment: str) -> dict:
+        """Isolate a machine"""
+        response = self._request('POST', f'/machines/{machine_id}/isolate',
+            json={'Comment': comment, 'IsolationType': 'Full'}
+        )
+        return response.json()
+    
+    def run_av_scan(self, machine_id: str, scan_type: str = 'Quick') -> dict:
+        """Run antivirus scan"""
+        response = self._request('POST', f'/machines/{machine_id}/runAntiVirusScan',
+            json={'Comment': 'Automated scan', 'ScanType': scan_type}
+        )
+        return response.json()
+    
+    def search_file(self, sha256: str) -> list:
+        """Search for file across environment"""
+        response = self._request('GET', f'/files/{sha256}/machines')
+        return response.json().get('value', [])
+
+# Usage
+mde = MDE_Client('tenant-id', 'client-id', 'client-secret')
+alerts = mde.get_alerts("severity eq 'High'")
+for alert in alerts[:5]:
+    print(f"{alert['title']} - {alert['severity']}")</code></pre>
+                    </div>
+
+                    <h3>Threat Intelligence APIs</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Multi-Source Threat Intel Client</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>import requests
+from typing import Dict, Optional
+from dataclasses import dataclass
+from concurrent.futures import ThreadPoolExecutor
+
+@dataclass
+class ThreatIntelResult:
+    source: str
+    ioc: str
+    malicious: bool
+    confidence: int
+    details: Dict
+
+class ThreatIntelClient:
+    def __init__(self, vt_key: str = None, otx_key: str = None, abuseipdb_key: str = None):
+        self.vt_key = vt_key
+        self.otx_key = otx_key
+        self.abuseipdb_key = abuseipdb_key
+    
+    def check_virustotal(self, ioc: str, ioc_type: str) -> Optional[ThreatIntelResult]:
+        if not self.vt_key:
+            return None
+        
+        endpoints = {
+            'ip': f'https://www.virustotal.com/api/v3/ip_addresses/{ioc}',
+            'domain': f'https://www.virustotal.com/api/v3/domains/{ioc}',
+            'hash': f'https://www.virustotal.com/api/v3/files/{ioc}'
+        }
+        
+        try:
+            response = requests.get(
+                endpoints.get(ioc_type, endpoints['hash']),
+                headers={'x-apikey': self.vt_key},
+                timeout=10
+            )
+            if response.status_code == 200:
+                data = response.json()['data']['attributes']
+                stats = data.get('last_analysis_stats', {})
+                malicious = stats.get('malicious', 0)
+                
+                return ThreatIntelResult(
+                    source='VirusTotal',
+                    ioc=ioc,
+                    malicious=malicious > 3,
+                    confidence=min(malicious * 10, 100),
+                    details={'malicious_count': malicious, 'stats': stats}
+                )
+        except Exception as e:
+            print(f"VT error: {e}")
+        return None
+    
+    def check_otx(self, ioc: str, ioc_type: str) -> Optional[ThreatIntelResult]:
+        if not self.otx_key:
+            return None
+        
+        sections = {'ip': 'IPv4', 'domain': 'domain', 'hash': 'file'}
+        
+        try:
+            response = requests.get(
+                f"https://otx.alienvault.com/api/v1/indicators/{sections.get(ioc_type, 'file')}/{ioc}/general",
+                headers={'X-OTX-API-KEY': self.otx_key},
+                timeout=10
+            )
+            if response.status_code == 200:
+                data = response.json()
+                pulse_count = data.get('pulse_info', {}).get('count', 0)
+                
+                return ThreatIntelResult(
+                    source='AlienVault OTX',
+                    ioc=ioc,
+                    malicious=pulse_count > 0,
+                    confidence=min(pulse_count * 20, 100),
+                    details={'pulse_count': pulse_count}
+                )
+        except Exception as e:
+            print(f"OTX error: {e}")
+        return None
+    
+    def check_abuseipdb(self, ip: str) -> Optional[ThreatIntelResult]:
+        if not self.abuseipdb_key:
+            return None
+        
+        try:
+            response = requests.get(
+                'https://api.abuseipdb.com/api/v2/check',
+                headers={'Key': self.abuseipdb_key, 'Accept': 'application/json'},
+                params={'ipAddress': ip, 'maxAgeInDays': 90},
+                timeout=10
+            )
+            if response.status_code == 200:
+                data = response.json()['data']
+                score = data.get('abuseConfidenceScore', 0)
+                
+                return ThreatIntelResult(
+                    source='AbuseIPDB',
+                    ioc=ip,
+                    malicious=score > 50,
+                    confidence=score,
+                    details={'reports': data.get('totalReports', 0), 'country': data.get('countryCode')}
+                )
+        except Exception as e:
+            print(f"AbuseIPDB error: {e}")
+        return None
+    
+    def check_all(self, ioc: str, ioc_type: str = 'ip') -> list:
+        """Check IOC against all available sources in parallel"""
+        results = []
+        
+        with ThreadPoolExecutor(max_workers=3) as executor:
+            futures = [
+                executor.submit(self.check_virustotal, ioc, ioc_type),
+                executor.submit(self.check_otx, ioc, ioc_type)
+            ]
+            if ioc_type == 'ip':
+                futures.append(executor.submit(self.check_abuseipdb, ioc))
+            
+            for future in futures:
+                result = future.result()
+                if result:
+                    results.append(result)
+        
+        return results
+
+# Usage
+ti = ThreatIntelClient(
+    vt_key='your-vt-key',
+    otx_key='your-otx-key',
+    abuseipdb_key='your-abuseipdb-key'
+)
+
+results = ti.check_all('8.8.8.8', 'ip')
+for r in results:
+    print(f"{r.source}: Malicious={r.malicious}, Confidence={r.confidence}%")</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Rate Limiting & Error Handling</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Resilient API Client with Retry</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+import time
+from functools import wraps
+
+def rate_limit(calls_per_minute: int):
+    """Decorator for rate limiting API calls"""
+    min_interval = 60.0 / calls_per_minute
+    last_call = [0.0]
+    
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            elapsed = time.time() - last_call[0]
+            if elapsed < min_interval:
+                time.sleep(min_interval - elapsed)
+            last_call[0] = time.time()
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
+class ResilientAPIClient:
+    def __init__(self, base_url: str, max_retries: int = 3):
+        self.base_url = base_url
+        self.session = self._create_session(max_retries)
+    
+    def _create_session(self, max_retries: int) -> requests.Session:
+        session = requests.Session()
+        
+        retry_strategy = Retry(
+            total=max_retries,
+            backoff_factor=1,  # 1s, 2s, 4s...
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["GET", "POST", "PUT", "DELETE"]
+        )
+        
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        session.mount("http://", adapter)
+        session.mount("https://", adapter)
+        
+        return session
+    
+    @rate_limit(calls_per_minute=4)  # VirusTotal free tier
+    def get(self, endpoint: str, **kwargs) -> requests.Response:
+        """Rate-limited GET request with retry"""
+        return self.session.get(f"{self.base_url}{endpoint}", **kwargs)
+    
+    def get_with_pagination(self, endpoint: str, params: dict = None, 
+                            limit_key: str = 'limit', offset_key: str = 'offset',
+                            page_size: int = 100) -> list:
+        """Handle paginated API responses"""
+        params = params or {}
+        params[limit_key] = page_size
+        offset = 0
+        all_results = []
+        
+        while True:
+            params[offset_key] = offset
+            response = self.get(endpoint, params=params)
+            response.raise_for_status()
+            
+            data = response.json()
+            results = data.get('results', data.get('data', data.get('value', [])))
+            
+            if not results:
+                break
+            
+            all_results.extend(results)
+            offset += page_size
+            
+            # Check if more pages exist
+            if len(results) < page_size:
+                break
+        
+        return all_results
+
+# Example usage
+client = ResilientAPIClient('https://api.example.com')
+# Rate-limited, auto-retry on failure
+response = client.get('/endpoint', headers={'Authorization': 'Bearer token'})</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Webhook Integration</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Flask Webhook Receiver</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>from flask import Flask, request, jsonify
+import hmac
+import hashlib
+import json
+
+app = Flask(__name__)
+WEBHOOK_SECRET = 'your-webhook-secret'
+
+def verify_signature(payload: bytes, signature: str) -> bool:
+    """Verify webhook signature"""
+    expected = hmac.new(
+        WEBHOOK_SECRET.encode(),
+        payload,
+        hashlib.sha256
+    ).hexdigest()
+    return hmac.compare_digest(f'sha256={expected}', signature)
+
+@app.route('/webhook/sentinel', methods=['POST'])
+def sentinel_webhook():
+    """Receive Sentinel incident webhooks"""
+    # Verify signature if provided
+    signature = request.headers.get('X-Webhook-Signature')
+    if signature and not verify_signature(request.data, signature):
+        return jsonify({'error': 'Invalid signature'}), 401
+    
+    data = request.json
+    incident = data.get('incident', {})
+    
+    # Process incident
+    print(f"Received incident: {incident.get('title')}")
+    print(f"Severity: {incident.get('severity')}")
+    print(f"Status: {incident.get('status')}")
+    
+    # Trigger additional automation
+    if incident.get('severity') == 'High':
+        # Send Slack notification, create ticket, etc.
+        pass
+    
+    return jsonify({'status': 'received'}), 200
+
+@app.route('/webhook/defender', methods=['POST'])
+def defender_webhook():
+    """Receive Defender for Endpoint alerts"""
+    alert = request.json
+    
+    alert_id = alert.get('id')
+    title = alert.get('title')
+    severity = alert.get('severity')
+    machine = alert.get('machineId')
+    
+    print(f"Alert: {title} ({severity}) on {machine}")
+    
+    # Auto-response logic
+    if severity == 'High' and 'ransomware' in title.lower():
+        # Trigger isolation playbook
+        pass
+    
+    return jsonify({'status': 'processed'}), 200
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you handle API rate limits in automation?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Strategies:</strong></p>
+                            <ul>
+                                <li><strong>Rate limiting decorator:</strong> Track time between calls, sleep if needed</li>
+                                <li><strong>Exponential backoff:</strong> On 429 errors, wait 1s, 2s, 4s, 8s...</li>
+                                <li><strong>Token bucket:</strong> Allow bursts but limit average rate</li>
+                                <li><strong>Queue system:</strong> For high-volume, use Redis/RabbitMQ queue</li>
+                                <li><strong>Caching:</strong> Cache responses to avoid redundant calls</li>
+                            </ul>
+                            <p><strong>Best practice:</strong> Check API documentation for limits, implement proactive rate limiting (don't wait for 429), and use async/parallel calls efficiently within limits.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you securely store and use API credentials?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Never:</strong> Hardcode in source code, commit to Git, store in plain text</p>
+                            <p><strong>Recommended approaches:</strong></p>
+                            <ul>
+                                <li><strong>Environment variables:</strong> Set in OS, CI/CD, or container</li>
+                                <li><strong>Secret managers:</strong> Azure Key Vault, AWS Secrets Manager, HashiCorp Vault</li>
+                                <li><strong>Encrypted config:</strong> SOPS, sealed secrets for Kubernetes</li>
+                                <li><strong>Managed identity:</strong> Azure/AWS/GCP workload identity (no secrets needed)</li>
+                            </ul>
+                            <p><strong>Additional measures:</strong> Rotate credentials regularly, use least-privilege scopes, audit API key usage.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="soar.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        SOAR Platforms
+                    </a>
+                    <a href="../detection-engineering/fundamentals.html" class="nav-link next">
+                        Detection Fundamentals
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

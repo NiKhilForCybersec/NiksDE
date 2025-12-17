@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Cloud Strategy - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="cloud">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+                            <span>Cloud Security</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item">Cloud Security Fundamentals</a>
+                        <a href="aws-security.html" class="nav-item">AWS Security</a>
+                        <a href="azure-security.html" class="nav-item">Azure Security</a>
+                        <a href="gcp-security.html" class="nav-item">GCP Security</a>
+                        <a href="multi-cloud.html" class="nav-item active">Multi-Cloud Strategy</a>
+                        <a href="cspm.html" class="nav-item">CSPM & CWPP</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="fundamentals.html">Cloud Security</a>
+                    <span class="separator">/</span>
+                    <span class="current">Multi-Cloud Strategy</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>Multi-Cloud Detection Strategy</h1>
+                    <p class="subtitle">Unified detection approaches across AWS, Azure, and GCP with log normalization, cross-cloud correlation, and consistent security monitoring.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Multi-Cloud Challenges</h2>
+                    
+                    <p>Most enterprises operate in multiple cloud environments, creating unique challenges for detection engineering. Effective multi-cloud security requires understanding equivalent services, normalizing logs, and building detections that work across platforms.</p>
+
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Technical Challenges</h4>
+                            <ul>
+                                <li>Different log formats and schemas</li>
+                                <li>Inconsistent field naming</li>
+                                <li>Varying timestamp formats</li>
+                                <li>Different API naming conventions</li>
+                                <li>Multiple SIEM integrations</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Operational Challenges</h4>
+                            <ul>
+                                <li>Skills across multiple platforms</li>
+                                <li>Correlation across clouds</li>
+                                <li>Consistent policy enforcement</li>
+                                <li>Unified incident response</li>
+                                <li>Cost management</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Detection Challenges</h4>
+                            <ul>
+                                <li>Similar attacks, different signals</li>
+                                <li>Cross-cloud attack paths</li>
+                                <li>Identity federation risks</li>
+                                <li>Shared services exposure</li>
+                                <li>Compliance consistency</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Service Equivalence Mapping</h2>
+
+                    <p>Understanding equivalent services across clouds is essential for building portable detections.</p>
+
+                    <h3>Core Service Mapping</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>AWS</th>
+                                <th>Azure</th>
+                                <th>GCP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Identity</strong></td>
+                                <td>IAM, IAM Identity Center</td>
+                                <td>Entra ID, RBAC</td>
+                                <td>Cloud IAM, Workforce Identity</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Audit Logs</strong></td>
+                                <td>CloudTrail</td>
+                                <td>Activity Log, Entra Logs</td>
+                                <td>Cloud Audit Logs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Threat Detection</strong></td>
+                                <td>GuardDuty</td>
+                                <td>Defender for Cloud</td>
+                                <td>Security Command Center</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Object Storage</strong></td>
+                                <td>S3</td>
+                                <td>Blob Storage</td>
+                                <td>Cloud Storage (GCS)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Secrets</strong></td>
+                                <td>Secrets Manager, SSM</td>
+                                <td>Key Vault</td>
+                                <td>Secret Manager</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Serverless</strong></td>
+                                <td>Lambda</td>
+                                <td>Functions, Logic Apps</td>
+                                <td>Cloud Functions, Cloud Run</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Kubernetes</strong></td>
+                                <td>EKS</td>
+                                <td>AKS</td>
+                                <td>GKE</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Network Logs</strong></td>
+                                <td>VPC Flow Logs</td>
+                                <td>NSG Flow Logs</td>
+                                <td>VPC Flow Logs</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Security Control Mapping</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Control</th>
+                                <th>AWS</th>
+                                <th>Azure</th>
+                                <th>GCP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Org Guardrails</strong></td>
+                                <td>SCPs (Organizations)</td>
+                                <td>Azure Policy</td>
+                                <td>Organization Policies</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CSPM</strong></td>
+                                <td>Security Hub</td>
+                                <td>Defender for Cloud</td>
+                                <td>Security Command Center</td>
+                            </tr>
+                            <tr>
+                                <td><strong>WAF</strong></td>
+                                <td>AWS WAF</td>
+                                <td>Azure WAF / Front Door</td>
+                                <td>Cloud Armor</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DLP</strong></td>
+                                <td>Macie</td>
+                                <td>Purview</td>
+                                <td>DLP API</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Key Management</strong></td>
+                                <td>KMS</td>
+                                <td>Key Vault</td>
+                                <td>Cloud KMS</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Log Normalization</h2>
+
+                    <p>Effective multi-cloud detection requires normalizing logs to a common schema. This enables writing detections once and applying them across clouds.</p>
+
+                    <h3>Common Detection Schema</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Normalized Cloud Event Schema</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>{
+    // Common fields across all clouds
+    "timestamp": "2024-01-15T10:30:00.000Z",
+    "cloud_provider": "aws|azure|gcp",
+    "event_type": "api_call|sign_in|data_access|config_change",
+    
+    // Actor information
+    "actor": {
+        "type": "user|service_account|role|managed_identity",
+        "id": "unique-identifier",
+        "email": "user@domain.com",
+        "display_name": "Human Name"
+    },
+    
+    // Action information
+    "action": {
+        "name": "normalized_action_name",
+        "native_name": "cloud-specific-api-name",
+        "service": "normalized_service",
+        "native_service": "cloud-specific-service",
+        "outcome": "success|failure",
+        "error_code": "native-error-code"
+    },
+    
+    // Source information
+    "source": {
+        "ip": "198.51.100.50",
+        "geo": {
+            "country": "US",
+            "city": "San Francisco"
+        },
+        "user_agent": "client-identifier"
+    },
+    
+    // Target resource
+    "target": {
+        "type": "normalized_resource_type",
+        "native_type": "cloud-specific-type",
+        "id": "resource-identifier",
+        "name": "resource-name",
+        "account": "aws-account|azure-subscription|gcp-project"
+    }
+}</code></pre>
+                    </div>
+
+                    <h3>Action Normalization Map</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Normalized Action</th>
+                                <th>AWS</th>
+                                <th>Azure</th>
+                                <th>GCP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>create_access_key</strong></td>
+                                <td>CreateAccessKey</td>
+                                <td>Add service principal credential</td>
+                                <td>CreateServiceAccountKey</td>
+                            </tr>
+                            <tr>
+                                <td><strong>assign_role</strong></td>
+                                <td>AttachUserPolicy, PutUserPolicy</td>
+                                <td>Add role assignment</td>
+                                <td>SetIamPolicy (ADD)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>console_login</strong></td>
+                                <td>ConsoleLogin</td>
+                                <td>Sign-in (interactive)</td>
+                                <td>Console login (Admin Activity)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>make_public</strong></td>
+                                <td>PutBucketAcl (AllUsers)</td>
+                                <td>Set blob public access</td>
+                                <td>SetIamPolicy (allUsers)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>disable_logging</strong></td>
+                                <td>StopLogging, DeleteTrail</td>
+                                <td>Delete diagnostic settings</td>
+                                <td>DeleteSink</td>
+                            </tr>
+                            <tr>
+                                <td><strong>create_firewall_rule</strong></td>
+                                <td>AuthorizeSecurityGroupIngress</td>
+                                <td>Create/Update NSG rule</td>
+                                <td>firewalls.insert</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Sentinel KQL - Multi-Cloud Normalization</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Cross-Cloud Activity Normalization</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Create unified view of privileged actions across clouds
+let AWS_PrivActions = AWSCloudTrail
+| where EventName in ("CreateAccessKey", "AttachUserPolicy", "CreateUser", "PutUserPolicy")
+| extend 
+    CloudProvider = "AWS",
+    Actor = UserIdentityArn,
+    ActorEmail = UserIdentityUserName,
+    ActionNormalized = case(
+        EventName == "CreateAccessKey", "create_access_key",
+        EventName has "Policy", "assign_role",
+        EventName == "CreateUser", "create_user",
+        "other"
+    ),
+    ActionNative = EventName,
+    SourceIP = SourceIpAddress,
+    TargetAccount = RecipientAccountId,
+    Success = ErrorCode == "";
+//
+let Azure_PrivActions = AuditLogs
+| where OperationName has_any ("Add member to role", "Add service principal", "Add user")
+| extend 
+    CloudProvider = "Azure",
+    Actor = tostring(InitiatedBy.user.userPrincipalName),
+    ActorEmail = tostring(InitiatedBy.user.userPrincipalName),
+    ActionNormalized = case(
+        OperationName has "role", "assign_role",
+        OperationName has "service principal", "create_service_principal",
+        OperationName has "user", "create_user",
+        "other"
+    ),
+    ActionNative = OperationName,
+    SourceIP = tostring(InitiatedBy.user.ipAddress),
+    TargetAccount = TenantId,
+    Success = Result == "success";
+//
+let GCP_PrivActions = // Assumes GCP logs in custom table
+GCPAuditLogs
+| where methodName has_any ("SetIamPolicy", "CreateServiceAccountKey", "CreateUser")
+| extend 
+    CloudProvider = "GCP",
+    Actor = principalEmail,
+    ActorEmail = principalEmail,
+    ActionNormalized = case(
+        methodName has "IamPolicy", "assign_role",
+        methodName has "ServiceAccountKey", "create_access_key",
+        "other"
+    ),
+    ActionNative = methodName,
+    SourceIP = callerIp,
+    TargetAccount = projectId,
+    Success = status_code == 0;
+//
+// Union all clouds into unified view
+union AWS_PrivActions, Azure_PrivActions, GCP_PrivActions
+| project 
+    TimeGenerated,
+    CloudProvider,
+    Actor,
+    ActorEmail,
+    ActionNormalized,
+    ActionNative,
+    SourceIP,
+    TargetAccount,
+    Success</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Universal Detections</h2>
+
+                    <p>Some attacks are cloud-agnostic and should be detected consistently across all environments.</p>
+
+                    <h3>Detection: Credential Creation (All Clouds)</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Cross-Cloud Access Key/Credential Detection</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Unified detection for credential creation
+let AWS_Keys = AWSCloudTrail
+| where EventName == "CreateAccessKey"
+| where ErrorCode == ""
+| extend 
+    Cloud = "AWS",
+    Actor = UserIdentityArn,
+    Target = tostring(parse_json(RequestParameters).userName),
+    CredType = "AccessKey";
+//
+let Azure_Keys = AuditLogs
+| where OperationName has "Add service principal credentials"
+| where Result == "success"
+| extend 
+    Cloud = "Azure",
+    Actor = tostring(InitiatedBy.user.userPrincipalName),
+    Target = tostring(TargetResources[0].displayName),
+    CredType = "ServicePrincipalCredential";
+//
+let GCP_Keys = GCPAuditLogs
+| where methodName == "google.iam.admin.v1.CreateServiceAccountKey"
+| extend 
+    Cloud = "GCP",
+    Actor = principalEmail,
+    Target = resourceName,
+    CredType = "ServiceAccountKey";
+//
+union AWS_Keys, Azure_Keys, GCP_Keys
+| where Actor != Target  // User creating key for different identity
+| project 
+    TimeGenerated,
+    Cloud,
+    Actor,
+    Target,
+    CredType
+| extend AlertSeverity = "High"
+| extend MITRE = "T1098.001 - Account Manipulation: Additional Cloud Credentials"</code></pre>
+                    </div>
+
+                    <h3>Detection: Logging Disabled (All Clouds)</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Cross-Cloud Logging Tampering</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Unified logging tampering detection
+let AWS_LogTamper = AWSCloudTrail
+| where EventName in ("StopLogging", "DeleteTrail", "UpdateTrail")
+| extend 
+    Cloud = "AWS",
+    Actor = UserIdentityArn,
+    Action = EventName,
+    Target = tostring(parse_json(RequestParameters).name);
+//
+let Azure_LogTamper = AzureActivity
+| where OperationNameValue has "Microsoft.Insights/diagnosticSettings/delete"
+| where ActivityStatusValue == "Success"
+| extend 
+    Cloud = "Azure",
+    Actor = Caller,
+    Action = "DeleteDiagnosticSettings",
+    Target = ResourceId;
+//
+let GCP_LogTamper = GCPAuditLogs
+| where methodName in (
+    "google.logging.v2.ConfigServiceV2.DeleteSink",
+    "google.logging.v2.ConfigServiceV2.CreateExclusion"
+)
+| extend 
+    Cloud = "GCP",
+    Actor = principalEmail,
+    Action = methodName,
+    Target = resourceName;
+//
+union AWS_LogTamper, Azure_LogTamper, GCP_LogTamper
+| project TimeGenerated, Cloud, Actor, Action, Target
+| extend AlertSeverity = "Critical"
+| extend MITRE = "T1562.008 - Impair Defenses: Disable Cloud Logs"</code></pre>
+                    </div>
+
+                    <h3>Detection: Public Exposure (All Clouds)</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Cross-Cloud Public Bucket/Storage Detection</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Unified public storage detection
+let AWS_Public = AWSCloudTrail
+| where EventSource == "s3.amazonaws.com"
+| where EventName in ("PutBucketAcl", "PutBucketPolicy")
+| where RequestParameters has "AllUsers" or RequestParameters has "AuthenticatedUsers"
+| extend Cloud = "AWS", ResourceName = tostring(parse_json(RequestParameters).bucketName);
+//
+let Azure_Public = AzureActivity
+| where OperationNameValue == "Microsoft.Storage/storageAccounts/write"
+| where Properties has '"allowBlobPublicAccess":true'
+| extend Cloud = "Azure", ResourceName = ResourceId;
+//
+let GCP_Public = GCPAuditLogs
+| where serviceName == "storage.googleapis.com"
+| where methodName == "storage.setIamPermissions"
+| where request has "allUsers" or request has "allAuthenticatedUsers"
+| extend Cloud = "GCP", ResourceName = resourceName;
+//
+union AWS_Public, Azure_Public, GCP_Public
+| project TimeGenerated, Cloud, Actor, ResourceName
+| extend AlertSeverity = "Critical"
+| extend MITRE = "T1530 - Data from Cloud Storage Object"</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Cross-Cloud Attack Scenarios</h2>
+
+                    <h3>Scenario: Identity Federation Attack</h3>
+                    <div class="info-box warning">
+                        <h4>⚠️ Cross-Cloud Identity Risk</h4>
+                        <p>Attackers compromise identity in one cloud (e.g., Azure AD) to gain access to federated resources in another (e.g., AWS via SAML). Detection requires correlating identity events across platforms.</p>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Identity Federation Abuse Detection</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detect Azure AD compromise leading to AWS access
+// Step 1: Find risky Azure sign-ins
+let RiskyAzureSignins = SigninLogs
+| where TimeGenerated > ago(24h)
+| where RiskLevelDuringSignIn in ("high", "medium")
+| project AzureTime = TimeGenerated, RiskyUser = UserPrincipalName, RiskLevel = RiskLevelDuringSignIn;
+//
+// Step 2: Look for AWS AssumeRoleWithSAML from same users
+let AWS_SAML_Access = AWSCloudTrail
+| where TimeGenerated > ago(24h)
+| where EventName == "AssumeRoleWithSAML"
+| extend SAMLUser = tostring(parse_json(RequestParameters).principalArn)
+| project AWSTime = TimeGenerated, SAMLUser, AssumedRole = UserIdentityArn, SourceIP = SourceIpAddress;
+//
+// Step 3: Correlate - Risky Azure sign-in followed by AWS SAML access
+RiskyAzureSignins
+| join kind=inner AWS_SAML_Access on $left.RiskyUser == $right.SAMLUser
+| where AWSTime between (AzureTime .. AzureTime + 4h)
+| project 
+    AzureSigninTime = AzureTime,
+    AWSAccessTime = AWSTime,
+    User = RiskyUser,
+    RiskLevel,
+    AssumedRole,
+    SourceIP
+| extend AlertSeverity = "Critical"
+| extend Description = "Risky Azure sign-in followed by AWS SAML federation access"</code></pre>
+                    </div>
+
+                    <h3>Scenario: Multi-Cloud Data Exfiltration</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Cross-Cloud Data Movement Detection</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detect data copied between clouds (potential exfiltration)
+// Pattern: Data read from one cloud, written to another
+let DataReads = union
+    (AWSCloudTrail | where EventName == "GetObject" | extend Cloud = "AWS", DataAction = "read"),
+    (AzureActivity | where OperationNameValue has "blob/read" | extend Cloud = "Azure", DataAction = "read"),
+    (GCPAuditLogs | where methodName == "storage.objects.get" | extend Cloud = "GCP", DataAction = "read");
+//
+let DataWrites = union
+    (AWSCloudTrail | where EventName == "PutObject" | extend Cloud = "AWS", DataAction = "write"),
+    (AzureActivity | where OperationNameValue has "blob/write" | extend Cloud = "Azure", DataAction = "write"),
+    (GCPAuditLogs | where methodName == "storage.objects.create" | extend Cloud = "GCP", DataAction = "write");
+//
+// Find users reading from one cloud and writing to another
+DataReads
+| summarize ReadClouds = make_set(Cloud), ReadCount = count() by Actor = UserIdentity, bin(TimeGenerated, 1h)
+| join kind=inner (
+    DataWrites
+    | summarize WriteClouds = make_set(Cloud), WriteCount = count() by Actor = UserIdentity, bin(TimeGenerated, 1h)
+) on Actor, TimeGenerated
+| where set_difference(WriteClouds, ReadClouds) != dynamic([])  // Writing to different cloud than reading
+| where ReadCount > 100 or WriteCount > 100  // Significant volume
+| extend AlertSeverity = "High"</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Multi-Cloud Architecture</h2>
+
+                    <h3>Centralized SIEM Architecture</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Multi-Cloud Log Collection</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>┌──────────────────────────────────────────────────────────────────┐
+│                    Multi-Cloud SIEM Architecture                  │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐          │
+│  │     AWS     │    │    Azure    │    │     GCP     │          │
+│  │             │    │             │    │             │          │
+│  │ CloudTrail  │    │ Activity Log│    │ Audit Logs  │          │
+│  │ GuardDuty   │    │ Entra Logs  │    │ SCC Findings│          │
+│  │ VPC Flows   │    │ NSG Flows   │    │ VPC Flows   │          │
+│  └──────┬──────┘    └──────┬──────┘    └──────┬──────┘          │
+│         │                  │                  │                   │
+│         ▼                  ▼                  ▼                   │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐          │
+│  │  S3 Bucket  │    │   Event Hub │    │  Pub/Sub    │          │
+│  │  or Kinesis │    │             │    │             │          │
+│  └──────┬──────┘    └──────┬──────┘    └──────┬──────┘          │
+│         │                  │                  │                   │
+│         └──────────────────┼──────────────────┘                  │
+│                            ▼                                      │
+│              ┌─────────────────────────────┐                     │
+│              │     Data Connectors /       │                     │
+│              │     Collection Pipeline      │                     │
+│              └─────────────┬───────────────┘                     │
+│                            ▼                                      │
+│              ┌─────────────────────────────┐                     │
+│              │    Normalization Layer       │                     │
+│              │  (ASIM, CIM, Custom Schema)  │                     │
+│              └─────────────┬───────────────┘                     │
+│                            ▼                                      │
+│              ┌─────────────────────────────┐                     │
+│              │      Centralized SIEM        │                     │
+│              │  (Sentinel/Splunk/Chronicle) │                     │
+│              │                              │                     │
+│              │  • Unified Dashboards        │                     │
+│              │  • Cross-Cloud Detections    │                     │
+│              │  • Correlation Rules         │                     │
+│              │  • SOAR Playbooks            │                     │
+│              └─────────────────────────────┘                     │
+│                                                                    │
+└──────────────────────────────────────────────────────────────────┘</code></pre>
+                    </div>
+
+                    <h3>Detection Coverage Matrix</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Must-Have Cross-Cloud</h4>
+                            <ul>
+                                <li>✅ Credential creation</li>
+                                <li>✅ Privilege escalation</li>
+                                <li>✅ Logging disabled</li>
+                                <li>✅ Public exposure</li>
+                                <li>✅ Data exfiltration</li>
+                                <li>✅ Threat detection alerts</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Advanced Correlation</h4>
+                            <ul>
+                                <li>🔍 Identity federation abuse</li>
+                                <li>🔍 Cross-cloud lateral movement</li>
+                                <li>🔍 Multi-cloud data staging</li>
+                                <li>🔍 Shared IP indicators</li>
+                                <li>🔍 Time-based correlation</li>
+                                <li>🔍 User behavior anomalies</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you approach detection engineering in a multi-cloud environment?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Strategy:</strong></p>
+                            <ol>
+                                <li><strong>Normalize logs:</strong> Create common schema across AWS, Azure, GCP for unified querying</li>
+                                <li><strong>Map equivalent services:</strong> Understand CloudTrail ≈ Activity Log ≈ Audit Logs</li>
+                                <li><strong>Build portable detections:</strong> Write detection logic once, apply across clouds</li>
+                                <li><strong>Prioritize universal attacks:</strong> Credential theft, priv esc, logging evasion occur everywhere</li>
+                                <li><strong>Enable cross-cloud correlation:</strong> Link identity across federated environments</li>
+                            </ol>
+                            <p>The goal is consistent security posture regardless of which cloud hosts a workload.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What are the biggest challenges in multi-cloud security monitoring?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Technical challenges:</strong></p>
+                            <ul>
+                                <li>Log format differences (JSON schemas vary significantly)</li>
+                                <li>API naming inconsistencies (CreateAccessKey vs CreateServiceAccountKey)</li>
+                                <li>Different identity models (IAM users vs Entra users vs Google accounts)</li>
+                                <li>Timestamp and timezone handling</li>
+                            </ul>
+                            <p><strong>Operational challenges:</strong></p>
+                            <ul>
+                                <li>Skills gap (teams may be deep in one cloud, shallow in others)</li>
+                                <li>Alert fatigue from multiple detection systems</li>
+                                <li>Incident response across different consoles/tools</li>
+                                <li>Cost management for log ingestion</li>
+                            </ul>
+                            <p><strong>Solutions:</strong> Invest in normalization layers (ASIM, CIM), cross-train teams, use unified SIEM with good data connectors.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="gcp-security.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        GCP Security
+                    </a>
+                    <a href="cspm.html" class="nav-link next">
+                        CSPM & CWPP
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

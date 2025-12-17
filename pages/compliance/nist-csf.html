@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIST CSF - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="compliance">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                            <span>Compliance & Frameworks</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="framework-overview.html" class="nav-item">Framework Overview</a>
+                        <a href="nist-csf.html" class="nav-item active">NIST CSF</a>
+                        <a href="nist-800-53.html" class="nav-item">NIST 800-53</a>
+                        <a href="iso-27001.html" class="nav-item">ISO 27001</a>
+                        <a href="gdpr.html" class="nav-item">GDPR & Privacy</a>
+                        <a href="other-frameworks.html" class="nav-item">PCI-DSS, SOC 2, HIPAA</a>
+                        <a href="documentation.html" class="nav-item">Security Documentation</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="framework-overview.html">Compliance</a>
+                    <span class="separator">/</span>
+                    <span class="current">NIST CSF</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>NIST Cybersecurity Framework</h1>
+                    <p class="subtitle">Understanding NIST CSF 2.0 functions, categories, and how detection engineering maps to the framework's Detect and Respond functions.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>NIST CSF Overview</h2>
+                    
+                    <p>The NIST Cybersecurity Framework provides a common language for managing cybersecurity risk. CSF 2.0 (released 2024) includes six core functions that organize cybersecurity activities.</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>NIST CSF 2.0 Core Functions</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                    NIST CSF 2.0 Functions                        │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│  ┌──────────┐   NEW in CSF 2.0                                  │
+│  │  GOVERN  │   Establish and monitor cybersecurity             │
+│  │   (GV)   │   risk management strategy, expectations,         │
+│  └────┬─────┘   and policy                                      │
+│       │                                                          │
+│       ▼                                                          │
+│  ┌──────────┐   Understand organizational context               │
+│  │ IDENTIFY │   to manage cybersecurity risk                    │
+│  │   (ID)   │   - Asset Management                              │
+│  └────┬─────┘   - Risk Assessment                               │
+│       │                                                          │
+│       ▼                                                          │
+│  ┌──────────┐   Implement safeguards to ensure                  │
+│  │ PROTECT  │   delivery of critical services                   │
+│  │   (PR)   │   - Access Control                                │
+│  └────┬─────┘   - Awareness Training                            │
+│       │                                                          │
+│       ▼                                                          │
+│  ┌──────────┐   ★ DETECTION ENGINEERING FOCUS ★                 │
+│  │  DETECT  │   Identify cybersecurity events                   │
+│  │   (DE)   │   - Continuous Monitoring                         │
+│  └────┬─────┘   - Anomaly Detection                             │
+│       │                                                          │
+│       ▼                                                          │
+│  ┌──────────┐   Take action regarding detected                  │
+│  │ RESPOND  │   cybersecurity incidents                         │
+│  │   (RS)   │   - Incident Analysis                             │
+│  └────┬─────┘   - Incident Response                             │
+│       │                                                          │
+│       ▼                                                          │
+│  ┌──────────┐   Restore capabilities impaired                   │
+│  │ RECOVER  │   by cybersecurity incidents                      │
+│  │   (RC)   │   - Recovery Planning                             │
+│  └──────────┘   - Improvements                                  │
+│                                                                   │
+└─────────────────────────────────────────────────────────────────┘</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Detect Function (DE)</h2>
+
+                    <p>The Detect function is where detection engineering directly contributes to organizational cybersecurity. It ensures timely discovery of cybersecurity events.</p>
+
+                    <h3>Detect Categories</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>ID</th>
+                                <th>Description</th>
+                                <th>Detection Engineering Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Continuous Monitoring</strong></td>
+                                <td>DE.CM</td>
+                                <td>Monitor for anomalies, indicators of compromise</td>
+                                <td>SIEM rules, EDR alerts, network monitoring</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Adverse Event Analysis</strong></td>
+                                <td>DE.AE</td>
+                                <td>Analyze detected events to understand attack</td>
+                                <td>Alert correlation, threat hunting, investigation</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Key Detect Subcategories</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>DE.CM - Continuous Monitoring</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>DE.CM-01: Networks monitored for potential adverse events
+         → Network detection rules, flow analysis, IDS/IPS
+
+DE.CM-02: Physical environment monitored for potential adverse events
+         → Badge access logs, camera systems, environmental sensors
+
+DE.CM-03: Personnel activity monitored for potential adverse events
+         → User behavior analytics, insider threat detection
+
+DE.CM-06: External service provider activity monitored
+         → Third-party access logging, vendor activity alerts
+
+DE.CM-09: Computing hardware and software monitored for potential adverse events
+         → Endpoint detection, malware alerts, vulnerability scanning</code></pre>
+                    </div>
+
+                    <h3>Detection Coverage Mapping</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Map Detections to DE.CM</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Example: Mapping Sentinel rules to NIST CSF
+let DetectionMappings = datatable(RuleName:string, CSF_Category:string, CSF_Subcategory:string)
+[
+    "Brute Force Against Azure Portal", "DE.CM", "DE.CM-03",
+    "Malware Detected by Defender", "DE.CM", "DE.CM-09",
+    "Suspicious Network Connection", "DE.CM", "DE.CM-01",
+    "Anomalous User Login", "DE.AE", "DE.AE-02",
+    "Data Exfiltration Detection", "DE.CM", "DE.CM-01"
+];
+
+// Coverage report
+SecurityAlert
+| join kind=inner DetectionMappings on $left.AlertName == $right.RuleName
+| summarize 
+    AlertCount = count(),
+    UniqueRules = dcount(RuleName)
+    by CSF_Category, CSF_Subcategory
+| order by CSF_Subcategory</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Respond Function (RS)</h2>
+
+                    <p>Detection engineering supports the Respond function through alert enrichment, automated response actions, and incident analysis capabilities.</p>
+
+                    <h3>Respond Categories</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>ID</th>
+                                <th>Detection Engineering Contribution</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Incident Management</strong></td>
+                                <td>RS.MA</td>
+                                <td>Incident creation, severity classification, assignment</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Incident Analysis</strong></td>
+                                <td>RS.AN</td>
+                                <td>Alert correlation, timeline generation, root cause</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Incident Response Reporting</strong></td>
+                                <td>RS.CO</td>
+                                <td>Automated notifications, stakeholder alerts</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Incident Mitigation</strong></td>
+                                <td>RS.MI</td>
+                                <td>SOAR playbooks, automated containment</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Implementation Tiers</h2>
+
+                    <p>NIST CSF uses tiers to describe the degree to which an organization's cybersecurity risk management practices exhibit the framework characteristics.</p>
+
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Tier</th>
+                                <th>Name</th>
+                                <th>Detection Maturity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Tier 1</strong></td>
+                                <td>Partial</td>
+                                <td>Ad-hoc detection, reactive only, minimal coverage</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tier 2</strong></td>
+                                <td>Risk Informed</td>
+                                <td>Some detection rules, basic SIEM, limited correlation</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tier 3</strong></td>
+                                <td>Repeatable</td>
+                                <td>Documented detections, coverage metrics, tuning process</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tier 4</strong></td>
+                                <td>Adaptive</td>
+                                <td>Threat-informed, continuous improvement, automated response</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="info-box tip">
+                        <h4>💡 Tier Assessment Questions for Detection</h4>
+                        <ul>
+                            <li>Are detection rules documented and version-controlled?</li>
+                            <li>Is there a process for detection rule lifecycle management?</li>
+                            <li>Are detections mapped to threat intelligence (MITRE ATT&CK)?</li>
+                            <li>Are detection metrics tracked and reported?</li>
+                            <li>Is there automated response capability (SOAR)?</li>
+                            <li>Are detections tested regularly (purple team, atomic tests)?</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>CSF Profiles</h2>
+
+                    <p>A CSF Profile represents the alignment of functions, categories, and subcategories with the business requirements, risk tolerance, and resources of the organization.</p>
+
+                    <h3>Detection Profile Example</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Current vs Target Profile - Detect Function</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>┌─────────────────────────────────────────────────────────────────┐
+│           Detection Capability Profile Assessment                │
+├─────────────────┬──────────────────┬──────────────────┬─────────┤
+│ Subcategory     │ Current State    │ Target State     │ Gap     │
+├─────────────────┼──────────────────┼──────────────────┼─────────┤
+│ DE.CM-01        │ Tier 2           │ Tier 3           │ +1      │
+│ Network Monitor │ Basic IDS        │ Full NDR +       │         │
+│                 │                  │ Flow Analysis    │         │
+├─────────────────┼──────────────────┼──────────────────┼─────────┤
+│ DE.CM-03        │ Tier 1           │ Tier 3           │ +2      │
+│ Personnel       │ Manual review    │ UEBA + automated │         │
+│ Activity        │                  │ anomaly detect   │         │
+├─────────────────┼──────────────────┼──────────────────┼─────────┤
+│ DE.CM-09        │ Tier 3           │ Tier 4           │ +1      │
+│ Endpoint        │ EDR deployed,    │ Full coverage,   │         │
+│ Monitoring      │ 80% coverage     │ auto-response    │         │
+├─────────────────┼──────────────────┼──────────────────┼─────────┤
+│ DE.AE-02        │ Tier 2           │ Tier 3           │ +1      │
+│ Event Analysis  │ Basic correlation│ MITRE mapping,   │         │
+│                 │                  │ attack chain     │         │
+└─────────────────┴──────────────────┴──────────────────┴─────────┘</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How does detection engineering support NIST CSF?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Primary alignment:</strong> Detect (DE) and Respond (RS) functions</p>
+                            <p><strong>Detect function:</strong></p>
+                            <ul>
+                                <li>DE.CM: Continuous monitoring through SIEM rules, EDR alerts</li>
+                                <li>DE.AE: Adverse event analysis through correlation and hunting</li>
+                            </ul>
+                            <p><strong>Respond function:</strong></p>
+                            <ul>
+                                <li>RS.AN: Incident analysis through enriched alerts</li>
+                                <li>RS.MI: Mitigation through automated response playbooks</li>
+                            </ul>
+                            <p><strong>Metrics to demonstrate:</strong> Detection coverage percentage, MTTD, false positive rate, MITRE ATT&CK coverage.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What's new in NIST CSF 2.0?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Key changes from CSF 1.1 to 2.0:</strong></p>
+                            <ul>
+                                <li><strong>Govern function:</strong> New sixth function emphasizing cybersecurity governance</li>
+                                <li><strong>Supply chain:</strong> Enhanced focus on supply chain risk management</li>
+                                <li><strong>Broader scope:</strong> Applicable to all organizations (not just critical infrastructure)</li>
+                                <li><strong>Implementation examples:</strong> More practical guidance for implementation</li>
+                                <li><strong>Profiles:</strong> Simplified profile development process</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="framework-overview.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        Framework Overview
+                    </a>
+                    <a href="nist-800-53.html" class="nav-link next">
+                        NIST 800-53
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forensic Artifacts - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="ir">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path></svg>
+                            <span>Incident Response</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="ir-support.html" class="nav-item">Detection Engineering for IR</a>
+                        <a href="forensics.html" class="nav-item active">Forensic Artifacts</a>
+                        <a href="soc-collaboration.html" class="nav-item">SOC Collaboration</a>
+                        <a href="communication.html" class="nav-item">IR Communication</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="ir-support.html">Incident Response</a>
+                    <span class="separator">/</span>
+                    <span class="current">Forensic Artifacts</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>Forensic Artifacts for Detection</h1>
+                    <p class="subtitle">Key Windows, Linux, and cloud forensic artifacts that detection engineers should understand for building detections and supporting investigations.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Windows Forensic Artifacts</h2>
+                    
+                    <h3>Registry Persistence Locations</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Location</th>
+                                <th>Purpose</th>
+                                <th>MITRE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run</code></td>
+                                <td>Programs run at startup (all users)</td>
+                                <td>T1547.001</td>
+                            </tr>
+                            <tr>
+                                <td><code>HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run</code></td>
+                                <td>Programs run at startup (current user)</td>
+                                <td>T1547.001</td>
+                            </tr>
+                            <tr>
+                                <td><code>HKLM\SYSTEM\CurrentControlSet\Services</code></td>
+                                <td>Windows services</td>
+                                <td>T1543.003</td>
+                            </tr>
+                            <tr>
+                                <td><code>HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon</code></td>
+                                <td>Shell, Userinit persistence</td>
+                                <td>T1547.004</td>
+                            </tr>
+                            <tr>
+                                <td><code>HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ShellIconOverlayIdentifiers</code></td>
+                                <td>COM hijacking</td>
+                                <td>T1546.015</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Detection: Registry Persistence</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Registry Run Key Modification</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// Detect modifications to Run keys
+DeviceRegistryEvents
+| where ActionType in ("RegistryValueSet", "RegistryKeyCreated")
+| where RegistryKey has_any (
+    @"\CurrentVersion\Run",
+    @"\CurrentVersion\RunOnce",
+    @"\CurrentVersion\RunServices",
+    @"\Winlogon\Shell",
+    @"\Winlogon\Userinit"
+)
+| where RegistryValueData !has "Microsoft"  // Tune for environment
+| project 
+    TimeGenerated,
+    DeviceName,
+    User = InitiatingProcessAccountName,
+    RegistryKey,
+    RegistryValueName,
+    RegistryValueData,
+    Process = InitiatingProcessFileName
+| extend AlertSeverity = "Medium"
+| extend MITRE = "T1547.001"</code></pre>
+                    </div>
+
+                    <h3>Important Windows Log Files</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Log</th>
+                                <th>Location</th>
+                                <th>Key Events</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Security</strong></td>
+                                <td>Security.evtx</td>
+                                <td>4624/4625 (logon), 4688 (process), 4720 (user created)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>System</strong></td>
+                                <td>System.evtx</td>
+                                <td>7045 (service installed), 7036 (service state)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PowerShell</strong></td>
+                                <td>PowerShell Operational</td>
+                                <td>4103/4104 (script block), 4105/4106 (start/stop)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sysmon</strong></td>
+                                <td>Sysmon Operational</td>
+                                <td>1 (process), 3 (network), 7 (image load), 11 (file create)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Scheduled Tasks</strong></td>
+                                <td>TaskScheduler Operational</td>
+                                <td>106 (task registered), 200/201 (task executed)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>File System Artifacts</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Prefetch</h4>
+                            <p><code>C:\Windows\Prefetch\*.pf</code></p>
+                            <ul>
+                                <li>Evidence of execution</li>
+                                <li>Run count and timestamps</li>
+                                <li>Files/directories accessed</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Amcache</h4>
+                            <p><code>C:\Windows\AppCompat\Programs\Amcache.hve</code></p>
+                            <ul>
+                                <li>Executed applications</li>
+                                <li>SHA1 hashes</li>
+                                <li>File paths and sizes</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>SRUM</h4>
+                            <p><code>C:\Windows\System32\sru\SRUDB.dat</code></p>
+                            <ul>
+                                <li>Application resource usage</li>
+                                <li>Network data transfer</li>
+                                <li>30-60 days history</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Linux Forensic Artifacts</h2>
+
+                    <h3>Key Log Files</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Log</th>
+                                <th>Location</th>
+                                <th>Contents</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Auth Log</strong></td>
+                                <td>/var/log/auth.log (Debian) or /var/log/secure (RHEL)</td>
+                                <td>Authentication, sudo, SSH</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Syslog</strong></td>
+                                <td>/var/log/syslog or /var/log/messages</td>
+                                <td>System events, services</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Audit</strong></td>
+                                <td>/var/log/audit/audit.log</td>
+                                <td>auditd events (if enabled)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cron</strong></td>
+                                <td>/var/log/cron</td>
+                                <td>Scheduled task execution</td>
+                            </tr>
+                            <tr>
+                                <td><strong>wtmp/btmp</strong></td>
+                                <td>/var/log/wtmp, /var/log/btmp</td>
+                                <td>Login records, failed logins</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Persistence Locations</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Linux Persistence Checks</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code># Cron jobs
+/etc/crontab
+/etc/cron.d/*
+/etc/cron.daily/*
+/var/spool/cron/crontabs/*
+
+# Systemd services
+/etc/systemd/system/*.service
+/usr/lib/systemd/system/*.service
+~/.config/systemd/user/*.service
+
+# Init scripts
+/etc/init.d/*
+/etc/rc.local
+
+# Shell profiles
+/etc/profile
+/etc/profile.d/*
+~/.bashrc
+~/.bash_profile
+~/.profile
+
+# SSH
+~/.ssh/authorized_keys
+/etc/ssh/sshd_config</code></pre>
+                    </div>
+
+                    <h3>Detection: Linux Cron Persistence</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Splunk SPL - Cron File Modification</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>index=linux sourcetype=auditd 
+(key=cron_modification OR key=crontab_modification)
+| eval cron_path=mvindex(split(name, " "), 0)
+| where match(cron_path, "(crontab|cron\.d|cron\.daily|cron\.hourly)")
+| stats count values(syscall) values(exe) by host, cron_path, auid
+| where auid != 0  // Non-root user modifying cron
+| rename auid as user_id</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Cloud Forensic Artifacts</h2>
+
+                    <h3>AWS</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Source</th>
+                                <th>Contents</th>
+                                <th>Retention</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>CloudTrail</strong></td>
+                                <td>API calls, management events</td>
+                                <td>90 days (console) or S3</td>
+                            </tr>
+                            <tr>
+                                <td><strong>VPC Flow Logs</strong></td>
+                                <td>Network traffic metadata</td>
+                                <td>CloudWatch or S3</td>
+                            </tr>
+                            <tr>
+                                <td><strong>GuardDuty</strong></td>
+                                <td>Threat findings</td>
+                                <td>90 days</td>
+                            </tr>
+                            <tr>
+                                <td><strong>S3 Access Logs</strong></td>
+                                <td>Bucket access</td>
+                                <td>Target bucket</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Azure</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Source</th>
+                                <th>Contents</th>
+                                <th>Retention</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Activity Log</strong></td>
+                                <td>Subscription-level events</td>
+                                <td>90 days (send to Log Analytics)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Entra ID Sign-in Logs</strong></td>
+                                <td>Authentication events</td>
+                                <td>30 days (P1/P2 license)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Entra ID Audit Logs</strong></td>
+                                <td>Directory changes</td>
+                                <td>30 days</td>
+                            </tr>
+                            <tr>
+                                <td><strong>NSG Flow Logs</strong></td>
+                                <td>Network traffic</td>
+                                <td>Storage account</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Memory Artifacts</h2>
+
+                    <div class="info-box warning">
+                        <h4>⚠️ Volatile Evidence</h4>
+                        <p>Memory artifacts are lost on reboot. Capture memory early in an investigation if malware analysis is needed.</p>
+                    </div>
+
+                    <h3>Key Memory Artifacts</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Processes</h4>
+                            <ul>
+                                <li>Running processes and threads</li>
+                                <li>Injected code</li>
+                                <li>Hidden/unlinked processes</li>
+                                <li>Command line arguments</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Network</h4>
+                            <ul>
+                                <li>Active connections</li>
+                                <li>Listening ports</li>
+                                <li>DNS cache</li>
+                                <li>Socket information</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Credentials</h4>
+                            <ul>
+                                <li>Cached passwords</li>
+                                <li>Kerberos tickets</li>
+                                <li>NTLM hashes</li>
+                                <li>Browser credentials</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What Windows artifacts would you examine for evidence of execution?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Primary sources:</strong></p>
+                            <ul>
+                                <li><strong>Prefetch:</strong> Shows execution with timestamps and run counts</li>
+                                <li><strong>Amcache:</strong> Application execution with SHA1 hashes</li>
+                                <li><strong>ShimCache:</strong> File execution metadata</li>
+                                <li><strong>Event logs:</strong> Security 4688 (process creation), Sysmon Event 1</li>
+                                <li><strong>UserAssist:</strong> GUI program execution (encoded in ROT13)</li>
+                                <li><strong>SRUM:</strong> Application resource usage over time</li>
+                            </ul>
+                            <p><strong>Key point:</strong> Multiple artifacts provide corroborating evidence and help establish timeline even if logs are cleared.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do forensic artifacts inform detection engineering?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Artifacts inform detections by:</strong></p>
+                            <ul>
+                                <li><strong>Identifying persistence mechanisms:</strong> Know what to monitor (registry keys, scheduled tasks, services)</li>
+                                <li><strong>Understanding attack artifacts:</strong> What evidence attackers leave behind</li>
+                                <li><strong>Log source selection:</strong> Which logs capture specific activities</li>
+                                <li><strong>Field identification:</strong> What data fields are available for detection logic</li>
+                                <li><strong>Timeline correlation:</strong> How to correlate events across sources</li>
+                            </ul>
+                            <p>Understanding forensics helps build more effective, evidence-based detections.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="ir-support.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        Detection Engineering for IR
+                    </a>
+                    <a href="soc-collaboration.html" class="nav-link next">
+                        SOC Collaboration
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

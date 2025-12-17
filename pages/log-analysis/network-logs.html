@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Log Analysis - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar" id="sidebar"></nav>
+        <div class="main-wrapper">
+            <header class="top-bar">
+                <button class="menu-toggle" id="menuToggle">☰</button>
+                <div class="breadcrumb">Log Analysis / Network Logs</div>
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search documentation...">
+                </div>
+            </header>
+            <main class="content">
+                <div class="content-header">
+                    <h1>Network Log Analysis</h1>
+                    <p class="subtitle">Deep dive into firewall, proxy, DNS, NetFlow, and network traffic analysis for detection engineering</p>
+                </div>
+
+                <!-- Network Log Sources Overview -->
+                <section class="doc-section">
+                    <h2>Network Log Sources Overview</h2>
+                    <p>Network logs provide critical visibility into traffic patterns, communications, and potential threats traversing your infrastructure. Each log source offers unique detection capabilities.</p>
+                    
+                    <div class="comparison-grid">
+                        <div class="comparison-card splunk-card">
+                            <h4>Perimeter Logs</h4>
+                            <ul>
+                                <li><strong>Firewall Logs</strong> - Allow/deny decisions, connection state</li>
+                                <li><strong>IDS/IPS</strong> - Signature-based alerts, anomaly detection</li>
+                                <li><strong>WAF</strong> - Web application attacks, OWASP Top 10</li>
+                                <li><strong>VPN/ZTNA</strong> - Remote access, authentication events</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card sentinel-card">
+                            <h4>Internal Logs</h4>
+                            <ul>
+                                <li><strong>Proxy Logs</strong> - URL access, content filtering</li>
+                                <li><strong>DNS Logs</strong> - Query/response, resolution patterns</li>
+                                <li><strong>NetFlow/IPFIX</strong> - Traffic metadata, volumetrics</li>
+                                <li><strong>DHCP</strong> - IP assignments, lease tracking</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Cloud Network</h4>
+                            <ul>
+                                <li><strong>VPC Flow Logs</strong> - Cloud traffic metadata</li>
+                                <li><strong>NSG Logs</strong> - Azure network security</li>
+                                <li><strong>Cloud DNS</strong> - Route 53, Azure DNS queries</li>
+                                <li><strong>Load Balancer</strong> - ALB/NLB access logs</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Firewall Log Analysis -->
+                <section class="doc-section">
+                    <h2>Firewall Log Analysis</h2>
+                    <p>Firewall logs are foundational for network security monitoring, providing visibility into allowed and denied traffic across network boundaries.</p>
+                    
+                    <h3>Common Firewall Log Fields</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Description</th>
+                                    <th>Detection Use</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>src_ip</code></td>
+                                    <td>Source IP address</td>
+                                    <td>Attribution, scanning detection, IOC matching</td>
+                                </tr>
+                                <tr>
+                                    <td><code>dst_ip</code></td>
+                                    <td>Destination IP address</td>
+                                    <td>C2 detection, data exfiltration targets</td>
+                                </tr>
+                                <tr>
+                                    <td><code>dst_port</code></td>
+                                    <td>Destination port</td>
+                                    <td>Service identification, unusual port usage</td>
+                                </tr>
+                                <tr>
+                                    <td><code>action</code></td>
+                                    <td>Allow/Deny/Drop</td>
+                                    <td>Policy violations, blocked threats</td>
+                                </tr>
+                                <tr>
+                                    <td><code>bytes_sent/recv</code></td>
+                                    <td>Data transfer volume</td>
+                                    <td>Exfiltration detection, beaconing</td>
+                                </tr>
+                                <tr>
+                                    <td><code>rule_name</code></td>
+                                    <td>Matched firewall rule</td>
+                                    <td>Policy analysis, rule optimization</td>
+                                </tr>
+                                <tr>
+                                    <td><code>session_duration</code></td>
+                                    <td>Connection length</td>
+                                    <td>Long-lived C2, tunnel detection</td>
+                                </tr>
+                                <tr>
+                                    <td><code>app_id</code></td>
+                                    <td>Application identification</td>
+                                    <td>Shadow IT, unauthorized apps</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Palo Alto Networks Log Analysis</h3>
+                    <p>Palo Alto firewalls provide rich application-aware logging:</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Palo Alto Traffic Analysis</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Palo Alto traffic logs in Sentinel
+CommonSecurityLog
+| where DeviceVendor == "Palo Alto Networks"
+| where DeviceEventClassID == "TRAFFIC"
+| extend 
+    Action = DeviceAction,
+    SourceIP = SourceIP,
+    DestIP = DestinationIP,
+    DestPort = DestinationPort,
+    Application = ApplicationProtocol,
+    BytesSent = SentBytes,
+    BytesReceived = ReceivedBytes,
+    SessionDuration = tolong(DeviceCustomNumber1)
+| project 
+    TimeGenerated,
+    Action,
+    SourceIP,
+    DestIP,
+    DestPort,
+    Application,
+    BytesSent,
+    BytesReceived,
+    SessionDuration</code></pre>
+                    </div>
+
+                    <h3>Detecting Port Scanning</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Port Scan Detection</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect horizontal port scanning (one host scanning many ports on one target)
+CommonSecurityLog
+| where DeviceAction == "Deny" or DeviceAction == "Drop"
+| where TimeGenerated > ago(15m)
+| summarize 
+    DistinctPorts = dcount(DestinationPort),
+    Ports = make_set(DestinationPort, 100),
+    DenyCount = count()
+    by SourceIP, DestinationIP, bin(TimeGenerated, 5m)
+| where DistinctPorts > 50
+| extend 
+    ScanType = "Vertical Port Scan",
+    RiskScore = case(
+        DistinctPorts > 1000, 100,
+        DistinctPorts > 500, 80,
+        DistinctPorts > 100, 60,
+        40
+    )
+| project TimeGenerated, SourceIP, DestinationIP, ScanType, DistinctPorts, DenyCount, RiskScore</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Network Sweep Detection</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect network sweeps (one host scanning many hosts on same port)
+CommonSecurityLog
+| where DeviceAction in ("Deny", "Drop", "Reset")
+| where TimeGenerated > ago(15m)
+| summarize 
+    DistinctTargets = dcount(DestinationIP),
+    Targets = make_set(DestinationIP, 50),
+    AttemptCount = count()
+    by SourceIP, DestinationPort, bin(TimeGenerated, 5m)
+| where DistinctTargets > 20
+| extend 
+    ScanType = "Horizontal Network Sweep",
+    ServiceScanned = case(
+        DestinationPort == 22, "SSH",
+        DestinationPort == 23, "Telnet",
+        DestinationPort == 445, "SMB",
+        DestinationPort == 3389, "RDP",
+        DestinationPort == 1433, "MSSQL",
+        DestinationPort == 3306, "MySQL",
+        DestinationPort == 5432, "PostgreSQL",
+        tostring(DestinationPort)
+    )
+| project TimeGenerated, SourceIP, ScanType, ServiceScanned, DestinationPort, DistinctTargets, AttemptCount</code></pre>
+                    </div>
+
+                    <h3>Detecting Outbound Anomalies</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Unusual Outbound Ports</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect outbound connections on unusual ports
+let CommonPorts = dynamic([80, 443, 53, 25, 587, 993, 995, 22, 21]);
+CommonSecurityLog
+| where DeviceAction == "Allow"
+| where DestinationIP !startswith "10." 
+    and DestinationIP !startswith "192.168."
+    and DestinationIP !startswith "172.16."
+| where DestinationPort !in (CommonPorts)
+| where DestinationPort > 1024
+| summarize 
+    ConnectionCount = count(),
+    TotalBytesSent = sum(SentBytes),
+    DistinctDestinations = dcount(DestinationIP),
+    Destinations = make_set(DestinationIP, 10)
+    by SourceIP, DestinationPort, bin(TimeGenerated, 1h)
+| where ConnectionCount > 10
+| extend 
+    RiskIndicator = case(
+        DestinationPort in (4444, 5555, 6666, 7777, 8888, 9999), "Common Backdoor Port",
+        DestinationPort in (1080, 3128, 8080, 8443), "Proxy Port",
+        DestinationPort > 49152, "Ephemeral Range",
+        "Unusual Port"
+    )
+| project TimeGenerated, SourceIP, DestinationPort, RiskIndicator, ConnectionCount, TotalBytesSent, DistinctDestinations</code></pre>
+                    </div>
+                </section>
+
+                <!-- DNS Log Analysis -->
+                <section class="doc-section">
+                    <h2>DNS Log Analysis</h2>
+                    <p>DNS logs provide unparalleled visibility into network activity since nearly all network communications begin with DNS resolution. This makes DNS an ideal chokepoint for detection.</p>
+                    
+                    <h3>DNS Detection Categories</h3>
+                    <div class="info-box info">
+                        <h4>What DNS Logs Reveal</h4>
+                        <ul>
+                            <li><strong>C2 Communications</strong> - Domain generation algorithms, DNS tunneling</li>
+                            <li><strong>Data Exfiltration</strong> - Encoded data in DNS queries</li>
+                            <li><strong>Malware Domains</strong> - Known malicious domain lookups</li>
+                            <li><strong>Phishing</strong> - Lookalike domain detection</li>
+                            <li><strong>Shadow IT</strong> - Unauthorized cloud service usage</li>
+                        </ul>
+                    </div>
+
+                    <h3>DNS Tunneling Detection</h3>
+                    <p>DNS tunneling encodes data in DNS queries to bypass security controls. Detection focuses on query anomalies:</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - DNS Tunneling Detection</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Comprehensive DNS tunneling detection
+DnsEvents
+| where TimeGenerated > ago(1h)
+| where QueryType in ("A", "TXT", "CNAME", "MX")
+| extend 
+    // Extract subdomain
+    DomainParts = split(Name, "."),
+    SubdomainLength = strlen(tostring(split(Name, ".")[0])),
+    TotalDomainLength = strlen(Name),
+    // Count labels (parts separated by dots)
+    LabelCount = array_length(split(Name, "."))
+| extend 
+    // Calculate entropy of subdomain (high entropy = encoded data)
+    EntropyScore = case(
+        SubdomainLength > 50, 100,
+        SubdomainLength > 30, 70,
+        SubdomainLength > 20, 40,
+        10
+    )
+| where SubdomainLength > 25 or LabelCount > 5
+| summarize 
+    QueryCount = count(),
+    AvgSubdomainLength = avg(SubdomainLength),
+    MaxSubdomainLength = max(SubdomainLength),
+    UniqueSubdomains = dcount(tostring(DomainParts[0])),
+    SampleQueries = make_set(Name, 5)
+    by ClientIP, tostring(DomainParts[-2]), tostring(DomainParts[-1]), bin(TimeGenerated, 10m)
+| extend 
+    BaseDomain = strcat(DomainParts_2, ".", DomainParts_1),
+    TunnelingScore = case(
+        UniqueSubdomains > 100 and AvgSubdomainLength > 30, "Critical - Active Tunneling",
+        UniqueSubdomains > 50 and AvgSubdomainLength > 25, "High - Likely Tunneling",
+        UniqueSubdomains > 20 and AvgSubdomainLength > 20, "Medium - Suspicious",
+        "Low"
+    )
+| where TunnelingScore != "Low"
+| project TimeGenerated, ClientIP, BaseDomain, TunnelingScore, QueryCount, UniqueSubdomains, AvgSubdomainLength</code></pre>
+                    </div>
+
+                    <h3>Domain Generation Algorithm (DGA) Detection</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - DGA Domain Detection</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect DGA domains based on characteristics
+DnsEvents
+| where TimeGenerated > ago(1h)
+| where QueryType == "A"
+| where ResultCode == 3  // NXDOMAIN - domain doesn't exist
+| extend 
+    DomainParts = split(Name, "."),
+    DomainName = tostring(split(Name, ".")[-2]),
+    TLD = tostring(split(Name, ".")[-1])
+| where strlen(DomainName) >= 8
+| extend 
+    // Check for DGA characteristics
+    HasConsecutiveConsonants = DomainName matches regex "[bcdfghjklmnpqrstvwxz]{4,}",
+    HasNoVowels = not(DomainName matches regex "[aeiou]"),
+    IsAllAlphanumeric = DomainName matches regex "^[a-z0-9]+$",
+    LooksRandom = DomainName matches regex "^[a-z]{8,15}$"
+| summarize 
+    NXDomainCount = count(),
+    UniqueDomains = dcount(Name),
+    Domains = make_set(Name, 20)
+    by ClientIP, bin(TimeGenerated, 10m)
+| where NXDomainCount > 50 and UniqueDomains > 30
+| extend 
+    DGAIndicator = "High volume of NXDOMAIN responses to random-looking domains",
+    RiskLevel = case(
+        NXDomainCount > 500, "Critical",
+        NXDomainCount > 200, "High",
+        NXDomainCount > 100, "Medium",
+        "Low"
+    )
+| project TimeGenerated, ClientIP, RiskLevel, NXDomainCount, UniqueDomains, Domains</code></pre>
+                    </div>
+
+                    <h3>Threat Intelligence DNS Matching</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - DNS IOC Matching</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Match DNS queries against threat intelligence
+let MaliciousDomains = externaldata(Domain:string)
+[@"https://your-ti-feed/malicious-domains.txt"] with (format="txt");
+// Or use Sentinel TI tables
+let TIDomains = ThreatIntelligenceIndicator
+| where isnotempty(DomainName)
+| where Active == true
+| where ExpirationDateTime > now()
+| distinct DomainName;
+DnsEvents
+| where TimeGenerated > ago(24h)
+| extend 
+    QueryDomain = tolower(Name),
+    BaseDomain = strcat(
+        tostring(split(Name, ".")[-2]), ".",
+        tostring(split(Name, ".")[-1])
+    )
+| where QueryDomain in (TIDomains) or BaseDomain in (TIDomains)
+| extend 
+    TIMatch = true,
+    MatchedDomain = iff(QueryDomain in (TIDomains), QueryDomain, BaseDomain)
+| lookup kind=leftouter (
+    ThreatIntelligenceIndicator 
+    | where isnotempty(DomainName)
+    | project DomainName, ThreatType, Description, ConfidenceScore
+) on $left.MatchedDomain == $right.DomainName
+| project 
+    TimeGenerated,
+    ClientIP,
+    QueryDomain,
+    MatchedDomain,
+    ThreatType,
+    ConfidenceScore,
+    Description</code></pre>
+                    </div>
+
+                    <h3>Detecting Suspicious DNS Patterns</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Fast-Flux Detection</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect fast-flux domains (rapidly changing IP addresses)
+DnsEvents
+| where TimeGenerated > ago(1h)
+| where QueryType == "A"
+| where isnotempty(IPAddresses)
+| mv-expand IPAddress = split(IPAddresses, ",")
+| extend IPAddress = trim(" ", tostring(IPAddress))
+| summarize 
+    UniqueIPs = dcount(IPAddress),
+    IPs = make_set(IPAddress, 50),
+    QueryCount = count()
+    by Name, bin(TimeGenerated, 15m)
+| where UniqueIPs > 5
+| extend 
+    FastFluxIndicator = case(
+        UniqueIPs > 20, "Critical - Definite Fast-Flux",
+        UniqueIPs > 10, "High - Likely Fast-Flux",
+        "Medium - Possible Fast-Flux"
+    )
+| project TimeGenerated, Name, FastFluxIndicator, UniqueIPs, QueryCount, IPs</code></pre>
+                    </div>
+                </section>
+
+                <!-- Proxy Log Analysis -->
+                <section class="doc-section">
+                    <h2>Proxy Log Analysis</h2>
+                    <p>Web proxy logs provide visibility into HTTP/HTTPS traffic, enabling detection of web-based threats, data exfiltration, and policy violations.</p>
+                    
+                    <h3>Key Proxy Log Fields</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Description</th>
+                                    <th>Detection Use</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>url</code></td>
+                                    <td>Full request URL</td>
+                                    <td>Malicious URL detection, IOC matching</td>
+                                </tr>
+                                <tr>
+                                    <td><code>user_agent</code></td>
+                                    <td>Browser/client identifier</td>
+                                    <td>Malware user agents, anomaly detection</td>
+                                </tr>
+                                <tr>
+                                    <td><code>http_method</code></td>
+                                    <td>GET, POST, PUT, etc.</td>
+                                    <td>Data exfiltration (large POSTs)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>response_code</code></td>
+                                    <td>HTTP status code</td>
+                                    <td>Error patterns, enumeration</td>
+                                </tr>
+                                <tr>
+                                    <td><code>bytes_uploaded</code></td>
+                                    <td>Request body size</td>
+                                    <td>Exfiltration detection</td>
+                                </tr>
+                                <tr>
+                                    <td><code>category</code></td>
+                                    <td>URL categorization</td>
+                                    <td>Policy violations, risky categories</td>
+                                </tr>
+                                <tr>
+                                    <td><code>ssl_decrypted</code></td>
+                                    <td>SSL inspection status</td>
+                                    <td>Inspection gap analysis</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Detecting Data Exfiltration via Web</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Large Upload Detection</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect large data uploads to external sites
+let CloudStorageDomains = dynamic([
+    "dropbox.com", "drive.google.com", "onedrive.live.com",
+    "box.com", "mega.nz", "wetransfer.com", "sendspace.com",
+    "mediafire.com", "file.io", "transfer.sh"
+]);
+CommonSecurityLog
+| where DeviceVendor in ("Zscaler", "BlueCoat", "Palo Alto Networks")
+| where RequestMethod == "POST" or RequestMethod == "PUT"
+| where SentBytes > 10000000  // > 10MB
+| extend 
+    Domain = extract(@"https?://([^/]+)", 1, RequestURL),
+    IsCloudStorage = Domain has_any (CloudStorageDomains)
+| summarize 
+    TotalBytesUploaded = sum(SentBytes),
+    UploadCount = count(),
+    Destinations = make_set(Domain, 10)
+    by SourceUserName, SourceIP, bin(TimeGenerated, 1h)
+| where TotalBytesUploaded > 100000000  // > 100MB per hour
+| extend 
+    DataVolumeGB = round(TotalBytesUploaded / 1073741824.0, 2),
+    RiskLevel = case(
+        TotalBytesUploaded > 1073741824, "Critical - > 1GB",
+        TotalBytesUploaded > 524288000, "High - > 500MB",
+        TotalBytesUploaded > 104857600, "Medium - > 100MB",
+        "Low"
+    )
+| project TimeGenerated, SourceUserName, SourceIP, DataVolumeGB, UploadCount, RiskLevel, Destinations</code></pre>
+                    </div>
+
+                    <h3>Suspicious User-Agent Detection</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Malicious User-Agent Patterns</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect suspicious or malicious user agents
+CommonSecurityLog
+| where isnotempty(RequestClientApplication)
+| extend UserAgent = RequestClientApplication
+| extend 
+    IsSuspicious = case(
+        // Known malware user agents
+        UserAgent contains "python-requests" and SourceIP !in (KnownDevServers), true,
+        UserAgent contains "curl" and SourceIP !in (KnownDevServers), true,
+        UserAgent contains "wget", true,
+        UserAgent contains "PowerShell", true,
+        UserAgent contains "CertUtil", true,
+        // Very short or absent user agent
+        strlen(UserAgent) < 10, true,
+        // Base64 encoded strings in UA
+        UserAgent matches regex "[A-Za-z0-9+/]{50,}={0,2}", true,
+        // Known C2 frameworks
+        UserAgent contains "Cobalt", true,
+        UserAgent contains "Metasploit", true,
+        UserAgent == "Mozilla/4.0", true,
+        false
+    ),
+    Category = case(
+        UserAgent contains "python-requests", "Scripting Tool",
+        UserAgent contains "curl", "Command Line Tool",
+        UserAgent contains "PowerShell", "PowerShell",
+        UserAgent contains "CertUtil", "LOLBin",
+        strlen(UserAgent) < 10, "Minimal UA",
+        "Other Suspicious"
+    )
+| where IsSuspicious == true
+| summarize 
+    RequestCount = count(),
+    UniqueDestinations = dcount(DestinationHostName),
+    Destinations = make_set(DestinationHostName, 10)
+    by SourceIP, UserAgent, Category, bin(TimeGenerated, 1h)
+| project TimeGenerated, SourceIP, Category, UserAgent, RequestCount, UniqueDestinations, Destinations</code></pre>
+                    </div>
+
+                    <h3>C2 Beaconing Detection</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Beaconing Pattern Analysis</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect C2 beaconing based on regular connection intervals
+let MinBeacons = 20;
+let MaxJitter = 0.2;  // 20% allowed variance
+CommonSecurityLog
+| where TimeGenerated > ago(24h)
+| where DestinationIP !startswith "10." 
+    and DestinationIP !startswith "192.168."
+| project TimeGenerated, SourceIP, DestinationHostName, DestinationIP
+| sort by SourceIP, DestinationHostName, TimeGenerated asc
+| extend 
+    PreviousTime = prev(TimeGenerated, 1),
+    PreviousHost = prev(DestinationHostName, 1),
+    PreviousSource = prev(SourceIP, 1)
+| where SourceIP == PreviousSource and DestinationHostName == PreviousHost
+| extend 
+    IntervalSeconds = datetime_diff('second', TimeGenerated, PreviousTime)
+| where IntervalSeconds > 30 and IntervalSeconds < 7200  // 30s to 2hr intervals
+| summarize 
+    BeaconCount = count(),
+    AvgInterval = avg(IntervalSeconds),
+    StdDevInterval = stdev(IntervalSeconds),
+    MinInterval = min(IntervalSeconds),
+    MaxInterval = max(IntervalSeconds)
+    by SourceIP, DestinationHostName, DestinationIP
+| where BeaconCount > MinBeacons
+| extend 
+    Jitter = StdDevInterval / AvgInterval,
+    BeaconIntervalMinutes = round(AvgInterval / 60.0, 1)
+| where Jitter < MaxJitter  // Low jitter = regular interval = likely beaconing
+| extend 
+    BeaconRisk = case(
+        Jitter < 0.05, "Critical - Very Regular Beaconing",
+        Jitter < 0.1, "High - Regular Beaconing",
+        Jitter < 0.15, "Medium - Possible Beaconing",
+        "Low"
+    )
+| where BeaconRisk != "Low"
+| project SourceIP, DestinationHostName, DestinationIP, BeaconRisk, BeaconCount, BeaconIntervalMinutes, Jitter</code></pre>
+                    </div>
+                </section>
+
+                <!-- NetFlow Analysis -->
+                <section class="doc-section">
+                    <h2>NetFlow/IPFIX Analysis</h2>
+                    <p>NetFlow provides metadata about network conversations without payload inspection, enabling scalable detection of traffic anomalies and lateral movement.</p>
+                    
+                    <h3>NetFlow Detection Use Cases</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card sentinel-card">
+                            <h4>What NetFlow Shows</h4>
+                            <ul>
+                                <li>Connection 5-tuple (src/dst IP/port, protocol)</li>
+                                <li>Bytes/packets transferred</li>
+                                <li>Connection duration</li>
+                                <li>TCP flags</li>
+                                <li>Flow start/end times</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card splunk-card">
+                            <h4>What NetFlow Misses</h4>
+                            <ul>
+                                <li>Payload content</li>
+                                <li>HTTP headers/URLs</li>
+                                <li>DNS query names</li>
+                                <li>User identity</li>
+                                <li>Application-layer details</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>Lateral Movement Detection</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Internal Reconnaissance</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect internal network scanning/reconnaissance
+AzureNetworkAnalytics_CL
+| where TimeGenerated > ago(1h)
+| where FlowDirection_s == "I"  // Inbound
+| where SrcIP_s startswith "10." or SrcIP_s startswith "192.168." or SrcIP_s startswith "172."
+| where DestIP_s startswith "10." or DestIP_s startswith "192.168." or DestIP_s startswith "172."
+| summarize 
+    DistinctDestIPs = dcount(DestIP_s),
+    DistinctDestPorts = dcount(DestPort_d),
+    TotalFlows = count(),
+    BytesTransferred = sum(BytesSrcToDest_d)
+    by SrcIP_s, bin(TimeGenerated, 10m)
+| where DistinctDestIPs > 20 or DistinctDestPorts > 50
+| extend 
+    ReconType = case(
+        DistinctDestIPs > 50 and DistinctDestPorts < 5, "Host Discovery Sweep",
+        DistinctDestIPs < 5 and DistinctDestPorts > 50, "Port Scan",
+        DistinctDestIPs > 20 and DistinctDestPorts > 20, "Broad Reconnaissance",
+        "Other Scanning"
+    )
+| project TimeGenerated, SrcIP_s, ReconType, DistinctDestIPs, DistinctDestPorts, TotalFlows</code></pre>
+                    </div>
+
+                    <h3>Data Exfiltration via Volume Analysis</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Abnormal Data Transfer</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Detect unusual outbound data volume
+let BaselineQuery = 
+    AzureNetworkAnalytics_CL
+    | where TimeGenerated between (ago(7d) .. ago(1d))
+    | where not(DestIP_s startswith "10." or DestIP_s startswith "192.168.")
+    | summarize 
+        AvgDailyBytes = avg(BytesSrcToDest_d),
+        StdDevBytes = stdev(BytesSrcToDest_d)
+        by SrcIP_s;
+AzureNetworkAnalytics_CL
+| where TimeGenerated > ago(1h)
+| where not(DestIP_s startswith "10." or DestIP_s startswith "192.168.")
+| summarize 
+    CurrentBytes = sum(BytesSrcToDest_d),
+    DistinctDestinations = dcount(DestIP_s)
+    by SrcIP_s
+| join kind=leftouter BaselineQuery on SrcIP_s
+| extend 
+    DeviationFactor = iff(StdDevBytes > 0, (CurrentBytes - AvgDailyBytes) / StdDevBytes, 0),
+    DataTransferGB = round(CurrentBytes / 1073741824.0, 2)
+| where DeviationFactor > 3 or CurrentBytes > 1073741824  // 3 std dev or > 1GB
+| extend 
+    ExfiltrationRisk = case(
+        DeviationFactor > 10 and CurrentBytes > 5368709120, "Critical",
+        DeviationFactor > 5 and CurrentBytes > 1073741824, "High",
+        DeviationFactor > 3, "Medium",
+        "Low"
+    )
+| project SrcIP_s, ExfiltrationRisk, DataTransferGB, DeviationFactor, DistinctDestinations</code></pre>
+                    </div>
+                </section>
+
+                <!-- Cloud Network Logs -->
+                <section class="doc-section">
+                    <h2>Cloud Network Logs</h2>
+                    <p>Cloud platforms provide network flow logs that enable visibility into virtual network traffic.</p>
+                    
+                    <h3>AWS VPC Flow Logs</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - AWS VPC Flow Analysis</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// AWS VPC Flow Logs - Rejected Traffic Analysis
+AWSVPCFlow
+| where TimeGenerated > ago(1h)
+| where FlowAction == "REJECT"
+| summarize 
+    RejectedFlows = count(),
+    DistinctSources = dcount(SrcAddr),
+    DistinctDestPorts = dcount(DstPort),
+    TopPorts = make_set(DstPort, 20)
+    by DstAddr, bin(TimeGenerated, 15m)
+| where RejectedFlows > 100
+| extend 
+    AttackType = case(
+        DistinctSources > 50, "Distributed Attack",
+        DistinctDestPorts > 20, "Port Scan",
+        RejectedFlows > 1000, "Brute Force/DDoS",
+        "Reconnaissance"
+    )
+| project TimeGenerated, DstAddr, AttackType, RejectedFlows, DistinctSources, TopPorts</code></pre>
+                    </div>
+
+                    <h3>Azure NSG Flow Logs</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Azure NSG Flow Analysis</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Azure NSG Flow Logs - Detect denied inbound from internet
+AzureNetworkAnalytics_CL
+| where TimeGenerated > ago(1h)
+| where FlowDirection_s == "I"
+| where FlowStatus_s == "D"  // Denied
+| where not(SrcIP_s startswith "10." or SrcIP_s startswith "192.168.")
+| summarize 
+    DeniedFlows = count(),
+    DistinctSourceIPs = dcount(SrcIP_s),
+    TargetPorts = make_set(DestPort_d, 20)
+    by DestIP_s, NSGRule_s, bin(TimeGenerated, 15m)
+| where DeniedFlows > 50
+| project TimeGenerated, DestIP_s, NSGRule_s, DeniedFlows, DistinctSourceIPs, TargetPorts</code></pre>
+                    </div>
+                </section>
+
+                <!-- Network Detection Best Practices -->
+                <section class="doc-section">
+                    <h2>Network Detection Best Practices</h2>
+                    
+                    <div class="info-box tip">
+                        <h4>Defense in Depth</h4>
+                        <ul>
+                            <li><strong>Layer coverage</strong> - Combine firewall, proxy, DNS, and flow logs for complete visibility</li>
+                            <li><strong>Baseline behavior</strong> - Establish normal patterns before alerting on anomalies</li>
+                            <li><strong>Correlation</strong> - Link network events with endpoint activity for context</li>
+                            <li><strong>TI integration</strong> - Enrich network logs with threat intelligence feeds</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box warning">
+                        <h4>Common Pitfalls</h4>
+                        <ul>
+                            <li><strong>Volume overwhelm</strong> - Network logs can be massive; filter strategically</li>
+                            <li><strong>SSL blind spots</strong> - HTTPS traffic without inspection limits detection</li>
+                            <li><strong>Legitimate tools</strong> - curl/wget/Python used legitimately by developers</li>
+                            <li><strong>CDN/cloud noise</strong> - High-volume services generate normal traffic spikes</li>
+                        </ul>
+                    </div>
+
+                    <h3>Network Log Correlation Strategy</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - Multi-Source Network Correlation</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Correlate DNS query with subsequent connection and endpoint process
+let SuspiciousDNS = 
+    DnsEvents
+    | where TimeGenerated > ago(1h)
+    | where strlen(tostring(split(Name, ".")[0])) > 25
+    | distinct ClientIP, Name, TimeGenerated;
+let SubsequentConnections = 
+    CommonSecurityLog
+    | where TimeGenerated > ago(1h)
+    | where DeviceAction == "Allow"
+    | project ConnectionTime = TimeGenerated, SourceIP, DestinationIP, DestinationHostName, DestinationPort;
+let EndpointProcesses = 
+    DeviceNetworkEvents
+    | where TimeGenerated > ago(1h)
+    | project ProcessTime = TimeGenerated, DeviceName, InitiatingProcessFileName, RemoteIP, RemotePort;
+SuspiciousDNS
+| join kind=inner (SubsequentConnections) on $left.ClientIP == $right.SourceIP
+| where ConnectionTime between (TimeGenerated .. (TimeGenerated + 5m))
+| join kind=leftouter (EndpointProcesses) on $left.SourceIP == $right.RemoteIP
+| project 
+    DNSQueryTime = TimeGenerated,
+    ConnectionTime,
+    ClientIP,
+    SuspiciousDomain = Name,
+    DestinationIP,
+    DestinationPort,
+    InitiatingProcess = InitiatingProcessFileName</code></pre>
+                    </div>
+                </section>
+
+                <!-- Interview Questions -->
+                <section class="doc-section">
+                    <h2>Interview Questions & Answers</h2>
+                    
+                    <div class="qa-accordion">
+                        <div class="qa-item">
+                            <button class="qa-question">How would you detect DNS tunneling in your environment?</button>
+                            <div class="qa-answer">
+                                <p><strong>Answer:</strong> I'd implement multi-layered DNS tunneling detection:</p>
+                                <ol>
+                                    <li><strong>Query characteristics:</strong>
+                                        <ul>
+                                            <li>Long subdomain names (>25 characters) - legitimate domains rarely need this</li>
+                                            <li>High entropy in subdomain - encoded data looks random</li>
+                                            <li>Excessive TXT queries - commonly used for tunneling payloads</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Behavioral patterns:</strong>
+                                        <ul>
+                                            <li>Single client making thousands of queries to same base domain</li>
+                                            <li>Many unique subdomains to same parent domain</li>
+                                            <li>Regular query intervals (beaconing pattern)</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Response analysis:</strong>
+                                        <ul>
+                                            <li>Large TXT record responses</li>
+                                            <li>NULL or CNAME responses with encoded data</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                                <p>Tools like Iodine, DNScat2, and Cobalt Strike use DNS tunneling, each with slightly different signatures.</p>
+                            </div>
+                        </div>
+
+                        <div class="qa-item">
+                            <button class="qa-question">What's the difference between detecting lateral movement with firewall logs vs. NetFlow?</button>
+                            <div class="qa-answer">
+                                <p><strong>Answer:</strong></p>
+                                <table>
+                                    <tr>
+                                        <th>Aspect</th>
+                                        <th>Firewall Logs</th>
+                                        <th>NetFlow</th>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Coverage</strong></td>
+                                        <td>Only traffic crossing firewall</td>
+                                        <td>All traffic where collectors are deployed</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>East-West visibility</strong></td>
+                                        <td>Limited (only if microsegmented)</td>
+                                        <td>Full internal visibility</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Application details</strong></td>
+                                        <td>App-ID, URL, user identity</td>
+                                        <td>Just ports/protocols</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Storage requirements</strong></td>
+                                        <td>Higher (more fields)</td>
+                                        <td>Lower (metadata only)</td>
+                                    </tr>
+                                </table>
+                                <p>For lateral movement, NetFlow is often better because it sees internal traffic that doesn't cross perimeter firewalls. I'd look for: internal hosts contacting many other internal hosts on admin ports (SMB/445, WinRM/5985, RDP/3389), unusual connection patterns from servers, and workstation-to-workstation traffic.</p>
+                            </div>
+                        </div>
+
+                        <div class="qa-item">
+                            <button class="qa-question">How would you detect C2 beaconing in proxy logs?</button>
+                            <div class="qa-answer">
+                                <p><strong>Answer:</strong> C2 beaconing has distinctive patterns:</p>
+                                <ol>
+                                    <li><strong>Regular intervals:</strong> Connections at consistent time intervals (every 60s, 5min, etc.) with low jitter</li>
+                                    <li><strong>Statistical detection:</strong>
+                                        <ul>
+                                            <li>Calculate time deltas between connections to same destination</li>
+                                            <li>Compute standard deviation of intervals</li>
+                                            <li>Low std dev / mean ratio = regular beaconing</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Additional indicators:</strong>
+                                        <ul>
+                                            <li>Consistent request/response sizes</li>
+                                            <li>Same user-agent across all connections</li>
+                                            <li>Connections continuing through off-hours</li>
+                                            <li>Base64 or encoded content in URLs/cookies</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                                <p>Modern C2 frameworks add jitter (randomness) to avoid detection, but even 20% jitter still shows more regularity than human browsing patterns.</p>
+                            </div>
+                        </div>
+
+                        <div class="qa-item">
+                            <button class="qa-question">Explain how you'd baseline network behavior for anomaly detection.</button>
+                            <div class="qa-answer">
+                                <p><strong>Answer:</strong> Network baselining requires structured approach:</p>
+                                <ol>
+                                    <li><strong>Segment by asset type:</strong>
+                                        <ul>
+                                            <li>Workstations, servers, IoT devices have different patterns</li>
+                                            <li>Web servers vs. database servers vs. file servers</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Time-based baselines:</strong>
+                                        <ul>
+                                            <li>Business hours vs. nights/weekends</li>
+                                            <li>Month-end processing spikes</li>
+                                            <li>Minimum 2-4 weeks of data</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Metrics to baseline:</strong>
+                                        <ul>
+                                            <li>Typical destinations (internal vs. external)</li>
+                                            <li>Data volume (bytes in/out per hour)</li>
+                                            <li>Connection count and duration</li>
+                                            <li>Port usage patterns</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Detection thresholds:</strong>
+                                        <ul>
+                                            <li>Static: >X connections/hour</li>
+                                            <li>Dynamic: >3 standard deviations from rolling average</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                                <p>I exclude known events (patch Tuesday, backups) when building baselines to avoid skewing the data.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Navigation -->
+                <div class="doc-navigation">
+                    <a href="endpoint-logs.html" class="nav-link prev">
+                        <span class="arrow">←</span>
+                        <span>Endpoint Logs</span>
+                    </a>
+                    <a href="cloud-logs.html" class="nav-link next">
+                        <span>Cloud Log Analysis</span>
+                        <span class="arrow">→</span>
+                    </a>
+                </div>
+            </main>
+            <footer class="footer">
+                <p>Detection Engineering Mastery © 2024 | Building world-class detection capabilities</p>
+            </footer>
+        </div>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+    <script>
+        // Q&A Accordion functionality
+        document.querySelectorAll('.qa-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const isOpen = answer.style.maxHeight;
+                document.querySelectorAll('.qa-answer').forEach(a => a.style.maxHeight = null);
+                document.querySelectorAll('.qa-question').forEach(q => q.classList.remove('active'));
+                if (!isOpen) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    button.classList.add('active');
+                }
+            });
+        });
+        function copyCode(btn) {
+            const code = btn.parentElement.nextElementSibling.querySelector('code').innerText;
+            navigator.clipboard.writeText(code);
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = 'Copy', 2000);
+        }
+    </script>
+</body>
+</html>

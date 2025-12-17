@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bash for Security - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="automation">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                            <span>Automation & Scripting</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item">Automation Fundamentals</a>
+                        <a href="python-security.html" class="nav-item">Python for Security</a>
+                        <a href="powershell-security.html" class="nav-item">PowerShell for Security</a>
+                        <a href="bash-security.html" class="nav-item active">Bash for Security</a>
+                        <a href="soar.html" class="nav-item">SOAR Platforms</a>
+                        <a href="api-integration.html" class="nav-item">API Integration</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="fundamentals.html">Automation</a>
+                    <span class="separator">/</span>
+                    <span class="current">Bash for Security</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>Bash for Security</h1>
+                    <p class="subtitle">Essential Bash skills for Linux security, log analysis, system hardening, and incident response on Unix-based systems.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Essential Security Commands</h2>
+                    
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Command</th>
+                                <th>Purpose</th>
+                                <th>Security Use</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>grep</code></td><td>Pattern search</td><td>Log analysis, IOC search</td></tr>
+                            <tr><td><code>awk</code></td><td>Text processing</td><td>Log parsing, data extraction</td></tr>
+                            <tr><td><code>sed</code></td><td>Stream editor</td><td>Log transformation</td></tr>
+                            <tr><td><code>find</code></td><td>File search</td><td>Find suspicious files</td></tr>
+                            <tr><td><code>netstat/ss</code></td><td>Network connections</td><td>Connection analysis</td></tr>
+                            <tr><td><code>ps/top</code></td><td>Process listing</td><td>Process investigation</td></tr>
+                            <tr><td><code>lsof</code></td><td>Open files</td><td>File handle analysis</td></tr>
+                            <tr><td><code>curl/wget</code></td><td>HTTP client</td><td>API calls, IOC checks</td></tr>
+                            <tr><td><code>jq</code></td><td>JSON processor</td><td>Parse API responses</td></tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Log Analysis</h2>
+
+                    <h3>SSH Brute Force Detection</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>detect_ssh_bruteforce.sh</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>#!/bin/bash
+# Detect SSH brute force attempts from auth.log
+
+THRESHOLD=10
+LOGFILE="/var/log/auth.log"
+
+echo "=== SSH Brute Force Detection ==="
+echo "Threshold: $THRESHOLD failed attempts"
+echo ""
+
+# Find failed SSH attempts grouped by IP
+echo "Top offending IPs:"
+grep "Failed password" "$LOGFILE" | \
+    grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | \
+    sort | uniq -c | sort -rn | \
+    awk -v threshold="$THRESHOLD" '$1 >= threshold {print $1 " attempts from " $2}'
+
+echo ""
+echo "Recent failed logins (last 50):"
+grep "Failed password" "$LOGFILE" | tail -50 | \
+    awk '{print $1, $2, $3, $9, $11}' | column -t
+
+# Optional: Block IPs with iptables
+# for ip in $(grep "Failed password" "$LOGFILE" | grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | sort | uniq -c | sort -rn | awk -v t="$THRESHOLD" '$1>=t {print $2}'); do
+#     iptables -A INPUT -s "$ip" -j DROP
+#     echo "Blocked: $ip"
+# done</code></pre>
+                    </div>
+
+                    <h3>Parse Apache/Nginx Logs</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>analyze_web_logs.sh</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>#!/bin/bash
+# Analyze web server access logs for security issues
+
+LOGFILE="${1:-/var/log/nginx/access.log}"
+
+echo "=== Web Log Security Analysis ==="
+echo "Analyzing: $LOGFILE"
+echo ""
+
+# Top IPs by request count
+echo "[Top 20 IPs by Requests]"
+awk '{print $1}' "$LOGFILE" | sort | uniq -c | sort -rn | head -20
+
+# 4xx/5xx errors by IP
+echo ""
+echo "[IPs with Most 4xx/5xx Errors]"
+awk '$9 ~ /^[45]/ {print $1, $9}' "$LOGFILE" | \
+    sort | uniq -c | sort -rn | head -20
+
+# Potential SQL injection attempts
+echo ""
+echo "[Potential SQL Injection Attempts]"
+grep -iE "(union|select|insert|update|delete|drop|--|;|'|\")" "$LOGFILE" | \
+    awk '{print $1, $7}' | head -20
+
+# Potential path traversal
+echo ""
+echo "[Potential Path Traversal]"
+grep -E "(\.\./|\.\.\\\\)" "$LOGFILE" | awk '{print $1, $7}' | head -20
+
+# User agents (looking for scanners)
+echo ""
+echo "[Suspicious User Agents]"
+grep -iE "(nikto|sqlmap|nmap|masscan|zgrab|curl|wget|python)" "$LOGFILE" | \
+    awk -F'"' '{print $6}' | sort | uniq -c | sort -rn | head -10
+
+# Requests per hour (timeline)
+echo ""
+echo "[Requests per Hour]"
+awk '{print $4}' "$LOGFILE" | cut -d: -f1,2 | uniq -c | tail -24</code></pre>
+                    </div>
+
+                    <h3>Search for IOCs in Logs</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>search_iocs.sh</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>#!/bin/bash
+# Search for IOCs across multiple log files
+
+IOC_FILE="${1:-iocs.txt}"
+LOG_DIR="${2:-/var/log}"
+
+if [[ ! -f "$IOC_FILE" ]]; then
+    echo "Usage: $0 <ioc_file> [log_directory]"
+    exit 1
+fi
+
+echo "=== IOC Search Results ==="
+echo "IOC File: $IOC_FILE"
+echo "Log Directory: $LOG_DIR"
+echo ""
+
+# Read IOCs and search
+while IFS= read -r ioc; do
+    # Skip empty lines and comments
+    [[ -z "$ioc" || "$ioc" =~ ^# ]] && continue
+    
+    # Search in all log files
+    results=$(grep -rl "$ioc" "$LOG_DIR" 2>/dev/null)
+    
+    if [[ -n "$results" ]]; then
+        echo "⚠️  FOUND: $ioc"
+        echo "   Files: $results" | tr '\n' ' '
+        echo ""
+        
+        # Show context
+        for file in $results; do
+            echo "   --- $file ---"
+            grep -n "$ioc" "$file" | head -3
+        done
+        echo ""
+    fi
+done < "$IOC_FILE"
+
+echo "Search complete."</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>System Investigation</h2>
+
+                    <h3>Process & Network Analysis</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>system_investigation.sh</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>#!/bin/bash
+# System security investigation script
+
+echo "=== System Security Investigation ==="
+echo "Hostname: $(hostname)"
+echo "Date: $(date)"
+echo ""
+
+# Suspicious processes
+echo "[Processes with Network Connections]"
+ss -tulpn 2>/dev/null | grep LISTEN
+
+echo ""
+echo "[Processes Running from /tmp or /dev/shm]"
+ps aux | awk '$11 ~ /^\/(tmp|dev\/shm)/ {print}'
+
+echo ""
+echo "[Processes with Deleted Executables]"
+ls -la /proc/*/exe 2>/dev/null | grep '(deleted)'
+
+# Network connections
+echo ""
+echo "[Established Connections to External IPs]"
+ss -tn state established 2>/dev/null | \
+    awk 'NR>1 && $5 !~ /^(127\.|10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.)/ {print}'
+
+# Scheduled tasks
+echo ""
+echo "[Cron Jobs - All Users]"
+for user in $(cut -f1 -d: /etc/passwd); do
+    crontab -u "$user" -l 2>/dev/null | grep -v '^#' | \
+        while read -r line; do [[ -n "$line" ]] && echo "$user: $line"; done
+done
+
+# Recently modified files
+echo ""
+echo "[Files Modified in Last 24h in Sensitive Dirs]"
+find /etc /usr/bin /usr/sbin -type f -mtime -1 2>/dev/null | head -20
+
+# SUID/SGID binaries
+echo ""
+echo "[SUID/SGID Files (potential privesc)]"
+find / -type f \( -perm -4000 -o -perm -2000 \) 2>/dev/null | head -20
+
+# Users with UID 0
+echo ""
+echo "[Users with UID 0]"
+awk -F: '$3 == 0 {print $1}' /etc/passwd
+
+# SSH authorized keys
+echo ""
+echo "[SSH Authorized Keys Files]"
+find /home -name authorized_keys 2>/dev/null -exec echo "File: {}" \; -exec wc -l {} \;</code></pre>
+                    </div>
+
+                    <h3>File Integrity Check</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>file_integrity.sh</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>#!/bin/bash
+# Simple file integrity monitoring
+
+BASELINE_FILE="baseline.sha256"
+CHECK_DIRS="/etc /usr/bin /usr/sbin"
+
+create_baseline() {
+    echo "Creating baseline..."
+    > "$BASELINE_FILE"
+    for dir in $CHECK_DIRS; do
+        find "$dir" -type f -exec sha256sum {} \; 2>/dev/null >> "$BASELINE_FILE"
+    done
+    echo "Baseline created: $(wc -l < "$BASELINE_FILE") files"
+}
+
+check_integrity() {
+    if [[ ! -f "$BASELINE_FILE" ]]; then
+        echo "No baseline found. Run with 'create' first."
+        exit 1
+    fi
+    
+    echo "Checking file integrity..."
+    
+    # Check for modified files
+    sha256sum -c "$BASELINE_FILE" 2>/dev/null | grep -v ': OK$' | while read -r line; do
+        echo "⚠️  MODIFIED: $line"
+    done
+    
+    # Check for new files
+    echo ""
+    echo "Checking for new files..."
+    for dir in $CHECK_DIRS; do
+        find "$dir" -type f 2>/dev/null | while read -r file; do
+            if ! grep -q "$file" "$BASELINE_FILE"; then
+                echo "⚠️  NEW FILE: $file"
+            fi
+        done
+    done
+}
+
+case "${1:-check}" in
+    create) create_baseline ;;
+    check) check_integrity ;;
+    *) echo "Usage: $0 {create|check}" ;;
+esac</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>API Calls with curl</h2>
+
+                    <h3>VirusTotal IOC Check</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>check_virustotal.sh</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>#!/bin/bash
+# Check IOC against VirusTotal
+
+VT_API_KEY="${VT_API_KEY:-your_api_key}"
+IOC="$1"
+
+if [[ -z "$IOC" ]]; then
+    echo "Usage: $0 <ip|domain|hash>"
+    exit 1
+fi
+
+# Detect IOC type
+if [[ "$IOC" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    ENDPOINT="ip_addresses/$IOC"
+elif [[ "$IOC" =~ ^[a-fA-F0-9]{32}$ ]] || [[ "$IOC" =~ ^[a-fA-F0-9]{64}$ ]]; then
+    ENDPOINT="files/$IOC"
+else
+    ENDPOINT="domains/$IOC"
+fi
+
+response=$(curl -s "https://www.virustotal.com/api/v3/$ENDPOINT" \
+    -H "x-apikey: $VT_API_KEY")
+
+# Parse with jq
+echo "=== VirusTotal Results for: $IOC ==="
+echo "$response" | jq -r '
+    .data.attributes | 
+    "Malicious: \(.last_analysis_stats.malicious // 0)",
+    "Suspicious: \(.last_analysis_stats.suspicious // 0)",
+    "Harmless: \(.last_analysis_stats.harmless // 0)",
+    "Reputation: \(.reputation // "N/A")"
+' 2>/dev/null || echo "Error parsing response"</code></pre>
+                    </div>
+
+                    <h3>AbuseIPDB Check</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>check_abuseipdb.sh</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>#!/bin/bash
+# Check IP reputation on AbuseIPDB
+
+ABUSEIPDB_KEY="${ABUSEIPDB_KEY:-your_api_key}"
+IP="$1"
+
+if [[ -z "$IP" ]]; then
+    echo "Usage: $0 <ip_address>"
+    exit 1
+fi
+
+response=$(curl -s "https://api.abuseipdb.com/api/v2/check" \
+    -H "Key: $ABUSEIPDB_KEY" \
+    -H "Accept: application/json" \
+    -G --data-urlencode "ipAddress=$IP" \
+    --data "maxAgeInDays=90")
+
+echo "=== AbuseIPDB Results for: $IP ==="
+echo "$response" | jq -r '
+    .data |
+    "Abuse Confidence: \(.abuseConfidenceScore)%",
+    "Total Reports: \(.totalReports)",
+    "Country: \(.countryCode)",
+    "ISP: \(.isp)",
+    "Is Tor: \(.isTor)"
+'</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>One-Liners Reference</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Security One-Liners</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code># Find world-writable files
+find / -type f -perm -o+w 2>/dev/null
+
+# Find files modified in last hour
+find / -type f -mmin -60 2>/dev/null
+
+# List all listening ports with process
+ss -tulpn | grep LISTEN
+
+# Extract IPs from file
+grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' file.log | sort -u
+
+# Count unique IPs in log
+awk '{print $1}' access.log | sort | uniq -c | sort -rn
+
+# Find large files (>100MB)
+find / -type f -size +100M 2>/dev/null
+
+# Check for rootkits (basic)
+find /dev -type f 2>/dev/null
+
+# List users with login shells
+grep -E '/bin/(ba)?sh$' /etc/passwd
+
+# Recent sudo commands
+grep sudo /var/log/auth.log | tail -20
+
+# Base64 decode inline
+echo "dGVzdA==" | base64 -d
+
+# Check SSL certificate expiry
+echo | openssl s_client -connect example.com:443 2>/dev/null | \
+    openssl x509 -noout -dates
+
+# HTTP request with timing
+curl -w "@curl-format.txt" -o /dev/null -s https://example.com</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How would you find all failed SSH login attempts and the source IPs?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <div class="code-block">
+                                <pre><code># Method 1: Simple grep and awk
+grep "Failed password" /var/log/auth.log | \
+    awk '{print $(NF-3)}' | sort | uniq -c | sort -rn
+
+# Method 2: More detailed with timestamp
+grep "Failed password" /var/log/auth.log | \
+    awk '{print $1, $2, $3, $(NF-3), $(NF-5)}' | \
+    column -t
+
+# Method 3: Using journalctl (systemd)
+journalctl -u sshd --since "24 hours ago" | \
+    grep "Failed password" | \
+    grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | \
+    sort | uniq -c | sort -rn</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Write a script to monitor a log file in real-time for a pattern.</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <div class="code-block">
+                                <pre><code>#!/bin/bash
+# Real-time log monitoring with alerting
+
+LOGFILE="${1:-/var/log/auth.log}"
+PATTERN="${2:-Failed password}"
+
+echo "Monitoring $LOGFILE for: $PATTERN"
+echo "Press Ctrl+C to stop"
+
+tail -F "$LOGFILE" 2>/dev/null | while read -r line; do
+    if echo "$line" | grep -q "$PATTERN"; then
+        timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+        echo "[$timestamp] ALERT: $line"
+        
+        # Optional: send notification
+        # curl -X POST "https://slack.webhook/..." -d "{\"text\":\"$line\"}"
+    fi
+done</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="powershell-security.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        PowerShell for Security
+                    </a>
+                    <a href="soar.html" class="nav-link next">
+                        SOAR Platforms
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

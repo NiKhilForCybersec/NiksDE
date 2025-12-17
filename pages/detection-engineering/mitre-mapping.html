@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MITRE ATT&CK Mapping | Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Detection Engineering</h2>
+            <span class="sidebar-subtitle">Mastery Guide</span>
+        </div>
+        <div class="sidebar-search">
+            <input type="text" id="sidebar-search" placeholder="Search topics...">
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="detection">
+                    <span>Detection Engineering</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="detection-items">
+                    <li><a href="fundamentals.html">Detection Fundamentals</a></li>
+                    <li><a href="sentinel-deep-dive.html">Microsoft Sentinel Deep Dive</a></li>
+                    <li><a href="splunk-comparison.html">Splunk Comparison</a></li>
+                    <li><a href="detection-logic.html">Detection Logic Design</a></li>
+                    <li><a href="mitre-mapping.html" class="active">MITRE ATT&CK Mapping</a></li>
+                    <li><a href="use-case-framework.html">Use Case Framework</a></li>
+                    <li><a href="metrics-optimization.html">Metrics & Optimization</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="log-analysis">
+                    <span>Log Analysis</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="log-analysis-items">
+                    <li><a href="../log-analysis/fundamentals.html">Log Analysis Fundamentals</a></li>
+                    <li><a href="../log-analysis/network-logs.html">Network Logs</a></li>
+                    <li><a href="../log-analysis/endpoint-logs.html">Endpoint Logs</a></li>
+                    <li><a href="../log-analysis/cloud-logs.html">Cloud Platform Logs</a></li>
+                    <li><a href="../log-analysis/regex-mastery.html">Regex Mastery</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="threat-intel">
+                    <span>Threat Intelligence</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="threat-intel-items">
+                    <li><a href="../threat-intel/ti-fundamentals.html">TI Fundamentals</a></li>
+                    <li><a href="../threat-intel/ti-sources.html">Intelligence Sources</a></li>
+                    <li><a href="../threat-intel/ioc-management.html">IOC Management</a></li>
+                    <li><a href="../threat-intel/hunting-methodology.html">Hunting Methodology</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="sap">
+                    <span>SAP Security</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="sap-items">
+                    <li><a href="../sap-security/sap-overview.html">SAP Overview</a></li>
+                    <li><a href="../sap-security/sap-architecture.html">SAP Architecture</a></li>
+                    <li><a href="../sap-security/sap-modules.html">Modules & Services</a></li>
+                    <li><a href="../sap-security/security-fundamentals.html">Security Fundamentals</a></li>
+                    <li><a href="../sap-security/log-types.html">SAP Log Types</a></li>
+                    <li><a href="../sap-security/siem-integration.html">SIEM Integration</a></li>
+                    <li><a href="../sap-security/threat-detection.html">Threat Detection</a></li>
+                    <li><a href="../sap-security/compliance.html">Compliance & Audit</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="vuln">
+                    <span>Vulnerability Management</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="vuln-items">
+                    <li><a href="../vulnerability-mgmt/fundamentals.html">VM Fundamentals</a></li>
+                    <li><a href="../vulnerability-mgmt/qualys-deep-dive.html">Qualys Deep Dive</a></li>
+                    <li><a href="../vulnerability-mgmt/tenable-nessus.html">Tenable & Nessus</a></li>
+                    <li><a href="../vulnerability-mgmt/risk-prioritization.html">Risk Prioritization</a></li>
+                    <li><a href="../vulnerability-mgmt/remediation.html">Remediation Workflows</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="cloud">
+                    <span>Cloud Security</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="cloud-items">
+                    <li><a href="../cloud-security/aws-security.html">AWS Security</a></li>
+                    <li><a href="../cloud-security/azure-security.html">Azure Security</a></li>
+                    <li><a href="../cloud-security/gcp-security.html">GCP Security</a></li>
+                    <li><a href="../cloud-security/multi-cloud.html">Multi-Cloud Strategy</a></li>
+                    <li><a href="../cloud-security/cspm-cwpp.html">CSPM & CWPP</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="automation">
+                    <span>Automation & Scripting</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="automation-items">
+                    <li><a href="../automation/python-security.html">Python for Security</a></li>
+                    <li><a href="../automation/powershell-security.html">PowerShell for Security</a></li>
+                    <li><a href="../automation/bash-security.html">Bash for Security</a></li>
+                    <li><a href="../automation/soar-platforms.html">SOAR Platforms</a></li>
+                    <li><a href="../automation/api-integration.html">API Integration</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="compliance">
+                    <span>Compliance & Frameworks</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="compliance-items">
+                    <li><a href="../compliance/framework-overview.html">Framework Overview</a></li>
+                    <li><a href="../compliance/iso-27001.html">ISO 27001</a></li>
+                    <li><a href="../compliance/nist-csf.html">NIST CSF & 800-53</a></li>
+                    <li><a href="../compliance/gdpr.html">GDPR</a></li>
+                    <li><a href="../compliance/documentation.html">Documentation Standards</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="incident">
+                    <span>Incident Response</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="incident-items">
+                    <li><a href="../incident-response/soc-collaboration.html">SOC Collaboration</a></li>
+                    <li><a href="../incident-response/ir-support.html">IR Support Role</a></li>
+                    <li><a href="../incident-response/forensic-requirements.html">Forensic Requirements</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title" data-section="references">
+                    <span>References & Cheat Sheets</span>
+                    <span class="nav-toggle">▼</span>
+                </div>
+                <ul class="nav-items" id="references-items">
+                    <li><a href="../references/kql-cheatsheet.html">KQL Cheat Sheet</a></li>
+                    <li><a href="../references/spl-cheatsheet.html">SPL Cheat Sheet</a></li>
+                    <li><a href="../references/regex-cheatsheet.html">Regex Cheat Sheet</a></li>
+                    <li><a href="../references/windows-events.html">Windows Event IDs</a></li>
+                    <li><a href="../references/mitre-reference.html">MITRE ATT&CK Reference</a></li>
+                    <li><a href="../references/interview-prep.html">Interview Preparation</a></li>
+                </ul>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+        
+        <nav class="breadcrumb">
+            <a href="../../index.html">Home</a> &gt;
+            <a href="fundamentals.html">Detection Engineering</a> &gt;
+            <span>MITRE ATT&CK Mapping</span>
+        </nav>
+
+        <header class="page-header">
+            <h1>MITRE ATT&CK Mapping</h1>
+            <p class="page-subtitle">Aligning detection coverage with adversary behaviors</p>
+        </header>
+
+        <section class="content-section">
+            <h2>Understanding MITRE ATT&CK</h2>
+            <p>MITRE ATT&CK (Adversarial Tactics, Techniques, and Common Knowledge) is a knowledge base of adversary behaviors based on real-world observations. It provides a common language for describing attacks and measuring detection coverage.</p>
+
+            <div class="info-box info">
+                <div class="info-box-header">
+                    <span class="info-icon">ℹ️</span>
+                    <span>ATT&CK Structure</span>
+                </div>
+                <div class="info-box-content">
+                    <p><strong>Tactics:</strong> The adversary's goal (WHY) - 14 tactics from Reconnaissance to Impact</p>
+                    <p><strong>Techniques:</strong> How the goal is achieved (WHAT) - 200+ techniques</p>
+                    <p><strong>Sub-techniques:</strong> Specific implementations (HOW) - 400+ sub-techniques</p>
+                    <p><strong>Procedures:</strong> Real-world examples of technique usage by threat actors</p>
+                </div>
+            </div>
+
+            <h3>The 14 Tactics (Attack Lifecycle)</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Tactic</th>
+                        <th>ID</th>
+                        <th>Description</th>
+                        <th>Detection Focus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Reconnaissance</strong></td>
+                        <td>TA0043</td>
+                        <td>Gathering information for planning</td>
+                        <td>External scanning, social engineering</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Resource Development</strong></td>
+                        <td>TA0042</td>
+                        <td>Establishing resources for attack</td>
+                        <td>Infrastructure, accounts, tools</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Initial Access</strong></td>
+                        <td>TA0001</td>
+                        <td>Getting into the network</td>
+                        <td>Phishing, exploits, valid accounts</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Execution</strong></td>
+                        <td>TA0002</td>
+                        <td>Running malicious code</td>
+                        <td>Script execution, command-line</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Persistence</strong></td>
+                        <td>TA0003</td>
+                        <td>Maintaining foothold</td>
+                        <td>Registry, scheduled tasks, services</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Privilege Escalation</strong></td>
+                        <td>TA0004</td>
+                        <td>Gaining higher permissions</td>
+                        <td>Token manipulation, exploits</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Defense Evasion</strong></td>
+                        <td>TA0005</td>
+                        <td>Avoiding detection</td>
+                        <td>Obfuscation, disabling security</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Credential Access</strong></td>
+                        <td>TA0006</td>
+                        <td>Stealing credentials</td>
+                        <td>LSASS, Kerberos, credential stores</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Discovery</strong></td>
+                        <td>TA0007</td>
+                        <td>Learning the environment</td>
+                        <td>Enumeration commands, AD queries</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lateral Movement</strong></td>
+                        <td>TA0008</td>
+                        <td>Moving through network</td>
+                        <td>Remote services, pass-the-hash</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Collection</strong></td>
+                        <td>TA0009</td>
+                        <td>Gathering target data</td>
+                        <td>Data staging, clipboard, email</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Command & Control</strong></td>
+                        <td>TA0011</td>
+                        <td>Communicating with compromised systems</td>
+                        <td>Beaconing, encoded channels</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Exfiltration</strong></td>
+                        <td>TA0010</td>
+                        <td>Stealing data</td>
+                        <td>Data transfers, compression</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Impact</strong></td>
+                        <td>TA0040</td>
+                        <td>Disrupting operations</td>
+                        <td>Encryption, destruction, defacement</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section">
+            <h2>High-Priority Techniques for Detection</h2>
+            <p>Based on prevalence in real attacks and detection feasibility, these techniques should be prioritized for coverage.</p>
+
+            <h3>Initial Access (TA0001)</h3>
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">T1566.001 - Spearphishing Attachment</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Detect execution of files from email attachments
+let SuspiciousExtensions = dynamic(["exe", "dll", "ps1", "bat", "vbs", "js", "hta", "scr"]);
+EmailAttachmentInfo
+| where TimeGenerated > ago(1d)
+| where FileType has_any (SuspiciousExtensions)
+| join kind=inner (
+    DeviceFileEvents
+    | where ActionType == "FileCreated"
+    | where FolderPath has_any ("Downloads", "Temp", "AppData")
+    | project FileTime = TimeGenerated, DeviceName, FileName, FolderPath, SHA256
+) on $left.SHA256 == $right.SHA256
+| join kind=inner (
+    DeviceProcessEvents
+    | project ProcessTime = TimeGenerated, DeviceName, 
+        ProcessName = FileName, ProcessCommandLine, SHA256
+) on $left.SHA256 == $right.SHA256
+| project
+    EmailReceived = TimeGenerated,
+    FileCreated = FileTime,
+    ProcessExecuted = ProcessTime,
+    RecipientEmailAddress,
+    SenderFromAddress,
+    AttachmentName = FileName,
+    DeviceName,
+    ProcessCommandLine
+| extend MITRETechnique = "T1566.001 - Spearphishing Attachment"</code></pre>
+            </div>
+
+            <h3>Execution (TA0002)</h3>
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">T1059.001 - PowerShell Execution</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Detect suspicious PowerShell execution patterns
+DeviceProcessEvents
+| where FileName in~ ("powershell.exe", "pwsh.exe")
+| extend 
+    IsEncoded = ProcessCommandLine has_any ("-enc", "-encoded", "-e "),
+    IsHidden = ProcessCommandLine has_any ("-w hidden", "-windowstyle h"),
+    HasDownload = ProcessCommandLine has_any 
+        ("DownloadString", "DownloadFile", "Invoke-WebRequest", "wget", "curl"),
+    HasIEX = ProcessCommandLine has_any 
+        ("IEX", "Invoke-Expression", "Invoke-Command"),
+    HasBypass = ProcessCommandLine has_any 
+        ("-ep bypass", "bypass", "-executionpolicy"),
+    FromSuspiciousParent = InitiatingProcessFileName in~ 
+        ("winword.exe", "excel.exe", "outlook.exe", "mshta.exe")
+| where IsEncoded or IsHidden or HasDownload or HasIEX or HasBypass or FromSuspiciousParent
+| extend 
+    RiskScore = (toint(IsEncoded) * 2) + toint(IsHidden) + 
+        (toint(HasDownload) * 3) + (toint(HasIEX) * 2) + 
+        toint(HasBypass) + (toint(FromSuspiciousParent) * 3),
+    MITRETechnique = "T1059.001 - PowerShell"
+| where RiskScore >= 3
+| project
+    TimeGenerated, DeviceName, AccountName,
+    ProcessCommandLine, RiskScore, MITRETechnique,
+    InitiatingProcessFileName</code></pre>
+            </div>
+
+            <h3>Persistence (TA0003)</h3>
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">T1547.001 - Registry Run Keys</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Detect persistence via registry run keys
+let RunKeyPaths = dynamic([
+    @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run",
+    @"SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce",
+    @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run",
+    @"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run"
+]);
+DeviceRegistryEvents
+| where ActionType in ("RegistryValueSet", "RegistryKeyCreated")
+| where RegistryKey has_any (RunKeyPaths)
+| extend RegistryValue = tostring(RegistryValueData)
+| where isnotempty(RegistryValue)
+// Filter known good entries
+| where not(RegistryValue has_any (
+    "C:\\Program Files", 
+    "C:\\Windows\\System32",
+    "SecurityHealth"
+))
+// Flag high-risk patterns
+| extend 
+    PointsToTemp = RegistryValue has_any ("\\Temp\\", "\\AppData\\Local\\Temp"),
+    PointsToAppData = RegistryValue has "\\AppData\\Roaming",
+    HasScript = RegistryValue has_any (".ps1", ".vbs", ".bat", ".js"),
+    HasPowerShell = RegistryValue has_any ("powershell", "pwsh"),
+    EncodedCommand = RegistryValue has_any ("-enc", "-encoded")
+| extend 
+    RiskLevel = case(
+        EncodedCommand, "Critical",
+        HasScript or HasPowerShell, "High",
+        PointsToTemp, "High",
+        PointsToAppData, "Medium",
+        "Low"
+    ),
+    MITRETechnique = "T1547.001 - Registry Run Keys / Startup Folder"
+| where RiskLevel in ("Critical", "High", "Medium")
+| project
+    TimeGenerated, DeviceName, AccountName,
+    RegistryKey, RegistryValueName, RegistryValue,
+    RiskLevel, MITRETechnique</code></pre>
+            </div>
+
+            <h3>Credential Access (TA0006)</h3>
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">T1003.001 - LSASS Memory Dumping</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Detect LSASS credential dumping attempts
+// Method 1: Process accessing LSASS
+let LsassAccess = DeviceProcessEvents
+| where FileName =~ "lsass.exe"
+| where ActionType == "ProcessAccessed"
+| where InitiatingProcessFileName !in~ (
+    "MsMpEng.exe", "csrss.exe", "svchost.exe", 
+    "wininit.exe", "services.exe", "lsm.exe"
+)
+| extend Method = "Direct LSASS Access";
+// Method 2: Known dump tools
+let DumpTools = DeviceProcessEvents
+| where FileName in~ (
+    "procdump.exe", "procdump64.exe",
+    "sqldumper.exe", "comsvcs.dll",
+    "mimikatz.exe", "pypykatz.exe"
+) or ProcessCommandLine has_any (
+    "sekurlsa", "logonpasswords", "lsadump",
+    "comsvcs.dll MiniDump", "procdump -ma lsass"
+)
+| extend Method = "Known Dump Tool";
+// Method 3: Suspicious minidump creation
+let MiniDumps = DeviceFileEvents
+| where ActionType == "FileCreated"
+| where FileName endswith ".dmp"
+| where FolderPath has_any ("\\Temp\\", "\\AppData\\")
+| extend Method = "Suspicious DMP File";
+// Combine all methods
+union LsassAccess, DumpTools
+| project
+    TimeGenerated, DeviceName, AccountName,
+    ProcessName = FileName, ProcessCommandLine,
+    Method, 
+    MITRETechnique = "T1003.001 - LSASS Memory"</code></pre>
+            </div>
+
+            <h3>Lateral Movement (TA0008)</h3>
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">T1021.002 - SMB/Windows Admin Shares</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Detect lateral movement via admin shares
+DeviceNetworkEvents
+| where RemotePort == 445
+| where ActionType == "ConnectionSuccess"
+| where LocalIP != RemoteIP
+// Focus on internal-to-internal
+| where RemoteIP startswith "10." or RemoteIP startswith "192.168." 
+    or RemoteIP startswith "172."
+| summarize 
+    ConnectionCount = count(),
+    UniqueTargets = dcount(RemoteIP),
+    TargetList = make_set(RemoteIP, 10),
+    FirstConnection = min(TimeGenerated),
+    LastConnection = max(TimeGenerated)
+    by DeviceName, AccountName = InitiatingProcessAccountName,
+       SourceProcess = InitiatingProcessFileName,
+       bin(TimeGenerated, 1h)
+// Alert on suspicious patterns
+| where UniqueTargets > 5 or ConnectionCount > 20
+| extend 
+    SuspicionReason = case(
+        UniqueTargets > 10, "High number of unique targets",
+        ConnectionCount > 50, "Excessive connection volume",
+        "Multiple admin share connections"
+    ),
+    MITRETechnique = "T1021.002 - SMB/Windows Admin Shares"
+| project
+    TimeGenerated, DeviceName, AccountName,
+    SourceProcess, UniqueTargets, ConnectionCount,
+    TargetList, SuspicionReason, MITRETechnique</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Coverage Assessment</h2>
+            <p>Regularly assess your detection coverage against the ATT&CK framework to identify gaps and prioritize development.</p>
+
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">Detection Coverage Heatmap Query</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Build detection coverage matrix
+// Step 1: Define your detection rules with MITRE mappings
+let DetectionRules = datatable(
+    RuleName: string, TechniqueID: string, 
+    Enabled: bool, LastTriggered: datetime
+) [
+    "PowerShell Encoded Command", "T1059.001", true, datetime(2024-06-15),
+    "Registry Run Key Persistence", "T1547.001", true, datetime(2024-06-10),
+    "LSASS Access Detection", "T1003.001", true, datetime(2024-06-12),
+    "Suspicious SMB Traffic", "T1021.002", true, datetime(2024-06-08),
+    "Scheduled Task Creation", "T1053.005", true, datetime(2024-06-14),
+    "WMI Process Creation", "T1047", true, datetime(2024-06-11),
+    "Pass-the-Hash Detection", "T1550.002", false, datetime(null),
+    "Kerberoasting", "T1558.003", true, datetime(2024-05-20)
+];
+// Step 2: Priority techniques by tactic
+let PriorityTechniques = datatable(
+    TechniqueID: string, TechniqueName: string, 
+    Tactic: string, Priority: string
+) [
+    "T1059.001", "PowerShell", "Execution", "Critical",
+    "T1059.003", "Windows Command Shell", "Execution", "High",
+    "T1547.001", "Registry Run Keys", "Persistence", "Critical",
+    "T1053.005", "Scheduled Task", "Persistence", "High",
+    "T1003.001", "LSASS Memory", "Credential Access", "Critical",
+    "T1558.003", "Kerberoasting", "Credential Access", "High",
+    "T1021.002", "SMB Admin Shares", "Lateral Movement", "Critical",
+    "T1550.002", "Pass-the-Hash", "Lateral Movement", "Critical",
+    "T1047", "WMI", "Execution", "High",
+    "T1566.001", "Spearphishing Attachment", "Initial Access", "Critical"
+];
+// Step 3: Calculate coverage
+PriorityTechniques
+| join kind=leftouter DetectionRules on TechniqueID
+| extend 
+    CoverageStatus = case(
+        isempty(RuleName), "No Coverage",
+        Enabled == false, "Disabled",
+        "Covered"
+    ),
+    DaysSinceTriggered = datetime_diff('day', now(), LastTriggered)
+| summarize 
+    TotalTechniques = count(),
+    Covered = countif(CoverageStatus == "Covered"),
+    NoCoverage = countif(CoverageStatus == "No Coverage"),
+    Disabled = countif(CoverageStatus == "Disabled")
+    by Tactic
+| extend CoveragePercent = round(100.0 * Covered / TotalTechniques, 1)
+| order by CoveragePercent asc</code></pre>
+            </div>
+
+            <h3>Coverage Matrix Visualization</h3>
+            <div class="info-box tip">
+                <div class="info-box-header">
+                    <span class="info-icon">💡</span>
+                    <span>ATT&CK Navigator</span>
+                </div>
+                <div class="info-box-content">
+                    <p>Use the <a href="https://mitre-attack.github.io/attack-navigator/" target="_blank">MITRE ATT&CK Navigator</a> to visualize your coverage. Export your detection mappings as a JSON layer to overlay on the matrix and identify gaps visually.</p>
+                </div>
+            </div>
+
+            <div class="code-block" data-language="json">
+                <div class="code-header">
+                    <span class="code-lang">JSON</span>
+                    <span class="code-title">ATT&CK Navigator Layer Export</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>{
+    "name": "Detection Coverage Layer",
+    "versions": {
+        "attack": "14",
+        "navigator": "4.9.1",
+        "layer": "4.5"
+    },
+    "domain": "enterprise-attack",
+    "description": "Organization detection rule coverage",
+    "filters": {
+        "platforms": ["Windows", "Azure AD", "Office 365"]
+    },
+    "gradient": {
+        "colors": ["#ff6666", "#ffeb3b", "#8bc34a"],
+        "minValue": 0,
+        "maxValue": 100
+    },
+    "techniques": [
+        {
+            "techniqueID": "T1059.001",
+            "score": 100,
+            "color": "#8bc34a",
+            "comment": "Covered by 3 rules",
+            "enabled": true
+        },
+        {
+            "techniqueID": "T1003.001", 
+            "score": 75,
+            "color": "#cddc39",
+            "comment": "Partial coverage - needs tuning",
+            "enabled": true
+        },
+        {
+            "techniqueID": "T1550.002",
+            "score": 0,
+            "color": "#ff6666", 
+            "comment": "GAP - No detection rule",
+            "enabled": true
+        }
+    ]
+}</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Detection by Data Source</h2>
+            <p>Understanding which data sources enable detection of specific techniques helps prioritize log collection.</p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Data Source</th>
+                        <th>Key Tactics Covered</th>
+                        <th>Example Techniques</th>
+                        <th>Sentinel Table</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Process Events</strong></td>
+                        <td>Execution, Defense Evasion</td>
+                        <td>T1059, T1218, T1055</td>
+                        <td>DeviceProcessEvents</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Registry Events</strong></td>
+                        <td>Persistence, Defense Evasion</td>
+                        <td>T1547, T1112, T1562</td>
+                        <td>DeviceRegistryEvents</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Network Connections</strong></td>
+                        <td>C2, Lateral Movement, Exfiltration</td>
+                        <td>T1071, T1021, T1048</td>
+                        <td>DeviceNetworkEvents</td>
+                    </tr>
+                    <tr>
+                        <td><strong>File Events</strong></td>
+                        <td>Execution, Collection, Impact</td>
+                        <td>T1566, T1074, T1486</td>
+                        <td>DeviceFileEvents</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Authentication Logs</strong></td>
+                        <td>Initial Access, Credential Access</td>
+                        <td>T1078, T1110, T1558</td>
+                        <td>SigninLogs, SecurityEvent</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PowerShell Logs</strong></td>
+                        <td>Execution, Defense Evasion</td>
+                        <td>T1059.001, T1027</td>
+                        <td>DeviceEvents (PS logging)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section">
+            <h2>Building a Detection Roadmap</h2>
+            
+            <h3>Prioritization Framework</h3>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h4 class="sentinel-color">Priority 1: Critical</h4>
+                    <ul>
+                        <li>Techniques used by active threat actors targeting your industry</li>
+                        <li>High-impact techniques (ransomware, data exfiltration)</li>
+                        <li>Techniques with high detection feasibility</li>
+                        <li>Required by compliance frameworks</li>
+                    </ul>
+                </div>
+                <div class="comparison-card">
+                    <h4 style="color: #fbbf24;">Priority 2: High</h4>
+                    <ul>
+                        <li>Common techniques across multiple threat actors</li>
+                        <li>Techniques enabling lateral movement</li>
+                        <li>Credential theft techniques</li>
+                        <li>Persistence mechanisms</li>
+                    </ul>
+                </div>
+                <div class="comparison-card">
+                    <h4 style="color: #10b981;">Priority 3: Medium</h4>
+                    <ul>
+                        <li>Less common but impactful techniques</li>
+                        <li>Techniques requiring specialized data sources</li>
+                        <li>Discovery and enumeration activities</li>
+                        <li>Defense evasion variants</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Gap Analysis Process</h3>
+            <div class="code-block" data-language="kql">
+                <div class="code-header">
+                    <span class="code-lang">KQL</span>
+                    <span class="code-title">Identify Detection Gaps</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code>// Analyze which techniques triggered alerts vs which are silent
+let AlertedTechniques = SecurityAlert
+| where TimeGenerated > ago(90d)
+| extend Techniques = extract_all(@"T\d{4}(\.\d{3})?", tostring(ExtendedProperties))
+| mv-expand Technique = Techniques
+| summarize 
+    AlertCount = count(),
+    LastAlert = max(TimeGenerated)
+    by TechniqueID = tostring(Technique);
+let AllConfiguredTechniques = datatable(TechniqueID: string, RuleName: string) [
+    "T1059.001", "PowerShell Detection",
+    "T1547.001", "Registry Persistence",
+    "T1003.001", "LSASS Dumping",
+    "T1021.002", "SMB Lateral Movement",
+    "T1078", "Valid Accounts",
+    // Add all your configured rules
+];
+AllConfiguredTechniques
+| join kind=leftouter AlertedTechniques on TechniqueID
+| extend 
+    Status = case(
+        isempty(AlertCount), "Never Triggered - Review Rule",
+        AlertCount < 5, "Low Activity - May Need Tuning",
+        AlertCount > 100, "High Volume - Check for FPs",
+        "Active"
+    ),
+    DaysSinceLastAlert = datetime_diff('day', now(), LastAlert)
+| project TechniqueID, RuleName, AlertCount, DaysSinceLastAlert, Status</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Interview Preparation</h2>
+            <div class="expandable-section">
+                <button class="expandable-header">
+                    <span>Common Interview Questions</span>
+                    <span class="expand-icon">+</span>
+                </button>
+                <div class="expandable-content">
+                    <div class="qa-item">
+                        <p class="qa-question">Q: How do you use MITRE ATT&CK in your detection engineering work?</p>
+                        <p class="qa-answer">A: I use ATT&CK as both a design framework and measurement tool. For design, I map threat intelligence about relevant adversaries to ATT&CK techniques, then build detections targeting those specific TTPs. For measurement, I maintain a coverage matrix showing which techniques have active detections, identify gaps, and prioritize development. I also use ATT&CK IDs in alert metadata to provide analysts with context about what attack phase they're investigating.</p>
+                    </div>
+                    <div class="qa-item">
+                        <p class="qa-question">Q: How do you prioritize which ATT&CK techniques to detect?</p>
+                        <p class="qa-answer">A: I use a risk-based approach: 1) Threat intelligence - which techniques are used by actors targeting our industry, 2) Impact - techniques enabling ransomware, data theft, or critical disruption, 3) Detection feasibility - do we have the required data sources and can we detect with acceptable FP rates, 4) Coverage gaps - techniques with no current detection, 5) Compliance requirements. I focus first on high-impact, high-feasibility techniques used by relevant threat actors.</p>
+                    </div>
+                    <div class="qa-item">
+                        <p class="qa-question">Q: What's the difference between a technique and a sub-technique?</p>
+                        <p class="qa-answer">A: A technique describes WHAT the adversary does (e.g., T1059 Command and Scripting Interpreter), while sub-techniques describe HOW specifically they do it (e.g., T1059.001 PowerShell, T1059.003 Windows Command Shell). Sub-techniques provide more granular detection opportunities - you might have different detections for PowerShell vs cmd.exe even though both are command interpreters. Sub-techniques were introduced in ATT&CK v7 to better organize the growing technique catalog.</p>
+                    </div>
+                    <div class="qa-item">
+                        <p class="qa-question">Q: How do you measure detection coverage?</p>
+                        <p class="qa-answer">A: I measure coverage at multiple levels: 1) Technique coverage - percentage of priority techniques with at least one detection rule, 2) Detection depth - multiple rules per technique using different data sources for defense in depth, 3) Alert effectiveness - techniques that actually generate alerts vs silent rules, 4) MTTR by technique - how quickly we detect and respond to specific TTPs, 5) Red team validation - testing coverage with simulated attacks. I visualize this using ATT&CK Navigator layers.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="page-navigation">
+            <a href="detection-logic.html" class="nav-prev">← Detection Logic Design</a>
+            <a href="use-case-framework.html" class="nav-next">Use Case Framework →</a>
+        </div>
+    </main>
+
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

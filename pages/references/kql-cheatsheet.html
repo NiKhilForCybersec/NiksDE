@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KQL Cheat Sheet | Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <div class="logo-icon">DE</div>
+                    <span class="logo-text">Detection Engineering</span>
+                </div>
+                <button class="sidebar-toggle" aria-label="Toggle Sidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="sidebar-search">
+                <input type="text" class="search-input" placeholder="Search topics...">
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section" data-section="home">
+                    <a href="../../index.html" class="nav-section-header" style="text-decoration: none;">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                            <span>Home</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="nav-section" data-section="detection">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                            <span>Detection Engineering</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../detection-engineering/fundamentals.html" class="nav-item">Detection Fundamentals</a>
+                        <a href="../detection-engineering/sentinel-deep-dive.html" class="nav-item">Microsoft Sentinel Deep Dive</a>
+                        <a href="../detection-engineering/splunk-comparison.html" class="nav-item">Splunk Comparison</a>
+                    </div>
+                </div>
+
+                <div class="nav-section" data-section="sap">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            <span>SAP Security</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../sap-security/sap-overview.html" class="nav-item">What is SAP?</a>
+                        <a href="../sap-security/architecture.html" class="nav-item">SAP Architecture</a>
+                        <a href="../sap-security/threat-detection.html" class="nav-item">Threat Detection</a>
+                    </div>
+                </div>
+
+                <div class="nav-section active expanded" data-section="reference">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                            <span>Quick Reference</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="kql-cheatsheet.html" class="nav-item active">KQL Cheat Sheet</a>
+                        <a href="spl-cheatsheet.html" class="nav-item">SPL Cheat Sheet</a>
+                        <a href="windows-events.html" class="nav-item">Windows Event IDs</a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="breadcrumb">
+                    <a href="../../index.html" class="breadcrumb-item">Home</a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-item">Quick Reference</span>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-item active">KQL Cheat Sheet</span>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <h1>KQL Cheat Sheet</h1>
+                <p style="font-size: 1.125rem; color: var(--text-secondary); max-width: 800px;">
+                    Comprehensive Kusto Query Language reference for Microsoft Sentinel and Log Analytics. 
+                    Copy-paste ready examples for detection engineering.
+                </p>
+
+                <!-- Table of Contents -->
+                <div class="info-box info">
+                    <strong>Quick Navigation:</strong>
+                    <a href="#basics">Basics</a> |
+                    <a href="#filtering">Filtering</a> |
+                    <a href="#aggregation">Aggregation</a> |
+                    <a href="#joins">Joins</a> |
+                    <a href="#time">Time Functions</a> |
+                    <a href="#string">String Functions</a> |
+                    <a href="#parsing">Parsing</a> |
+                    <a href="#detection">Detection Patterns</a>
+                </div>
+
+                <!-- Basics -->
+                <h2 id="basics">Query Basics</h2>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Fundamental Operators</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Basic table query
+SecurityEvent
+
+// Filter with where
+SecurityEvent
+| where EventID == 4625
+
+// Multiple conditions (AND)
+SecurityEvent
+| where EventID == 4625
+| where TimeGenerated > ago(24h)
+
+// OR conditions
+SecurityEvent
+| where EventID == 4625 or EventID == 4624
+
+// Select specific columns
+SecurityEvent
+| project TimeGenerated, Computer, Account, EventID
+
+// Rename columns
+SecurityEvent
+| project Time = TimeGenerated, Host = Computer, User = Account
+
+// Add new columns
+SecurityEvent
+| extend DayOfWeek = dayofweek(TimeGenerated)
+
+// Sort results
+SecurityEvent
+| sort by TimeGenerated desc
+
+// Limit results
+SecurityEvent
+| take 100
+
+// Count total rows
+SecurityEvent
+| count
+
+// Distinct values
+SecurityEvent
+| distinct Computer</code></pre>
+                </div>
+
+                <!-- Filtering -->
+                <h2 id="filtering">Filtering Operators</h2>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Comparison Operators</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Equality
+| where EventID == 4625
+| where EventID != 4625
+
+// Numeric comparisons
+| where Severity >= 4
+| where BytesSent > 1000000
+
+// String equality (case-sensitive by default)
+| where Account == "admin"
+
+// Case-insensitive equality
+| where Account =~ "admin"
+
+// Contains (case-sensitive)
+| where CommandLine contains "mimikatz"
+
+// Contains (case-insensitive)
+| where CommandLine contains_cs "MIMIKATZ"
+
+// Has - word boundary match (faster than contains)
+| where CommandLine has "powershell"
+
+// Has any - match any value
+| where ProcessName has_any ("cmd.exe", "powershell.exe", "wscript.exe")
+
+// Starts with / Ends with
+| where Account startswith "svc_"
+| where FileName endswith ".exe"
+
+// In list
+| where EventID in (4624, 4625, 4648)
+| where Account !in ("SYSTEM", "LOCAL SERVICE")
+
+// Between
+| where TimeGenerated between (datetime(2024-01-01) .. datetime(2024-01-31))
+
+// Is null / Is not null
+| where isnotnull(SourceIP)
+| where isempty(UserPrincipalName)</code></pre>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Regex Matching</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Regex match
+| where CommandLine matches regex @"(?i)invoke-.*expression"
+
+// Extract with regex
+| extend Domain = extract(@"@(.+)$", 1, UserPrincipalName)
+
+// IP address pattern
+| where SourceIP matches regex @"^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$"
+
+// Common patterns
+| where Email matches regex @"^[\w\.-]+@[\w\.-]+\.\w{2,}$"
+| where Hash matches regex @"^[a-fA-F0-9]{64}$"  // SHA256</code></pre>
+                </div>
+
+                <!-- Aggregation -->
+                <h2 id="aggregation">Aggregation Functions</h2>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Summarize Operator</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Count by field
+SecurityEvent
+| summarize count() by Computer
+
+// Multiple aggregations
+SecurityEvent
+| summarize 
+    TotalEvents = count(),
+    UniqueUsers = dcount(Account),
+    FirstEvent = min(TimeGenerated),
+    LastEvent = max(TimeGenerated)
+    by Computer
+
+// Count distinct
+| summarize dcount(UserPrincipalName) by SourceIP
+
+// Make a set (unique values as array)
+| summarize Accounts = make_set(Account) by Computer
+
+// Make a list (all values as array)
+| summarize AllEvents = make_list(EventID) by Computer
+
+// Percentiles
+| summarize 
+    p50 = percentile(ResponseTime, 50),
+    p95 = percentile(ResponseTime, 95),
+    p99 = percentile(ResponseTime, 99)
+
+// Standard deviation
+| summarize avg(BytesSent), stdev(BytesSent) by Computer
+
+// Arg_max - row with max value
+| summarize arg_max(TimeGenerated, *) by Computer
+
+// Arg_min - row with min value  
+| summarize arg_min(TimeGenerated, *) by Account</code></pre>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Time-Based Aggregation</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Time buckets (like timechart)
+SecurityEvent
+| summarize count() by bin(TimeGenerated, 1h)
+| render timechart
+
+// Multiple series
+SigninLogs
+| summarize 
+    Successful = countif(ResultType == "0"),
+    Failed = countif(ResultType != "0")
+    by bin(TimeGenerated, 1h)
+| render timechart
+
+// Count per day
+| summarize DailyCount = count() by bin(TimeGenerated, 1d)
+
+// Events per minute (for spike detection)
+| summarize EventsPerMinute = count() by bin(TimeGenerated, 1m)
+| where EventsPerMinute > 100
+
+// Rolling window (previous hour from each event)
+SecurityEvent
+| serialize 
+| extend PreviousHourEvents = row_cumsum(1) - prev(row_cumsum(1), 60)</code></pre>
+                </div>
+
+                <!-- Joins -->
+                <h2 id="joins">Join Operations</h2>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Join Types</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Inner join (default) - only matching rows
+SecurityEvent
+| where EventID == 4624
+| join kind=inner (
+    SecurityEvent
+    | where EventID == 4625
+    | project FailedIP = IpAddress, FailedAccount = Account
+) on $left.IpAddress == $right.FailedIP
+
+// Left outer join - all from left, matching from right
+SigninLogs
+| join kind=leftouter (
+    IdentityInfo
+    | project UserPrincipalName, Department, Manager
+) on UserPrincipalName
+
+// Anti join - rows in left NOT in right
+SecurityEvent
+| where EventID == 4624
+| join kind=leftanti (
+    _GetWatchlist('Approved_Admins')
+    | project Account = SearchKey
+) on Account
+
+// Semi join - rows in left that HAVE match in right
+SigninLogs
+| where RiskLevelDuringSignIn != "none"
+| join kind=leftsemi (
+    _GetWatchlist('VIP_Users')
+) on $left.UserPrincipalName == $right.SearchKey
+
+// Union - combine tables
+SecurityEvent
+| where EventID == 4625
+| union (
+    SigninLogs
+    | where ResultType != "0"
+)</code></pre>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Join with Watchlists</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Get watchlist as table
+let VIPUsers = _GetWatchlist('VIP_Users')
+    | project UserPrincipalName = SearchKey;
+
+// Filter using watchlist
+SigninLogs
+| where UserPrincipalName in (VIPUsers)
+
+// Enrich with watchlist data
+let AssetInfo = _GetWatchlist('Critical_Assets')
+    | project Computer = SearchKey, Criticality, Owner;
+SecurityEvent
+| join kind=leftouter (AssetInfo) on Computer
+| extend AlertPriority = case(
+    Criticality == "High", "P1",
+    Criticality == "Medium", "P2",
+    "P3"
+)</code></pre>
+                </div>
+
+                <!-- Time Functions -->
+                <h2 id="time">Time Functions</h2>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Time Operations</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Relative time
+| where TimeGenerated > ago(24h)
+| where TimeGenerated > ago(7d)
+| where TimeGenerated > ago(30m)
+
+// Specific datetime
+| where TimeGenerated > datetime(2024-01-15)
+| where TimeGenerated between (datetime(2024-01-01) .. datetime(2024-01-31))
+
+// Time arithmetic
+| extend HoursSinceEvent = datetime_diff('hour', now(), TimeGenerated)
+| extend DaysSinceEvent = datetime_diff('day', now(), TimeGenerated)
+
+// Extract time components
+| extend 
+    Hour = hourofday(TimeGenerated),
+    DayOfWeek = dayofweek(TimeGenerated),
+    Month = monthofyear(TimeGenerated),
+    WeekOfYear = weekofyear(TimeGenerated)
+
+// Format datetime
+| extend FormattedTime = format_datetime(TimeGenerated, 'yyyy-MM-dd HH:mm:ss')
+
+// Business hours filter (9 AM - 5 PM, Mon-Fri)
+| where hourofday(TimeGenerated) between (9 .. 17)
+| where dayofweek(TimeGenerated) between (1d .. 5d)
+
+// Outside business hours
+| where hourofday(TimeGenerated) < 9 or hourofday(TimeGenerated) > 17
+    or dayofweek(TimeGenerated) in (0d, 6d)
+
+// Start of day/week/month
+| extend StartOfDay = startofday(TimeGenerated)
+| extend StartOfWeek = startofweek(TimeGenerated)
+| extend StartOfMonth = startofmonth(TimeGenerated)</code></pre>
+                </div>
+
+                <!-- String Functions -->
+                <h2 id="string">String Functions</h2>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">String Manipulation</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// String concatenation
+| extend FullName = strcat(FirstName, " ", LastName)
+| extend Message = strcat("Alert: ", Title, " on ", Computer)
+
+// Split string
+| extend Parts = split(UserPrincipalName, "@")
+| extend Username = tostring(Parts[0])
+| extend Domain = tostring(Parts[1])
+
+// Substring
+| extend First10Chars = substring(CommandLine, 0, 10)
+
+// Replace
+| extend CleanPath = replace_string(FilePath, "\\", "/")
+| extend Masked = replace_regex(Email, @"@.+", "@***.***")
+
+// Trim whitespace
+| extend CleanAccount = trim(" ", Account)
+
+// Case conversion
+| extend LowerAccount = tolower(Account)
+| extend UpperAccount = toupper(Account)
+
+// String length
+| extend CmdLength = strlen(CommandLine)
+
+// Reverse (useful for file extension extraction)
+| extend Reversed = reverse(FileName)
+
+// Index of
+| extend AtPosition = indexof(Email, "@")
+
+// Pad strings
+| extend PaddedID = format_ipv4(IpAddress)
+
+// URL decode
+| extend DecodedUrl = url_decode(RequestUrl)
+
+// Base64 decode
+| extend DecodedCmd = base64_decode_tostring(EncodedCommand)</code></pre>
+                </div>
+
+                <!-- Parsing -->
+                <h2 id="parsing">Parsing & Data Extraction</h2>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Parse Operators</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Parse with pattern
+Syslog
+| parse SyslogMessage with * "user=" User " " * "src=" SourceIP " " *
+
+// Parse with regex
+| parse kind=regex CommandLine with * @"(?i)-encodedcommand\s+(?<EncodedCmd>\S+)" *
+
+// Parse JSON
+| extend ParsedJson = parse_json(AdditionalData)
+| extend Value = ParsedJson.key
+
+// Parse key-value pairs
+| parse-kv CommandLine as (user:string, host:string) with (pair_delimiter=' ', kv_delimiter='=')
+
+// Parse CSV
+| extend CsvParts = parse_csv(CsvField)
+| extend Field1 = tostring(CsvParts[0])
+
+// Parse URL
+| extend ParsedUrl = parse_url(RequestUrl)
+| extend Host = tostring(ParsedUrl.Host)
+| extend Path = tostring(ParsedUrl.Path)
+| extend QueryParams = tostring(ParsedUrl.Query Parameters)
+
+// Parse path
+| extend ParsedPath = parse_path(FilePath)
+| extend FileName = tostring(ParsedPath.Filename)
+| extend Directory = tostring(ParsedPath.DirectoryPath)
+
+// Parse user agent
+| extend ParsedUA = parse_user_agent(UserAgent, "browser")
+| extend Browser = tostring(ParsedUA.Browser.Family)
+
+// Extract with regex
+| extend Domain = extract(@"@(.+)$", 1, Email)
+| extend FileExt = extract(@"\.(\w+)$", 1, FileName)</code></pre>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">JSON Handling</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Parse JSON string to dynamic
+| extend Parsed = parse_json(JsonColumn)
+
+// Access nested properties
+| extend Value = Parsed.level1.level2.value
+
+// Access array elements
+| extend FirstItem = Parsed.array[0]
+
+// Expand arrays (one row per element)
+| mv-expand Parsed.items
+
+// Extract all keys
+| extend Keys = bag_keys(Parsed)
+
+// Check if property exists
+| where isnotnull(Parsed.specificKey)
+
+// Convert dynamic to string
+| extend StringValue = tostring(Parsed.key)
+
+// Convert dynamic to int
+| extend IntValue = toint(Parsed.number)
+
+// Pack into JSON
+| extend NewJson = pack("key1", Value1, "key2", Value2)
+
+// Remove property from JSON
+| extend CleanJson = bag_remove_keys(Parsed, dynamic(["sensitiveKey"]))</code></pre>
+                </div>
+
+                <!-- Detection Patterns -->
+                <h2 id="detection">Detection Patterns</h2>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Brute Force Detection</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Brute force - multiple failed logins then success
+let FailedLogins = SigninLogs
+| where TimeGenerated > ago(1h)
+| where ResultType != "0"
+| summarize 
+    FailedCount = count(),
+    FailedTimes = make_list(TimeGenerated)
+    by UserPrincipalName, IPAddress;
+let SuccessfulLogins = SigninLogs
+| where TimeGenerated > ago(1h)
+| where ResultType == "0"
+| project UserPrincipalName, IPAddress, SuccessTime = TimeGenerated;
+FailedLogins
+| where FailedCount >= 5
+| join kind=inner (SuccessfulLogins) on UserPrincipalName, IPAddress
+| where SuccessTime > todatetime(FailedTimes[-1])
+| project 
+    UserPrincipalName, IPAddress, FailedCount,
+    TimeToSuccess = datetime_diff('minute', SuccessTime, todatetime(FailedTimes[0]))</code></pre>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Anomaly Detection - Baseline Deviation</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Detect anomalous data transfer
+let Baseline = CommonSecurityLog
+| where TimeGenerated between (ago(14d) .. ago(1d))
+| where DeviceAction == "Allow"
+| summarize 
+    AvgBytes = avg(SentBytes),
+    StdDevBytes = stdev(SentBytes)
+    by SourceIP;
+CommonSecurityLog
+| where TimeGenerated > ago(1h)
+| where DeviceAction == "Allow"
+| summarize CurrentBytes = sum(SentBytes) by SourceIP
+| join kind=inner (Baseline) on SourceIP
+| extend Zscore = (CurrentBytes - AvgBytes) / StdDevBytes
+| where Zscore > 3  // More than 3 standard deviations
+| project SourceIP, CurrentBytes, AvgBytes, Zscore</code></pre>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">First Time Activity</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// First time user logged in from country
+let HistoricalLocations = SigninLogs
+| where TimeGenerated between (ago(90d) .. ago(1d))
+| summarize Countries = make_set(Location) by UserPrincipalName;
+SigninLogs
+| where TimeGenerated > ago(24h)
+| where ResultType == "0"
+| join kind=leftanti (
+    HistoricalLocations
+    | mv-expand Countries
+    | project UserPrincipalName, Location = tostring(Countries)
+) on UserPrincipalName, Location
+| project TimeGenerated, UserPrincipalName, Location, IPAddress, AppDisplayName</code></pre>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Impossible Travel</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Detect impossible travel (logins from different locations too quickly)
+SigninLogs
+| where TimeGenerated > ago(24h)
+| where ResultType == "0"
+| project TimeGenerated, UserPrincipalName, Location, IPAddress, Latitude, Longitude
+| sort by UserPrincipalName, TimeGenerated asc
+| serialize
+| extend 
+    PrevTime = prev(TimeGenerated, 1),
+    PrevLocation = prev(Location, 1),
+    PrevLat = prev(Latitude, 1),
+    PrevLon = prev(Longitude, 1),
+    PrevUser = prev(UserPrincipalName, 1)
+| where UserPrincipalName == PrevUser
+| where Location != PrevLocation
+| extend 
+    TimeDiffMinutes = datetime_diff('minute', TimeGenerated, PrevTime),
+    // Approximate distance calculation
+    DistanceKm = geo_distance_2points(Longitude, Latitude, PrevLon, PrevLat) / 1000
+| extend RequiredSpeedKmh = (DistanceKm / TimeDiffMinutes) * 60
+| where RequiredSpeedKmh > 800  // Faster than commercial flight
+| project 
+    UserPrincipalName, 
+    FromLocation = PrevLocation, ToLocation = Location,
+    TimeDiffMinutes, DistanceKm, RequiredSpeedKmh</code></pre>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Process Chain / Parent-Child Analysis</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Suspicious process chain
+SecurityEvent
+| where TimeGenerated > ago(1h)
+| where EventID == 4688
+| project 
+    TimeGenerated, Computer, Account,
+    ParentProcess = ParentProcessName,
+    Process = NewProcessName,
+    CommandLine
+| where ParentProcess has_any ("winword.exe", "excel.exe", "outlook.exe", "powerpnt.exe")
+| where Process has_any ("cmd.exe", "powershell.exe", "wscript.exe", "mshta.exe")
+| extend RiskIndicators = case(
+    CommandLine has_any ("-enc", "-encodedcommand", "downloadstring", "invoke-expression"), "High - Encoded/Download",
+    CommandLine has_any ("http://", "https://"), "Medium - Network Activity",
+    "Low"
+)
+| project-reorder TimeGenerated, Computer, ParentProcess, Process, RiskIndicators, CommandLine</code></pre>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Lateral Movement Detection</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Detect lateral movement - same account accessing multiple systems
+SecurityEvent
+| where TimeGenerated > ago(1h)
+| where EventID == 4624
+| where LogonType in (3, 10)  // Network and RemoteInteractive
+| where Account !endswith "$"  // Exclude machine accounts
+| summarize 
+    TargetHosts = make_set(Computer),
+    HostCount = dcount(Computer),
+    SourceIPs = make_set(IpAddress)
+    by Account, bin(TimeGenerated, 10m)
+| where HostCount > 5
+| extend AlertDescription = strcat(
+    Account, " accessed ", HostCount, " hosts in 10 minutes: ",
+    strcat_array(TargetHosts, ", ")
+)
+
+// RDP lateral movement
+SecurityEvent
+| where TimeGenerated > ago(1h)
+| where EventID == 4624
+| where LogonType == 10
+| summarize 
+    RdpSessions = count(),
+    TargetHosts = make_set(Computer)
+    by IpAddress, Account
+| where RdpSessions > 3</code></pre>
+                </div>
+
+                <!-- Let Statements -->
+                <h2>Let Statements & Variables</h2>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Using Let Statements</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Define constants
+let threshold = 10;
+let timeWindow = 1h;
+
+// Define lists
+let SuspiciousProcesses = dynamic(["mimikatz.exe", "procdump.exe", "psexec.exe"]);
+let CriticalServers = dynamic(["DC01", "DC02", "SQL01"]);
+
+// Define time range
+let startTime = ago(7d);
+let endTime = now();
+
+// Define subqueries
+let FailedLogins = SigninLogs
+| where ResultType != "0"
+| summarize FailCount = count() by UserPrincipalName;
+
+// Use let statements
+SecurityEvent
+| where TimeGenerated > ago(timeWindow)
+| where NewProcessName has_any (SuspiciousProcesses)
+| where Computer in (CriticalServers)
+
+// Tabular let with join
+let VIPUsers = 
+    _GetWatchlist('VIP_Users')
+    | project UserPrincipalName = SearchKey;
+SigninLogs
+| where UserPrincipalName in (VIPUsers)
+
+// Let with function
+let GetEventDescription = (eventId: int) {
+    case(
+        eventId == 4624, "Successful Logon",
+        eventId == 4625, "Failed Logon",
+        eventId == 4648, "Explicit Credentials",
+        "Unknown"
+    )
+};
+SecurityEvent
+| extend Description = GetEventDescription(EventID)</code></pre>
+                </div>
+
+                <!-- Rendering -->
+                <h2>Visualization</h2>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">KQL</span>
+                        <span class="code-title">Render Charts</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <pre><code>// Time chart
+SecurityEvent
+| summarize count() by bin(TimeGenerated, 1h)
+| render timechart
+
+// Bar chart
+SecurityEvent
+| summarize count() by Computer
+| top 10 by count_
+| render barchart
+
+// Pie chart
+SigninLogs
+| summarize count() by AppDisplayName
+| render piechart
+
+// Column chart
+SecurityEvent
+| summarize count() by EventID
+| render columnchart
+
+// Area chart
+CommonSecurityLog
+| summarize sum(SentBytes) by bin(TimeGenerated, 1h)
+| render areachart
+
+// Scatter chart
+Perf
+| where CounterName == "% Processor Time"
+| project TimeGenerated, CounterValue
+| render scatterchart</code></pre>
+                </div>
+
+                <!-- Quick Reference Table -->
+                <h2>Quick Reference</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Operation</th>
+                            <th>KQL Syntax</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Filter rows</td>
+                            <td><code>| where condition</code></td>
+                        </tr>
+                        <tr>
+                            <td>Select columns</td>
+                            <td><code>| project col1, col2</code></td>
+                        </tr>
+                        <tr>
+                            <td>Add column</td>
+                            <td><code>| extend newcol = expression</code></td>
+                        </tr>
+                        <tr>
+                            <td>Rename column</td>
+                            <td><code>| project newname = oldname</code></td>
+                        </tr>
+                        <tr>
+                            <td>Sort</td>
+                            <td><code>| sort by col desc</code></td>
+                        </tr>
+                        <tr>
+                            <td>Limit rows</td>
+                            <td><code>| take 100</code></td>
+                        </tr>
+                        <tr>
+                            <td>Group & aggregate</td>
+                            <td><code>| summarize count() by col</code></td>
+                        </tr>
+                        <tr>
+                            <td>Join tables</td>
+                            <td><code>| join kind=inner (Table2) on Key</code></td>
+                        </tr>
+                        <tr>
+                            <td>Union tables</td>
+                            <td><code>Table1 | union Table2</code></td>
+                        </tr>
+                        <tr>
+                            <td>Time filter</td>
+                            <td><code>| where TimeGenerated > ago(24h)</code></td>
+                        </tr>
+                        <tr>
+                            <td>Time bucket</td>
+                            <td><code>| summarize count() by bin(TimeGenerated, 1h)</code></td>
+                        </tr>
+                        <tr>
+                            <td>Distinct count</td>
+                            <td><code>| summarize dcount(col)</code></td>
+                        </tr>
+                        <tr>
+                            <td>Create array</td>
+                            <td><code>| summarize make_set(col)</code></td>
+                        </tr>
+                        <tr>
+                            <td>Expand array</td>
+                            <td><code>| mv-expand col</code></td>
+                        </tr>
+                        <tr>
+                            <td>Parse JSON</td>
+                            <td><code>| extend parsed = parse_json(col)</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Navigation -->
+                <div class="page-nav">
+                    <a href="../../index.html" class="nav-btn prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                        Home
+                    </a>
+                    <a href="spl-cheatsheet.html" class="nav-btn next">
+                        SPL Cheat Sheet
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

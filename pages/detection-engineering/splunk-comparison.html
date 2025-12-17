@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splunk Comparison | Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <div class="logo-icon">DE</div>
+                    <span class="logo-text">Detection Engineering</span>
+                </div>
+                <button class="sidebar-toggle" aria-label="Toggle Sidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="sidebar-search">
+                <input type="text" class="search-input" placeholder="Search topics...">
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section" data-section="home">
+                    <a href="../../index.html" class="nav-section-header" style="text-decoration: none;">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                            <span>Home</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="nav-section active expanded" data-section="detection">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                            <span>Detection Engineering</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item">Detection Fundamentals</a>
+                        <a href="sentinel-deep-dive.html" class="nav-item">Microsoft Sentinel Deep Dive</a>
+                        <a href="splunk-comparison.html" class="nav-item active">Splunk Comparison</a>
+                        <a href="detection-logic.html" class="nav-item">Detection Logic Design</a>
+                        <a href="mitre-attack.html" class="nav-item">MITRE ATT&CK Mapping</a>
+                        <a href="use-case-framework.html" class="nav-item">Use Case Framework</a>
+                        <a href="metrics.html" class="nav-item">Metrics & Optimization</a>
+                    </div>
+                </div>
+
+                <div class="nav-section" data-section="logs">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                            <span>Log Analysis & Data</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../log-analysis/fundamentals.html" class="nav-item">Log Fundamentals</a>
+                        <a href="../log-analysis/network-logs.html" class="nav-item">Network Log Sources</a>
+                        <a href="../log-analysis/endpoint-logs.html" class="nav-item">Endpoint Log Sources</a>
+                        <a href="../log-analysis/cloud-logs.html" class="nav-item">Cloud Log Sources</a>
+                        <a href="../log-analysis/regex.html" class="nav-item">Regex Mastery</a>
+                    </div>
+                </div>
+
+                <div class="nav-section" data-section="sap">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            <span>SAP Security</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../sap-security/sap-overview.html" class="nav-item">What is SAP?</a>
+                        <a href="../sap-security/architecture.html" class="nav-item">SAP Architecture</a>
+                        <a href="../sap-security/threat-detection.html" class="nav-item">Threat Detection</a>
+                    </div>
+                </div>
+
+                <div class="nav-section" data-section="reference">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                            <span>Quick Reference</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../references/kql-cheatsheet.html" class="nav-item">KQL Cheat Sheet</a>
+                        <a href="../references/spl-cheatsheet.html" class="nav-item">SPL Cheat Sheet</a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="breadcrumb">
+                    <a href="../../index.html" class="breadcrumb-item">Home</a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-item">Detection Engineering</span>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-item active">Splunk Comparison</span>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <h1>Sentinel vs Splunk: Deep Comparison</h1>
+                <p style="font-size: 1.125rem; color: var(--text-secondary); max-width: 800px;">
+                    A comprehensive comparison of Microsoft Sentinel and Splunk Enterprise Security - architecture, 
+                    query languages, detection capabilities, and when to use each platform.
+                </p>
+
+                <!-- Platform Overview -->
+                <h2>Platform Overview</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Microsoft Sentinel</th>
+                            <th>Splunk Enterprise Security</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Deployment Model</strong></td>
+                            <td>Cloud-native (Azure only)</td>
+                            <td>On-premise, Cloud, Hybrid</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Query Language</strong></td>
+                            <td>KQL (Kusto Query Language)</td>
+                            <td>SPL (Search Processing Language)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pricing Model</strong></td>
+                            <td>Pay per GB ingested</td>
+                            <td>License per GB/day indexed</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Data Retention</strong></td>
+                            <td>Up to 12 years (archive)</td>
+                            <td>Unlimited (storage dependent)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SOAR</strong></td>
+                            <td>Built-in (Logic Apps)</td>
+                            <td>Splunk SOAR (separate product)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Best For</strong></td>
+                            <td>Microsoft-heavy environments, cloud-first</td>
+                            <td>Multi-vendor, on-premise, complex correlation</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Architecture Comparison -->
+                <h2>Architecture Comparison</h2>
+
+                <div class="comparison-grid">
+                    <div class="comparison-block sentinel">
+                        <div class="comparison-header">
+                            <span class="platform-logo">MS</span>
+                            <span>Microsoft Sentinel</span>
+                        </div>
+                        <div class="comparison-content">
+                            <h4>Architecture Components</h4>
+                            <ul>
+                                <li><strong>Log Analytics Workspace:</strong> Data storage (Azure Data Explorer)</li>
+                                <li><strong>Data Connectors:</strong> Ingest from 200+ sources</li>
+                                <li><strong>Analytics Rules:</strong> Detection logic</li>
+                                <li><strong>Playbooks:</strong> Logic Apps for automation</li>
+                                <li><strong>Workbooks:</strong> Visualization</li>
+                            </ul>
+                            <h4>Scaling</h4>
+                            <p>Automatic - no infrastructure management. Query performance scales with data volume automatically.</p>
+                            <h4>High Availability</h4>
+                            <p>Built into Azure. Multi-region replication available.</p>
+                        </div>
+                    </div>
+                    <div class="comparison-block splunk">
+                        <div class="comparison-header">
+                            <span class="platform-logo">SP</span>
+                            <span>Splunk Enterprise</span>
+                        </div>
+                        <div class="comparison-content">
+                            <h4>Architecture Components</h4>
+                            <ul>
+                                <li><strong>Indexers:</strong> Store and index data</li>
+                                <li><strong>Search Heads:</strong> Process queries</li>
+                                <li><strong>Forwarders:</strong> Collect and ship data</li>
+                                <li><strong>Deployment Server:</strong> Manage forwarders</li>
+                                <li><strong>Cluster Master:</strong> Coordinate indexer clusters</li>
+                            </ul>
+                            <h4>Scaling</h4>
+                            <p>Horizontal - add indexers for storage, search heads for query capacity.</p>
+                            <h4>High Availability</h4>
+                            <p>Search Head Clustering + Indexer Clustering required.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Query Language Comparison -->
+                <h2>Query Language: KQL vs SPL</h2>
+
+                <p>Both languages are powerful but have different philosophies. KQL uses a pipe-forward functional style, while SPL uses a command-based transformation approach.</p>
+
+                <h3>Basic Queries</h3>
+
+                <div class="comparison-grid">
+                    <div class="comparison-block sentinel">
+                        <div class="comparison-header">
+                            <span class="platform-logo">MS</span>
+                            <span>KQL (Kusto)</span>
+                        </div>
+                        <div class="code-block">
+                            <pre><code>// Basic search with time filter
+SecurityEvent
+| where TimeGenerated > ago(24h)
+| where EventID == 4625
+| project TimeGenerated, Computer, Account, IpAddress
+
+// Count by field
+SecurityEvent
+| where TimeGenerated > ago(24h)
+| summarize count() by Computer
+
+// Search text in any field
+search "failed password"
+| where TimeGenerated > ago(1h)</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-block splunk">
+                        <div class="comparison-header">
+                            <span class="platform-logo">SP</span>
+                            <span>SPL (Splunk)</span>
+                        </div>
+                        <div class="code-block">
+                            <pre><code>// Basic search with time filter
+index=windows EventCode=4625 earliest=-24h
+| table _time, ComputerName, Account_Name, src_ip
+
+// Count by field  
+index=windows earliest=-24h
+| stats count by ComputerName
+
+// Search text in any field
+index=* "failed password" earliest=-1h</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Aggregations & Statistics</h3>
+
+                <div class="comparison-grid">
+                    <div class="comparison-block sentinel">
+                        <div class="comparison-header">
+                            <span class="platform-logo">MS</span>
+                            <span>KQL Aggregations</span>
+                        </div>
+                        <div class="code-block">
+                            <pre><code>// Multiple aggregations
+SecurityEvent
+| where TimeGenerated > ago(24h)
+| summarize 
+    TotalEvents = count(),
+    UniqueUsers = dcount(Account),
+    FirstSeen = min(TimeGenerated),
+    LastSeen = max(TimeGenerated)
+    by Computer
+| sort by TotalEvents desc
+
+// Time buckets (timechart equivalent)
+SecurityEvent
+| where TimeGenerated > ago(7d)
+| summarize count() by bin(TimeGenerated, 1h)
+| render timechart
+
+// Percentiles
+Perf
+| where TimeGenerated > ago(1h)
+| summarize 
+    p50 = percentile(CounterValue, 50),
+    p95 = percentile(CounterValue, 95),
+    p99 = percentile(CounterValue, 99)
+    by Computer</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-block splunk">
+                        <div class="comparison-header">
+                            <span class="platform-logo">SP</span>
+                            <span>SPL Aggregations</span>
+                        </div>
+                        <div class="code-block">
+                            <pre><code>// Multiple aggregations
+index=windows earliest=-24h
+| stats 
+    count as TotalEvents,
+    dc(Account_Name) as UniqueUsers,
+    earliest(_time) as FirstSeen,
+    latest(_time) as LastSeen
+    by ComputerName
+| sort - TotalEvents
+
+// Time buckets (timechart)
+index=windows earliest=-7d
+| timechart span=1h count
+
+// Percentiles
+index=perfmon earliest=-1h
+| stats 
+    perc50(Value) as p50,
+    perc95(Value) as p95,
+    perc99(Value) as p99
+    by Computer</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Joins & Lookups</h3>
+
+                <div class="comparison-grid">
+                    <div class="comparison-block sentinel">
+                        <div class="comparison-header">
+                            <span class="platform-logo">MS</span>
+                            <span>KQL Joins</span>
+                        </div>
+                        <div class="code-block">
+                            <pre><code>// Inner join
+let FailedLogins = SigninLogs
+| where ResultType != "0"
+| summarize FailCount = count() by UserPrincipalName;
+let UserInfo = IdentityInfo
+| project UserPrincipalName, Department, Manager;
+FailedLogins
+| join kind=inner (UserInfo) 
+    on UserPrincipalName
+
+// Left outer join
+SecurityEvent
+| where EventID == 4624
+| join kind=leftouter (
+    _GetWatchlist('VIP_Users')
+    | project Account = SearchKey, VIPLevel
+) on Account
+
+// Lookup with let statement
+let MaliciousIPs = externaldata(IP: string)
+[@"https://example.com/badips.csv"];
+CommonSecurityLog
+| where SourceIP in (MaliciousIPs)</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-block splunk">
+                        <div class="comparison-header">
+                            <span class="platform-logo">SP</span>
+                            <span>SPL Joins & Lookups</span>
+                        </div>
+                        <div class="code-block">
+                            <pre><code>// Join command
+index=windows EventCode=4625 earliest=-24h
+| stats count as FailCount by user
+| join type=inner user [
+    | inputlookup user_info.csv
+    | fields user, department, manager
+]
+
+// Lookup command (more efficient)
+index=windows EventCode=4624 earliest=-24h
+| lookup vip_users.csv user as Account_Name 
+    OUTPUT vip_level
+| where isnotnull(vip_level)
+
+// Subsearch
+index=firewall action=blocked
+| search [
+    | inputlookup threat_intel.csv
+    | fields src_ip
+]</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detection Rules Comparison -->
+                <h2>Detection Rule Comparison</h2>
+
+                <h3>Brute Force Detection</h3>
+
+                <div class="comparison-grid">
+                    <div class="comparison-block sentinel">
+                        <div class="comparison-header">
+                            <span class="platform-logo">MS</span>
+                            <span>Sentinel Analytics Rule</span>
+                        </div>
+                        <div class="code-block">
+                            <pre><code>// Brute Force Detection
+let threshold = 10;
+let timeWindow = 5m;
+SigninLogs
+| where TimeGenerated > ago(timeWindow)
+| where ResultType != "0"
+| summarize 
+    FailedAttempts = count(),
+    DistinctUsers = dcount(UserPrincipalName),
+    Accounts = make_set(UserPrincipalName)
+    by IPAddress, Location
+| where FailedAttempts >= threshold
+| extend AlertSeverity = case(
+    FailedAttempts > 100, "High",
+    FailedAttempts > 50, "Medium",
+    "Low"
+)
+
+// Rule Settings:
+// - Frequency: Every 5 minutes
+// - Lookback: 5 minutes
+// - Alert per row
+// - Entity mapping: IP, Account</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-block splunk">
+                        <div class="comparison-header">
+                            <span class="platform-logo">SP</span>
+                            <span>Splunk Correlation Search</span>
+                        </div>
+                        <div class="code-block">
+                            <pre><code>// Brute Force Detection
+index=authentication action=failure earliest=-5m
+| stats 
+    count as FailedAttempts,
+    dc(user) as DistinctUsers,
+    values(user) as Accounts
+    by src_ip, src_location
+| where FailedAttempts >= 10
+| eval severity=case(
+    FailedAttempts > 100, "high",
+    FailedAttempts > 50, "medium",
+    true(), "low"
+)
+
+// Correlation Search Settings:
+// - Schedule: */5 * * * *
+// - Window: -5m to now
+// - Notable Event: Yes
+// - Drilldown: Search for events
+// - Adaptive Response: Optional</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Suspicious Process Execution</h3>
+
+                <div class="comparison-grid">
+                    <div class="comparison-block sentinel">
+                        <div class="comparison-header">
+                            <span class="platform-logo">MS</span>
+                            <span>Sentinel - Process Detection</span>
+                        </div>
+                        <div class="code-block">
+                            <pre><code>// Suspicious LOLBin Execution
+let SuspiciousProcesses = dynamic([
+    "certutil.exe", "mshta.exe", "regsvr32.exe",
+    "rundll32.exe", "wmic.exe", "cscript.exe"
+]);
+let SuspiciousArgs = dynamic([
+    "-urlcache", "-decode", "javascript:",
+    "vbscript:", "/i:", "process call create"
+]);
+SecurityEvent
+| where TimeGenerated > ago(1h)
+| where EventID == 4688
+| where NewProcessName has_any (SuspiciousProcesses)
+| where CommandLine has_any (SuspiciousArgs)
+| extend 
+    ParentProcess = ParentProcessName,
+    CommandLine = CommandLine
+| project 
+    TimeGenerated, Computer, Account,
+    NewProcessName, ParentProcess, CommandLine
+| extend 
+    HostName = tostring(split(Computer, ".")[0]),
+    DnsDomain = strcat_array(array_slice(
+        split(Computer, "."), 1, -1), ".")</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-block splunk">
+                        <div class="comparison-header">
+                            <span class="platform-logo">SP</span>
+                            <span>Splunk - Process Detection</span>
+                        </div>
+                        <div class="code-block">
+                            <pre><code>// Suspicious LOLBin Execution
+index=windows sourcetype=WinEventLog:Security 
+    EventCode=4688 earliest=-1h
+| search process_name IN (
+    "certutil.exe", "mshta.exe", "regsvr32.exe",
+    "rundll32.exe", "wmic.exe", "cscript.exe"
+)
+| regex CommandLine="(?i)(-urlcache|-decode|
+    javascript:|vbscript:|/i:|process call create)"
+| eval ParentProcess=parent_process_name
+| table _time, dest, user, process_name, 
+    ParentProcess, CommandLine
+| eval 
+    host_name=mvindex(split(dest, "."), 0),
+    dns_domain=mvjoin(mvindex(
+        split(dest, "."), 1, -1), ".")</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Model Comparison -->
+                <h2>Data Normalization</h2>
+
+                <div class="comparison-grid">
+                    <div class="comparison-block sentinel">
+                        <div class="comparison-header">
+                            <span class="platform-logo">MS</span>
+                            <span>ASIM (Sentinel)</span>
+                        </div>
+                        <div class="comparison-content">
+                            <h4>Advanced Security Information Model</h4>
+                            <p>Microsoft's normalization schema that unifies data across sources.</p>
+                            <ul>
+                                <li><strong>Parser Functions:</strong> imAuthentication, imProcessCreate, imNetworkSession, imDns</li>
+                                <li><strong>Unified Schema:</strong> Same field names across all sources</li>
+                                <li><strong>Built-in Parsers:</strong> Auto-normalize common sources</li>
+                                <li><strong>Custom Parsers:</strong> Extend for proprietary sources</li>
+                            </ul>
+                            <div class="code-block">
+                                <pre><code>// Works across ALL auth sources
+imAuthentication
+| where EventResult == "Failure"
+| summarize count() by SrcIpAddr, TargetUsername</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comparison-block splunk">
+                        <div class="comparison-header">
+                            <span class="platform-logo">SP</span>
+                            <span>CIM (Splunk)</span>
+                        </div>
+                        <div class="comparison-content">
+                            <h4>Common Information Model</h4>
+                            <p>Splunk's normalization schema using data models and tags.</p>
+                            <ul>
+                                <li><strong>Data Models:</strong> Authentication, Network Traffic, Endpoint, etc.</li>
+                                <li><strong>Accelerated:</strong> Pre-indexed for fast queries</li>
+                                <li><strong>Add-ons:</strong> TA's provide field mappings</li>
+                                <li><strong>Tagging:</strong> Classify events with tags</li>
+                            </ul>
+                            <div class="code-block">
+                                <pre><code>// Works across ALL auth sources
+| datamodel Authentication Successful_Authentication 
+    search
+| stats count by src, user</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Automation Comparison -->
+                <h2>Automation & SOAR</h2>
+
+                <div class="comparison-grid">
+                    <div class="comparison-block sentinel">
+                        <div class="comparison-header">
+                            <span class="platform-logo">MS</span>
+                            <span>Sentinel Playbooks</span>
+                        </div>
+                        <div class="comparison-content">
+                            <h4>Built on Azure Logic Apps</h4>
+                            <ul>
+                                <li><strong>Trigger:</strong> Incident creation, alert, scheduled</li>
+                                <li><strong>400+ Connectors:</strong> Microsoft, third-party services</li>
+                                <li><strong>Pricing:</strong> Per Logic App execution</li>
+                                <li><strong>No-Code:</strong> Visual designer</li>
+                            </ul>
+                            <h4>Common Actions</h4>
+                            <ul>
+                                <li>Get entities from incident</li>
+                                <li>Enrich IP/URL with threat intel</li>
+                                <li>Send Teams/Slack notification</li>
+                                <li>Block user in Azure AD</li>
+                                <li>Isolate host via Defender</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="comparison-block splunk">
+                        <div class="comparison-header">
+                            <span class="platform-logo">SP</span>
+                            <span>Splunk SOAR</span>
+                        </div>
+                        <div class="comparison-content">
+                            <h4>Dedicated SOAR Platform</h4>
+                            <ul>
+                                <li><strong>Trigger:</strong> Notable events, manual, scheduled</li>
+                                <li><strong>300+ Apps:</strong> Pre-built integrations</li>
+                                <li><strong>Pricing:</strong> Separate license (events/actions)</li>
+                                <li><strong>Code + Visual:</strong> Python playbooks + VPE</li>
+                            </ul>
+                            <h4>Key Features</h4>
+                            <ul>
+                                <li>Case management built-in</li>
+                                <li>Mission control dashboards</li>
+                                <li>Workbooks for manual tasks</li>
+                                <li>Custom Python actions</li>
+                                <li>Approval workflows</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cost Comparison -->
+                <h2>Cost Model Comparison</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Factor</th>
+                            <th>Microsoft Sentinel</th>
+                            <th>Splunk Enterprise</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Primary Metric</strong></td>
+                            <td>GB ingested per day</td>
+                            <td>GB indexed per day (license)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pay-As-You-Go</strong></td>
+                            <td>~$2.76/GB</td>
+                            <td>N/A (license required)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Commitment Tier</strong></td>
+                            <td>100GB/day = ~50% discount</td>
+                            <td>Annual license with volume discount</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Free Data</strong></td>
+                            <td>Azure Activity, M365 Audit (basic)</td>
+                            <td>None (all data counts)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Infrastructure</strong></td>
+                            <td>$0 (cloud-native)</td>
+                            <td>Servers, storage, licensing</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Retention Cost</strong></td>
+                            <td>90 days free, then ~$0.10/GB/month</td>
+                            <td>Storage cost only</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SOAR Cost</strong></td>
+                            <td>Logic Apps consumption pricing</td>
+                            <td>Separate SOAR license</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- When to Use Each -->
+                <h2>Decision Matrix: When to Use Each</h2>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Choose Sentinel When:</h4>
+                        <ul>
+                            <li>Heavy Microsoft ecosystem (M365, Azure, Defender)</li>
+                            <li>Cloud-first or cloud-only strategy</li>
+                            <li>No existing SIEM infrastructure</li>
+                            <li>Limited security operations staff</li>
+                            <li>Need rapid deployment</li>
+                            <li>Variable or unpredictable data volume</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Choose Splunk When:</h4>
+                        <ul>
+                            <li>Multi-vendor, heterogeneous environment</li>
+                            <li>Significant on-premise infrastructure</li>
+                            <li>Complex correlation requirements</li>
+                            <li>Need for operational intelligence beyond security</li>
+                            <li>Existing Splunk investment</li>
+                            <li>Data sovereignty requirements</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="info-box tip">
+                    <strong>Hybrid Approach:</strong> Many organizations use both platforms. Sentinel for cloud/Microsoft 
+                    workloads and Splunk for on-premise/legacy systems. Data can be shared between platforms using 
+                    Sentinel's data export or Splunk's HTTP Event Collector.
+                </div>
+
+                <!-- Interview Questions -->
+                <h2>Interview Questions & Answers</h2>
+
+                <div class="expandable">
+                    <div class="expandable-header">
+                        <span>Q: What are the main differences between KQL and SPL?</span>
+                        <svg class="expand-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="expandable-content">
+                        <p><strong>Philosophy:</strong></p>
+                        <ul>
+                            <li><strong>KQL:</strong> Functional, declarative - describe what you want</li>
+                            <li><strong>SPL:</strong> Imperative, command-based - describe how to get it</li>
+                        </ul>
+                        <p><strong>Key Differences:</strong></p>
+                        <table>
+                            <tr><td>Time Filter</td><td>where TimeGenerated > ago(24h)</td><td>earliest=-24h</td></tr>
+                            <tr><td>Aggregation</td><td>summarize count() by field</td><td>stats count by field</td></tr>
+                            <tr><td>Column Select</td><td>project col1, col2</td><td>table col1, col2</td></tr>
+                            <tr><td>Rename</td><td>project NewName = OldName</td><td>rename OldName as NewName</td></tr>
+                            <tr><td>Conditional</td><td>case(condition, value, default)</td><td>case(condition, value, ...)</td></tr>
+                        </table>
+                        <p>Both are powerful - proficiency in one makes learning the other easier.</p>
+                    </div>
+                </div>
+
+                <div class="expandable">
+                    <div class="expandable-header">
+                        <span>Q: How do ASIM and CIM compare for detection engineering?</span>
+                        <svg class="expand-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="expandable-content">
+                        <p>Both solve the same problem: normalizing data from multiple sources to enable vendor-agnostic detection.</p>
+                        <p><strong>ASIM (Sentinel):</strong></p>
+                        <ul>
+                            <li>Uses KQL parser functions (imAuthentication, imProcessCreate)</li>
+                            <li>Parsing happens at query time</li>
+                            <li>Relatively new - fewer sources covered</li>
+                            <li>Microsoft-maintained parsers</li>
+                        </ul>
+                        <p><strong>CIM (Splunk):</strong></p>
+                        <ul>
+                            <li>Uses data models with acceleration</li>
+                            <li>Parsing happens at index time via TA's</li>
+                            <li>Mature - extensive coverage</li>
+                            <li>Community + Splunk maintained</li>
+                        </ul>
+                        <p><strong>Key Insight:</strong> CIM's acceleration makes normalized queries faster, but requires more upfront configuration. ASIM is more flexible but can impact query performance.</p>
+                    </div>
+                </div>
+
+                <div class="expandable">
+                    <div class="expandable-header">
+                        <span>Q: How would you migrate detection rules from Splunk to Sentinel?</span>
+                        <svg class="expand-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="expandable-content">
+                        <p><strong>Migration Process:</strong></p>
+                        <ol>
+                            <li><strong>Inventory:</strong> Export all correlation searches with logic, thresholds, and schedules</li>
+                            <li><strong>Data Mapping:</strong> Map Splunk indexes/sourcetypes to Sentinel tables</li>
+                            <li><strong>Field Mapping:</strong> Map CIM fields to ASIM or native table fields</li>
+                            <li><strong>Query Translation:</strong> Convert SPL to KQL (command by command)</li>
+                            <li><strong>Test in Parallel:</strong> Run both rules, compare detection rates</li>
+                            <li><strong>Tune:</strong> Adjust thresholds for Sentinel's data characteristics</li>
+                        </ol>
+                        <p><strong>Common Translation Patterns:</strong></p>
+                        <ul>
+                            <li>stats count → summarize count()</li>
+                            <li>eval → extend</li>
+                            <li>rex → parse or extract()</li>
+                            <li>lookup → join with watchlist</li>
+                            <li>datamodel → ASIM parser function</li>
+                        </ul>
+                        <p><strong>Tools:</strong> Microsoft provides a Splunk to Sentinel migration workbook and query converter (preview).</p>
+                    </div>
+                </div>
+
+                <div class="expandable">
+                    <div class="expandable-header">
+                        <span>Q: When would you recommend Splunk over Sentinel?</span>
+                        <svg class="expand-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="expandable-content">
+                        <p><strong>Recommend Splunk when:</strong></p>
+                        <ul>
+                            <li><strong>Data Sovereignty:</strong> Regulations require on-premise data storage</li>
+                            <li><strong>Complex Correlation:</strong> Need advanced subsearches, transaction analysis, or multi-step correlation</li>
+                            <li><strong>Non-Security Use Cases:</strong> IT Ops, business analytics, and security share the platform</li>
+                            <li><strong>Existing Investment:</strong> Large Splunk deployment with trained staff and content</li>
+                            <li><strong>Air-Gapped Networks:</strong> No cloud connectivity available</li>
+                            <li><strong>Heavy SAP Integration:</strong> Better native SAP add-ons (though Sentinel's SAP solution is improving)</li>
+                        </ul>
+                        <p><strong>Key Consideration:</strong> Total cost of ownership often favors Sentinel for Microsoft-heavy shops, but Splunk's flexibility can justify the cost in complex environments.</p>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <div class="page-nav">
+                    <a href="sentinel-deep-dive.html" class="nav-btn prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                        Sentinel Deep Dive
+                    </a>
+                    <a href="detection-logic.html" class="nav-btn next">
+                        Detection Logic Design
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

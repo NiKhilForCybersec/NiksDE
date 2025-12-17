@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hunting Methodology - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="threat-intel">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                            <span>Threat Intelligence</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item">TI Fundamentals</a>
+                        <a href="sources.html" class="nav-item">Intelligence Sources</a>
+                        <a href="ioc-management.html" class="nav-item">IOC Management</a>
+                        <a href="threat-hunting.html" class="nav-item">Threat Hunting Intro</a>
+                        <a href="hunting-methodology.html" class="nav-item active">Hunting Methodology</a>
+                        <a href="hunting-techniques.html" class="nav-item">Hunting Techniques</a>
+                        <a href="hunting-queries.html" class="nav-item">Hunting Queries</a>
+                        <a href="mitre-framework.html" class="nav-item">MITRE ATT&CK Deep Dive</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="fundamentals.html">Threat Intelligence</a>
+                    <span class="separator">/</span>
+                    <span class="current">Hunting Methodology</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>Threat Hunting Methodology</h1>
+                    <p class="subtitle">Structured approaches to proactive threat hunting—hypothesis-driven hunting, the hunting loop, and documentation practices.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>The Hunting Loop</h2>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Threat Hunting Cycle</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                    Threat Hunting Loop                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│    ┌────────────┐                                                │
+│    │ HYPOTHESIS │ ◀───────────────────────────────┐             │
+│    │            │                                  │             │
+│    │ • Threat report                              │             │
+│    │ • New TTP                                    │             │
+│    │ • Anomaly observed                           │             │
+│    └─────┬──────┘                                 │             │
+│          │                                         │             │
+│          ▼                                         │             │
+│    ┌────────────┐                                 │             │
+│    │  COLLECT   │                                 │             │
+│    │            │                                 │             │
+│    │ • Identify data sources                      │             │
+│    │ • Build queries                              │             │
+│    │ • Gather evidence                            │             │
+│    └─────┬──────┘                                 │             │
+│          │                                         │             │
+│          ▼                                         │             │
+│    ┌────────────┐                                 │             │
+│    │  ANALYZE   │                                 │             │
+│    │            │                                 │             │
+│    │ • Review results                             │             │
+│    │ • Identify anomalies                         │             │
+│    │ • Validate findings                          │             │
+│    └─────┬──────┘                                 │             │
+│          │                                         │             │
+│          ▼                                         │             │
+│    ┌────────────┐      ┌────────────┐            │             │
+│    │   ENRICH   │─────▶│  AUTOMATE  │────────────┘             │
+│    │            │      │            │                           │
+│    │ • Context  │      │ • Create detection                    │
+│    │ • Threat   │      │ • Update playbook                     │
+│    │   intel    │      │ • Improve coverage                    │
+│    └────────────┘      └────────────┘                           │
+│                                                                   │
+└─────────────────────────────────────────────────────────────────┘</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Hypothesis-Driven Hunting</h2>
+
+                    <p>Effective hunts start with a clear hypothesis about what threats may exist in your environment.</p>
+
+                    <h3>Hypothesis Sources</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Intelligence-Based</h4>
+                            <ul>
+                                <li>Threat reports (APT campaigns)</li>
+                                <li>Industry-specific threats</li>
+                                <li>New vulnerability exploitation</li>
+                                <li>Shared IOCs/TTPs</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Situational Awareness</h4>
+                            <ul>
+                                <li>Anomalies in existing alerts</li>
+                                <li>Gaps in detection coverage</li>
+                                <li>High-value asset concerns</li>
+                                <li>Recent changes in environment</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Framework-Based</h4>
+                            <ul>
+                                <li>MITRE ATT&CK techniques</li>
+                                <li>Uncovered attack stages</li>
+                                <li>Common attacker patterns</li>
+                                <li>Red team findings</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>Hypothesis Template</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Hunt Hypothesis Document</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>HUNT HYPOTHESIS: [Name]
+Date: [Date]
+Hunter: [Name]
+
+HYPOTHESIS STATEMENT
+"Adversaries may be using [TECHNIQUE] to [OBJECTIVE] in our environment,
+which would be visible in [DATA SOURCE] as [OBSERVABLE]."
+
+Example:
+"Adversaries may be using scheduled tasks for persistence in our environment,
+which would be visible in Windows Event Logs as Event ID 4698 from
+non-standard user accounts or unusual task locations."
+
+MITRE ATT&CK MAPPING
+- Tactic: [TA00XX - Name]
+- Technique: [T1XXX - Name]
+- Sub-technique: [T1XXX.XXX - Name]
+
+INTELLIGENCE BASIS
+- [Source/Report that inspired this hunt]
+- [Relevance to our environment/industry]
+
+DATA SOURCES REQUIRED
+- [Data source 1]: [Specific fields needed]
+- [Data source 2]: [Specific fields needed]
+
+SUCCESS CRITERIA
+- Finding malicious activity
+- Validating no malicious activity exists
+- Identifying detection gaps
+- Improving detection coverage
+
+SCOPE
+- Time range: [Start] to [End]
+- Assets: [All / Specific subset]
+- Exclusions: [Known benign activity to filter]</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Hunt Documentation</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Hunt Report Template</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>THREAT HUNT REPORT
+
+Hunt ID: HUNT-2024-042
+Hunt Name: Scheduled Task Persistence Detection
+Date Range: 2024-01-15 to 2024-01-22
+Hunter: [Name]
+
+EXECUTIVE SUMMARY
+[2-3 sentences describing what was hunted and key findings]
+
+HYPOTHESIS
+[Original hypothesis statement]
+
+METHODOLOGY
+1. [Step 1 - Query/technique used]
+2. [Step 2 - Analysis performed]
+3. [Step 3 - Validation approach]
+
+QUERIES USED
+[Include actual queries with explanations]
+
+FINDINGS
+☐ No malicious activity found
+☑ Suspicious activity requiring investigation
+☐ Confirmed malicious activity
+
+Details:
+- [Finding 1]
+- [Finding 2]
+
+FALSE POSITIVES IDENTIFIED
+- [Pattern 1 - Reason it's benign]
+- [Pattern 2 - Reason it's benign]
+
+RECOMMENDATIONS
+1. [Detection rule to create]
+2. [Process improvement]
+3. [Additional hunting needed]
+
+DETECTION GAPS IDENTIFIED
+- [Gap 1 - Missing data source]
+- [Gap 2 - Coverage hole]
+
+ARTIFACTS/EVIDENCE
+- [Links to saved queries]
+- [Screenshots if applicable]
+
+TIME SPENT: [X hours]
+OUTCOME: [Detection created / Investigation opened / No action]</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Walk me through your threat hunting methodology.</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Structured approach:</strong></p>
+                            <ol>
+                                <li><strong>Hypothesis:</strong> Start with threat intel, MITRE technique, or anomaly</li>
+                                <li><strong>Data identification:</strong> What logs/telemetry needed?</li>
+                                <li><strong>Query development:</strong> Build detection queries</li>
+                                <li><strong>Analysis:</strong> Review results, filter false positives</li>
+                                <li><strong>Validation:</strong> Confirm findings are malicious or benign</li>
+                                <li><strong>Documentation:</strong> Record methodology and findings</li>
+                                <li><strong>Automation:</strong> Convert successful hunts to detections</li>
+                            </ol>
+                            <p><strong>Key point:</strong> The goal is to find threats AND improve detection coverage.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="threat-hunting.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        Threat Hunting Intro
+                    </a>
+                    <a href="hunting-techniques.html" class="nav-link next">
+                        Hunting Techniques
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What is SAP? | SAP Security | Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <div class="logo-icon">DE</div>
+                    <span class="logo-text">Detection Engineering</span>
+                </div>
+                <button class="sidebar-toggle" aria-label="Toggle Sidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="sidebar-search">
+                <input type="text" class="search-input" placeholder="Search topics...">
+            </div>
+            
+            <nav class="sidebar-nav">
+                <!-- Home -->
+                <div class="nav-section" data-section="home">
+                    <a href="../../index.html" class="nav-section-header" style="text-decoration: none;">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                            <span>Home</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Module 1: Detection Engineering -->
+                <div class="nav-section" data-section="detection">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                            <span>Detection Engineering</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../detection-engineering/fundamentals.html" class="nav-item">Detection Fundamentals</a>
+                        <a href="../detection-engineering/sentinel-deep-dive.html" class="nav-item">Microsoft Sentinel Deep Dive</a>
+                        <a href="../detection-engineering/splunk-comparison.html" class="nav-item">Splunk Comparison</a>
+                        <a href="../detection-engineering/detection-logic.html" class="nav-item">Detection Logic Design</a>
+                        <a href="../detection-engineering/mitre-attack.html" class="nav-item">MITRE ATT&CK Mapping</a>
+                        <a href="../detection-engineering/use-case-framework.html" class="nav-item">Use Case Framework</a>
+                        <a href="../detection-engineering/metrics.html" class="nav-item">Metrics & Optimization</a>
+                    </div>
+                </div>
+
+                <!-- Module 2: Log Analysis -->
+                <div class="nav-section" data-section="logs">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                            <span>Log Analysis & Data</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../log-analysis/fundamentals.html" class="nav-item">Log Fundamentals</a>
+                        <a href="../log-analysis/network-logs.html" class="nav-item">Network Log Sources</a>
+                        <a href="../log-analysis/endpoint-logs.html" class="nav-item">Endpoint Log Sources</a>
+                        <a href="../log-analysis/cloud-logs.html" class="nav-item">Cloud Log Sources</a>
+                        <a href="../log-analysis/identity-logs.html" class="nav-item">Identity & Access Logs</a>
+                        <a href="../log-analysis/data-models.html" class="nav-item">Data Models & Normalization</a>
+                        <a href="../log-analysis/regex.html" class="nav-item">Regex Mastery</a>
+                        <a href="../log-analysis/parsing.html" class="nav-item">Log Parsing Techniques</a>
+                    </div>
+                </div>
+
+                <!-- Module 3: Threat Intelligence -->
+                <div class="nav-section" data-section="threat-intel">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                            <span>Threat Intel & Hunting</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../threat-intel/fundamentals.html" class="nav-item">TI Fundamentals</a>
+                        <a href="../threat-intel/sources.html" class="nav-item">Intelligence Sources</a>
+                        <a href="../threat-intel/ioc-management.html" class="nav-item">IOC Management</a>
+                        <a href="../threat-intel/operationalization.html" class="nav-item">TI Operationalization</a>
+                        <a href="../threat-intel/mitre-framework.html" class="nav-item">MITRE ATT&CK Framework</a>
+                        <a href="../threat-intel/hunting-methodology.html" class="nav-item">Hunting Methodology</a>
+                        <a href="../threat-intel/hunting-techniques.html" class="nav-item">Hunting Techniques</a>
+                        <a href="../threat-intel/hunting-queries.html" class="nav-item">Hunting Queries</a>
+                    </div>
+                </div>
+
+                <!-- Module 4: SAP Security - ACTIVE -->
+                <div class="nav-section active expanded" data-section="sap">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            <span>SAP Security</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="sap-overview.html" class="nav-item active">What is SAP?</a>
+                        <a href="architecture.html" class="nav-item">SAP Architecture</a>
+                        <a href="modules-services.html" class="nav-item">Modules & Services</a>
+                        <a href="security-fundamentals.html" class="nav-item">Security Fundamentals</a>
+                        <a href="log-types.html" class="nav-item">SAP Log Types</a>
+                        <a href="siem-integration.html" class="nav-item">SIEM Integration</a>
+                        <a href="threat-detection.html" class="nav-item">Threat Detection</a>
+                        <a href="compliance.html" class="nav-item">Compliance & Audit</a>
+                    </div>
+                </div>
+
+                <!-- Module 5: Vulnerability Management -->
+                <div class="nav-section" data-section="vuln">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                <line x1="12" y1="9" x2="12" y2="13"></line>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                            <span>Vulnerability Management</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../vulnerability-mgmt/fundamentals.html" class="nav-item">VM Fundamentals</a>
+                        <a href="../vulnerability-mgmt/scanning.html" class="nav-item">Scanning Techniques</a>
+                        <a href="../vulnerability-mgmt/qualys.html" class="nav-item">Qualys Deep Dive</a>
+                        <a href="../vulnerability-mgmt/tenable.html" class="nav-item">Tenable/Nessus</a>
+                        <a href="../vulnerability-mgmt/prioritization.html" class="nav-item">Risk Prioritization</a>
+                        <a href="../vulnerability-mgmt/remediation.html" class="nav-item">Remediation Workflows</a>
+                        <a href="../vulnerability-mgmt/metrics.html" class="nav-item">VM Metrics</a>
+                        <a href="../vulnerability-mgmt/automation.html" class="nav-item">VM Automation</a>
+                    </div>
+                </div>
+
+                <!-- Module 6: Cloud Security -->
+                <div class="nav-section" data-section="cloud">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                            </svg>
+                            <span>Cloud Security</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../cloud-security/fundamentals.html" class="nav-item">Cloud Security Fundamentals</a>
+                        <a href="../cloud-security/aws-security.html" class="nav-item">AWS Security</a>
+                        <a href="../cloud-security/azure-security.html" class="nav-item">Azure Security</a>
+                        <a href="../cloud-security/gcp-security.html" class="nav-item">GCP Security</a>
+                        <a href="../cloud-security/multi-cloud.html" class="nav-item">Multi-Cloud Strategy</a>
+                        <a href="../cloud-security/cspm.html" class="nav-item">CSPM & CWPP</a>
+                    </div>
+                </div>
+
+                <!-- Module 7: Automation -->
+                <div class="nav-section" data-section="automation">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="16 18 22 12 16 6"></polyline>
+                                <polyline points="8 6 2 12 8 18"></polyline>
+                            </svg>
+                            <span>Automation & Scripting</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../automation/fundamentals.html" class="nav-item">Automation Fundamentals</a>
+                        <a href="../automation/python-security.html" class="nav-item">Python for Security</a>
+                        <a href="../automation/powershell-security.html" class="nav-item">PowerShell for Security</a>
+                        <a href="../automation/bash-security.html" class="nav-item">Bash for Security</a>
+                        <a href="../automation/soar.html" class="nav-item">SOAR Platforms</a>
+                        <a href="../automation/api-integration.html" class="nav-item">API Integration</a>
+                    </div>
+                </div>
+
+                <!-- Module 8: Compliance -->
+                <div class="nav-section" data-section="compliance">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                            <span>Compliance & Governance</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../compliance/framework-overview.html" class="nav-item">Framework Overview</a>
+                        <a href="../compliance/iso-27001.html" class="nav-item">ISO 27001</a>
+                        <a href="../compliance/nist-csf.html" class="nav-item">NIST CSF</a>
+                        <a href="../compliance/nist-800-53.html" class="nav-item">NIST 800-53</a>
+                        <a href="../compliance/gdpr.html" class="nav-item">GDPR</a>
+                        <a href="../compliance/other-frameworks.html" class="nav-item">Other Frameworks</a>
+                        <a href="../compliance/documentation.html" class="nav-item">Documentation Standards</a>
+                    </div>
+                </div>
+
+                <!-- Module 9: Incident Response -->
+                <div class="nav-section" data-section="ir">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                            </svg>
+                            <span>Incident Response</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../incident-response/soc-collaboration.html" class="nav-item">SOC Collaboration</a>
+                        <a href="../incident-response/ir-support.html" class="nav-item">IR Support Role</a>
+                        <a href="../incident-response/forensics.html" class="nav-item">Forensic Requirements</a>
+                        <a href="../incident-response/communication.html" class="nav-item">Cross-Team Communication</a>
+                    </div>
+                </div>
+
+                <!-- Quick Reference -->
+                <div class="nav-section" data-section="reference">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                            <span>Quick Reference</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../references/kql-cheatsheet.html" class="nav-item">KQL Cheat Sheet</a>
+                        <a href="../references/spl-cheatsheet.html" class="nav-item">SPL Cheat Sheet</a>
+                        <a href="../references/regex-cheatsheet.html" class="nav-item">Regex Cheat Sheet</a>
+                        <a href="../references/windows-events.html" class="nav-item">Windows Event IDs</a>
+                        <a href="../references/mitre-quick-ref.html" class="nav-item">MITRE Quick Reference</a>
+                        <a href="../references/interview-prep.html" class="nav-item">Interview Preparation</a>
+                    </div>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="progress-card">
+                    <div class="progress-header">
+                        <span class="progress-label">Learning Progress</span>
+                        <span class="progress-value">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="breadcrumb">
+                    <a href="../../index.html" class="breadcrumb-item">Home</a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-item">SAP Security</span>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-item active">What is SAP?</span>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <h1>What is SAP? Complete Overview</h1>
+                <p style="font-size: 1.125rem; color: var(--text-secondary); max-width: 800px;">
+                    Understanding SAP from the ground up - the company, its products, how enterprises use it, and why it's critical 
+                    infrastructure that security teams must protect.
+                </p>
+
+                <div class="info-box info">
+                    <div class="info-box-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        Why This Matters for Detection Engineers
+                    </div>
+                    <p>SAP systems process <strong>77% of the world's transaction revenue</strong> and hold the most sensitive business data. As a detection engineer, you'll need to integrate SAP logs into your SIEM, create detections for SAP-specific threats, and understand how attackers target these systems.</p>
+                </div>
+
+                <h2>SAP: The Company</h2>
+                
+                <p>SAP SE (Systems, Applications & Products in Data Processing) is a German multinational corporation founded in 1972 by five former IBM engineers: Dietmar Hopp, Claus Wellenreuther, Hasso Plattner, Klaus Tschira, and Hans-Werner Hector. Originally named "Systemanalyse Programmentwicklung" (System Analysis Program Development), they created the first commercial enterprise resource planning (ERP) software.</p>
+
+                <div class="card">
+                    <h3 class="mt-0">SAP by the Numbers</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Value</th>
+                                    <th>Significance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Global Revenue Share</td>
+                                    <td>77%</td>
+                                    <td>World's transaction revenue touches SAP</td>
+                                </tr>
+                                <tr>
+                                    <td>Fortune 500 Customers</td>
+                                    <td>92%</td>
+                                    <td>Nearly all major enterprises use SAP</td>
+                                </tr>
+                                <tr>
+                                    <td>Customers Worldwide</td>
+                                    <td>440,000+</td>
+                                    <td>Across 180+ countries</td>
+                                </tr>
+                                <tr>
+                                    <td>Employees</td>
+                                    <td>107,000+</td>
+                                    <td>Global workforce</td>
+                                </tr>
+                                <tr>
+                                    <td>Annual Revenue</td>
+                                    <td>€31+ Billion</td>
+                                    <td>Largest enterprise software company</td>
+                                </tr>
+                                <tr>
+                                    <td>Founded</td>
+                                    <td>1972</td>
+                                    <td>50+ years of enterprise software</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <h2>What Does SAP Actually Do?</h2>
+                
+                <p>At its core, SAP provides <strong>Enterprise Resource Planning (ERP)</strong> software - integrated systems that manage all aspects of a business's operations. Think of SAP as the central nervous system of a large organization, connecting and coordinating:</p>
+
+                <h3>The Problem SAP Solves</h3>
+                
+                <p>Before ERP systems like SAP, large enterprises faced a nightmare of disconnected systems:</p>
+
+                <div class="comparison-grid">
+                    <div class="comparison-block" style="border-top-color: var(--accent-red);">
+                        <div class="comparison-header">
+                            <div class="comparison-logo" style="background: var(--accent-red);">✗</div>
+                            <h4 class="comparison-title mt-0 mb-0">Without SAP/ERP</h4>
+                        </div>
+                        <ul>
+                            <li>Finance uses one system</li>
+                            <li>HR uses a different system</li>
+                            <li>Manufacturing uses another</li>
+                            <li>Sales tracks in spreadsheets</li>
+                            <li>Data is siloed and inconsistent</li>
+                            <li>Manual data entry between systems</li>
+                            <li>No real-time visibility</li>
+                            <li>Reporting takes weeks</li>
+                        </ul>
+                    </div>
+                    <div class="comparison-block" style="border-top-color: var(--accent-green);">
+                        <div class="comparison-header">
+                            <div class="comparison-logo" style="background: var(--accent-green);">✓</div>
+                            <h4 class="comparison-title mt-0 mb-0">With SAP/ERP</h4>
+                        </div>
+                        <ul>
+                            <li>Single integrated system</li>
+                            <li>All departments connected</li>
+                            <li>Single source of truth</li>
+                            <li>Real-time data updates</li>
+                            <li>Automated workflows</li>
+                            <li>Cross-functional visibility</li>
+                            <li>Instant reporting</li>
+                            <li>Regulatory compliance built-in</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Real-World Example: Order-to-Cash Process</h3>
+                
+                <p>Consider what happens when a customer places an order at a large manufacturer:</p>
+
+                <div class="card">
+                    <ol>
+                        <li><strong>Sales & Distribution (SD):</strong> Sales rep enters customer order in SAP</li>
+                        <li><strong>Materials Management (MM):</strong> SAP checks inventory availability automatically</li>
+                        <li><strong>Production Planning (PP):</strong> If inventory is low, SAP triggers production order</li>
+                        <li><strong>Finance (FI):</strong> SAP creates accounting entries, checks customer credit</li>
+                        <li><strong>Warehouse Management (WM):</strong> SAP generates picking list for warehouse</li>
+                        <li><strong>Shipping:</strong> SAP creates delivery documents, shipping labels</li>
+                        <li><strong>Accounts Receivable:</strong> SAP generates invoice automatically</li>
+                        <li><strong>Controlling (CO):</strong> Profit margins calculated in real-time</li>
+                    </ol>
+                    <p class="text-muted mb-0">All of this happens within one integrated system, with full audit trails - which is why SAP logs are so valuable for security monitoring.</p>
+                </div>
+
+                <h2>SAP's Product Portfolio</h2>
+                
+                <p>SAP offers a wide range of products, but the core ERP systems are what most enterprises run:</p>
+
+                <h3>Core ERP Products</h3>
+
+                <div class="expandable">
+                    <div class="expandable-header">
+                        <span class="expandable-title">SAP R/3 (Legacy - 1992-2015)</span>
+                        <svg class="expandable-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="expandable-content">
+                        <p>The system that made SAP dominant. "R/3" stands for "Real-time, 3-tier architecture" (presentation, application, database layers). While officially replaced by S/4HANA, many enterprises still run R/3 systems due to the complexity of migration. These legacy systems are often the most vulnerable and require careful security monitoring.</p>
+                        <ul>
+                            <li><strong>Architecture:</strong> Client-server, 3-tier</li>
+                            <li><strong>Database:</strong> Oracle, SQL Server, DB2, MaxDB</li>
+                            <li><strong>Status:</strong> Mainstream maintenance ends 2027</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="expandable">
+                    <div class="expandable-header">
+                        <span class="expandable-title">SAP ECC (ERP Central Component - 2004-Present)</span>
+                        <svg class="expandable-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="expandable-content">
+                        <p>Evolution of R/3, also known as "SAP ERP 6.0". This is what most enterprises currently run as their primary SAP system. ECC introduced Enhancement Packages (EhP) for incremental upgrades without full system replacement.</p>
+                        <ul>
+                            <li><strong>Architecture:</strong> NetWeaver-based</li>
+                            <li><strong>Database:</strong> Any major RDBMS</li>
+                            <li><strong>Current Status:</strong> Mainstream support until 2027, extended to 2030</li>
+                            <li><strong>Security Note:</strong> Most SAP security incidents target ECC systems</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="expandable open">
+                    <div class="expandable-header">
+                        <span class="expandable-title">SAP S/4HANA (2015-Present) - Current Generation</span>
+                        <svg class="expandable-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="expandable-content">
+                        <p>SAP's current flagship ERP, built on the in-memory HANA database. "S/4" stands for "Simple Suite, 4th generation". This represents a complete re-architecture of SAP ERP for modern requirements including real-time analytics, simplified data models, and cloud-native deployment.</p>
+                        <ul>
+                            <li><strong>Database:</strong> SAP HANA only (in-memory)</li>
+                            <li><strong>Deployment:</strong> On-premise, Cloud (public/private), Hybrid</li>
+                            <li><strong>Interface:</strong> SAP Fiori (modern UI) + traditional SAP GUI</li>
+                            <li><strong>Key Advantage:</strong> Real-time analytics, simplified data model</li>
+                        </ul>
+                        <div class="info-box tip">
+                            <div class="info-box-header">Migration Reality</div>
+                            <p>SAP has set 2027 as the deadline for ECC support, forcing enterprises to migrate to S/4HANA. This migration creates significant security risks and opportunities for detection engineers to ensure proper security controls during transition.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Deployment Models</h3>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Description</th>
+                                <th>Security Responsibility</th>
+                                <th>Log Access</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>On-Premise</strong></td>
+                                <td>SAP runs in customer's data center</td>
+                                <td>Customer manages everything</td>
+                                <td>Full access to all logs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Private Cloud</strong></td>
+                                <td>Dedicated infrastructure hosted by SAP/partner</td>
+                                <td>Shared responsibility model</td>
+                                <td>Most logs accessible</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Public Cloud</strong></td>
+                                <td>Multi-tenant SAP Cloud (SaaS)</td>
+                                <td>SAP manages infrastructure</td>
+                                <td>Application logs only</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Hybrid</strong></td>
+                                <td>Mix of on-prem and cloud</td>
+                                <td>Complex shared model</td>
+                                <td>Varies by component</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2>How Companies Use SAP</h2>
+
+                <p>Understanding how organizations structure their SAP environments helps you know where to look for threats:</p>
+
+                <h3>System Landscape Architecture</h3>
+                
+                <p>Enterprises typically run SAP in a three-tier landscape:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">SAP System Landscape</span>
+                    </div>
+                    <pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                    SAP SYSTEM LANDSCAPE                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐         │
+│  │     DEV     │    │     QAS     │    │     PRD     │         │
+│  │ Development │───▶│   Quality   │───▶│ Production  │         │
+│  │   System    │    │  Assurance  │    │   System    │         │
+│  └─────────────┘    └─────────────┘    └─────────────┘         │
+│        │                  │                  │                  │
+│   Developers         Testers           End Users                │
+│   Custom Code        UAT Testing       Live Business            │
+│   Configuration      Integration       Critical Data            │
+│                                                                 │
+│  Transport Path: DEV → QAS → PRD (via Transport Management)    │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  SUPPORTING SYSTEMS                                             │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐        │
+│  │ Solution │  │ Content  │  │   SAP    │  │ Identity │        │
+│  │ Manager  │  │ Server   │  │  Router  │  │ Mgmt     │        │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘        │
+└─────────────────────────────────────────────────────────────────┘</code></pre>
+                </div>
+
+                <h3>Industry-Specific Use Cases</h3>
+
+                <div class="tabs-container">
+                    <div class="tabs-header">
+                        <button class="tab-btn active" data-tab="manufacturing">Manufacturing</button>
+                        <button class="tab-btn" data-tab="retail">Retail</button>
+                        <button class="tab-btn" data-tab="finance">Financial Services</button>
+                        <button class="tab-btn" data-tab="healthcare">Healthcare</button>
+                    </div>
+                    
+                    <div class="tab-content active" data-tab="manufacturing">
+                        <h4>Manufacturing Industry</h4>
+                        <p>Manufacturing companies use SAP to manage:</p>
+                        <ul>
+                            <li><strong>Production Planning (PP):</strong> Manufacturing schedules, capacity planning</li>
+                            <li><strong>Quality Management (QM):</strong> Inspection lots, quality certificates</li>
+                            <li><strong>Plant Maintenance (PM):</strong> Equipment maintenance, work orders</li>
+                            <li><strong>Materials Management (MM):</strong> Inventory, procurement, vendor management</li>
+                        </ul>
+                        <p><strong>Security Focus:</strong> Industrial espionage, production disruption, supply chain attacks, theft of BOMs (Bill of Materials)</p>
+                    </div>
+                    
+                    <div class="tab-content" data-tab="retail">
+                        <h4>Retail Industry</h4>
+                        <p>Retailers use SAP to manage:</p>
+                        <ul>
+                            <li><strong>Sales & Distribution (SD):</strong> Orders, pricing, promotions</li>
+                            <li><strong>Retail (IS-Retail):</strong> Store operations, POS integration</li>
+                            <li><strong>Supply Chain:</strong> Demand planning, replenishment</li>
+                            <li><strong>Customer Management:</strong> Loyalty programs, customer data</li>
+                        </ul>
+                        <p><strong>Security Focus:</strong> Customer PII theft, payment card data, pricing manipulation, inventory theft</p>
+                    </div>
+                    
+                    <div class="tab-content" data-tab="finance">
+                        <h4>Financial Services</h4>
+                        <p>Banks and financial institutions use SAP for:</p>
+                        <ul>
+                            <li><strong>Banking (IS-Banking):</strong> Core banking operations</li>
+                            <li><strong>Treasury:</strong> Cash management, financial instruments</li>
+                            <li><strong>Risk Management:</strong> Credit risk, market risk</li>
+                            <li><strong>Regulatory Reporting:</strong> Basel III, IFRS compliance</li>
+                        </ul>
+                        <p><strong>Security Focus:</strong> Financial fraud, regulatory violations, data breaches, insider trading</p>
+                    </div>
+                    
+                    <div class="tab-content" data-tab="healthcare">
+                        <h4>Healthcare Industry</h4>
+                        <p>Healthcare organizations use SAP for:</p>
+                        <ul>
+                            <li><strong>Healthcare (IS-H):</strong> Patient administration, billing</li>
+                            <li><strong>Supply Chain:</strong> Medical supplies, pharmaceuticals</li>
+                            <li><strong>HR:</strong> Staff scheduling, credentials management</li>
+                            <li><strong>Finance:</strong> Revenue cycle management</li>
+                        </ul>
+                        <p><strong>Security Focus:</strong> PHI/HIPAA compliance, medical identity theft, drug diversion, ransomware</p>
+                    </div>
+                </div>
+
+                <h2>Why SAP Systems Are High-Value Targets</h2>
+
+                <div class="info-box danger">
+                    <div class="info-box-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        Critical Security Consideration
+                    </div>
+                    <p>SAP systems contain the "crown jewels" of an organization - financial records, customer data, intellectual property, employee information, and trade secrets. A breach of SAP can be more damaging than any other system in the enterprise.</p>
+                </div>
+
+                <h3>What Attackers Want from SAP</h3>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Target Data</th>
+                                <th>SAP Module</th>
+                                <th>Attack Motivation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Financial Records</td>
+                                <td>FI/CO</td>
+                                <td>Fraud, insider trading, competitive intelligence</td>
+                            </tr>
+                            <tr>
+                                <td>Customer Data</td>
+                                <td>SD, CRM</td>
+                                <td>Identity theft, phishing campaigns, data breach ransom</td>
+                            </tr>
+                            <tr>
+                                <td>Employee Data</td>
+                                <td>HR/HCM</td>
+                                <td>Identity theft, social engineering, tax fraud</td>
+                            </tr>
+                            <tr>
+                                <td>Vendor/Payment Data</td>
+                                <td>MM, AP</td>
+                                <td>Payment fraud, vendor impersonation</td>
+                            </tr>
+                            <tr>
+                                <td>Product Designs/BOMs</td>
+                                <td>PP, PLM</td>
+                                <td>Industrial espionage, counterfeiting</td>
+                            </tr>
+                            <tr>
+                                <td>Pricing Information</td>
+                                <td>SD</td>
+                                <td>Competitive advantage, market manipulation</td>
+                            </tr>
+                            <tr>
+                                <td>M&A Information</td>
+                                <td>FI/CO</td>
+                                <td>Insider trading, competitive intelligence</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Common SAP Attack Vectors</h3>
+
+                <ol>
+                    <li><strong>Credential Theft:</strong> Phishing for SAP credentials, password spraying against SAP systems</li>
+                    <li><strong>Privilege Escalation:</strong> Exploiting overly permissive SAP roles to gain SAP_ALL or similar privileges</li>
+                    <li><strong>RFC Exploitation:</strong> Remote Function Calls can be abused to execute code or extract data</li>
+                    <li><strong>Transport Manipulation:</strong> Injecting malicious code through the transport system</li>
+                    <li><strong>Debug/Replace:</strong> Using debug privileges to bypass controls and modify data in memory</li>
+                    <li><strong>Direct Table Access:</strong> Using SE16/SE16N to directly read or modify database tables</li>
+                    <li><strong>Gateway Attacks:</strong> Exploiting SAP Gateway for unauthorized access</li>
+                    <li><strong>Custom Code Vulnerabilities:</strong> ABAP code with SQL injection, hardcoded credentials</li>
+                </ol>
+
+                <h2>Key SAP Terminology for Detection Engineers</h2>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Term</th>
+                                <th>Definition</th>
+                                <th>Security Relevance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Client</strong></td>
+                                <td>Logical partition within SAP (000, 001, 100, etc.)</td>
+                                <td>Cross-client access is a security risk</td>
+                            </tr>
+                            <tr>
+                                <td><strong>T-Code</strong></td>
+                                <td>Transaction Code - shortcut to run SAP functions</td>
+                                <td>Critical T-codes need monitoring (SE16, SU01, PFCG)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ABAP</strong></td>
+                                <td>Advanced Business Application Programming - SAP's language</td>
+                                <td>Custom ABAP code can contain vulnerabilities</td>
+                            </tr>
+                            <tr>
+                                <td><strong>RFC</strong></td>
+                                <td>Remote Function Call - SAP-to-SAP communication</td>
+                                <td>RFC connections can be exploited for lateral movement</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SAP_ALL</strong></td>
+                                <td>Profile with all authorizations (superuser)</td>
+                                <td>Any user with SAP_ALL is a critical finding</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Basis</strong></td>
+                                <td>SAP system administration layer</td>
+                                <td>Basis administrators have powerful access</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Transport</strong></td>
+                                <td>Package of changes moved between systems</td>
+                                <td>Unauthorized transports can inject malicious code</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SM21</strong></td>
+                                <td>System Log transaction</td>
+                                <td>Primary log source for security events</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SM37</strong></td>
+                                <td>Background job monitor</td>
+                                <td>Detect suspicious scheduled jobs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Firefighter ID</strong></td>
+                                <td>Emergency access account (privileged)</td>
+                                <td>Must be heavily monitored and time-limited</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2>Interview Preparation: SAP Overview Questions</h2>
+
+                <div class="card">
+                    <h3 class="mt-0">Common Interview Questions</h3>
+                    
+                    <div class="expandable">
+                        <div class="expandable-header">
+                            <span class="expandable-title">Q: What is SAP and why is it important for security?</span>
+                            <svg class="expandable-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="expandable-content">
+                            <p><strong>Answer:</strong> SAP is an Enterprise Resource Planning (ERP) system that serves as the central nervous system for large organizations, managing everything from finance and HR to supply chain and manufacturing. From a security perspective, SAP is critical because it contains the most sensitive business data - financial records, customer information, employee PII, trade secrets, and intellectual property. 77% of world transaction revenue touches a SAP system, making it a high-value target. As a detection engineer, monitoring SAP is essential because a breach can lead to financial fraud, data theft, regulatory violations, and severe business disruption.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <div class="expandable-header">
+                            <span class="expandable-title">Q: What's the difference between SAP ECC and S/4HANA?</span>
+                            <svg class="expandable-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="expandable-content">
+                            <p><strong>Answer:</strong> SAP ECC (ERP Central Component) is the previous generation of SAP ERP, running on traditional databases like Oracle or SQL Server. S/4HANA is SAP's current-generation ERP, built exclusively on the in-memory HANA database. S/4HANA offers real-time analytics, a simplified data model, and modern user interfaces through SAP Fiori. From a security perspective, both systems need monitoring, but the logging and integration approaches differ. Many organizations are currently migrating from ECC to S/4HANA (deadline 2027), which creates additional security risks during transition that detection engineers should monitor.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <div class="expandable-header">
+                            <span class="expandable-title">Q: What kind of data does SAP contain that attackers target?</span>
+                            <svg class="expandable-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="expandable-content">
+                            <p><strong>Answer:</strong> SAP contains multiple categories of high-value data: (1) Financial data - general ledger, accounts payable/receivable, which enables financial fraud; (2) Customer data - names, addresses, payment information for identity theft; (3) Employee data - SSNs, salaries, personal details; (4) Vendor/supplier data - bank accounts for payment fraud; (5) Intellectual property - product designs, pricing strategies, M&A information; (6) Operational data - production schedules, inventory levels for competitive intelligence. The combination of all this data in one system makes SAP a single point of compromise for an entire organization's most sensitive information.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="page-footer">
+                    <div class="footer-nav">
+                        <a href="../../index.html" class="footer-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                <polyline points="12 19 5 12 12 5"></polyline>
+                            </svg>
+                            Home
+                        </a>
+                        <a href="architecture.html" class="footer-link">
+                            SAP Architecture
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </a>
+                    </div>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

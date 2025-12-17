@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISO 27001 - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="compliance">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                            <span>Compliance & Frameworks</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="framework-overview.html" class="nav-item">Framework Overview</a>
+                        <a href="nist-csf.html" class="nav-item">NIST CSF</a>
+                        <a href="nist-800-53.html" class="nav-item">NIST 800-53</a>
+                        <a href="iso-27001.html" class="nav-item active">ISO 27001</a>
+                        <a href="gdpr.html" class="nav-item">GDPR & Privacy</a>
+                        <a href="other-frameworks.html" class="nav-item">PCI-DSS, SOC 2, HIPAA</a>
+                        <a href="documentation.html" class="nav-item">Security Documentation</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="framework-overview.html">Compliance</a>
+                    <span class="separator">/</span>
+                    <span class="current">ISO 27001</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>ISO 27001:2022</h1>
+                    <p class="subtitle">International standard for Information Security Management Systems (ISMS), with focus on Annex A controls relevant to detection and monitoring.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>ISO 27001 Overview</h2>
+                    
+                    <p>ISO/IEC 27001:2022 is the international standard for establishing, implementing, maintaining, and continually improving an Information Security Management System (ISMS). Certification demonstrates security commitment to customers and partners.</p>
+
+                    <div class="grid-2">
+                        <div class="info-box">
+                            <h4>ISO 27001 (ISMS Requirements)</h4>
+                            <ul>
+                                <li>Management system requirements</li>
+                                <li>Risk assessment process</li>
+                                <li>Certification standard</li>
+                                <li>Annex A: Control objectives</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4>ISO 27002 (Control Guidance)</h4>
+                            <ul>
+                                <li>Implementation guidance</li>
+                                <li>93 controls in 4 themes</li>
+                                <li>Best practice recommendations</li>
+                                <li>Not certifiable directly</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>ISO 27001:2022 Control Themes</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Theme</th>
+                                <th>Controls</th>
+                                <th>Detection Relevance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Organizational</strong></td>
+                                <td>37 controls</td>
+                                <td>Policies, roles, threat intel, incident management</td>
+                            </tr>
+                            <tr>
+                                <td><strong>People</strong></td>
+                                <td>8 controls</td>
+                                <td>Awareness, insider threat considerations</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Physical</strong></td>
+                                <td>14 controls</td>
+                                <td>Physical access logging correlation</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Technological</strong></td>
+                                <td>34 controls</td>
+                                <td>★ Core: Logging, monitoring, malware, network</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Detection-Relevant Controls</h2>
+
+                    <h3>Organizational Controls</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Control</th>
+                                <th>Title</th>
+                                <th>Detection Implementation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>A.5.7</strong></td>
+                                <td>Threat Intelligence</td>
+                                <td>TI feeds, IOC integration, MITRE ATT&CK mapping</td>
+                            </tr>
+                            <tr>
+                                <td><strong>A.5.24</strong></td>
+                                <td>Incident Management Planning</td>
+                                <td>Detection playbooks, escalation procedures</td>
+                            </tr>
+                            <tr>
+                                <td><strong>A.5.25</strong></td>
+                                <td>Assessment and Decision</td>
+                                <td>Alert triage criteria, severity classification</td>
+                            </tr>
+                            <tr>
+                                <td><strong>A.5.26</strong></td>
+                                <td>Response to Incidents</td>
+                                <td>SOAR automation, response procedures</td>
+                            </tr>
+                            <tr>
+                                <td><strong>A.5.27</strong></td>
+                                <td>Learning from Incidents</td>
+                                <td>Detection tuning, lessons learned</td>
+                            </tr>
+                            <tr>
+                                <td><strong>A.5.28</strong></td>
+                                <td>Collection of Evidence</td>
+                                <td>Forensic logging, chain of custody</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Technological Controls</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Control</th>
+                                <th>Title</th>
+                                <th>Detection Implementation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>A.8.15</strong></td>
+                                <td>Logging</td>
+                                <td>★ Log collection, SIEM ingestion</td>
+                            </tr>
+                            <tr>
+                                <td><strong>A.8.16</strong></td>
+                                <td>Monitoring Activities</td>
+                                <td>★ Detection rules, alerting, dashboards</td>
+                            </tr>
+                            <tr>
+                                <td><strong>A.8.17</strong></td>
+                                <td>Clock Synchronization</td>
+                                <td>NTP for accurate log timestamps</td>
+                            </tr>
+                            <tr>
+                                <td><strong>A.8.7</strong></td>
+                                <td>Protection Against Malware</td>
+                                <td>EDR/AV alerts, malware detection</td>
+                            </tr>
+                            <tr>
+                                <td><strong>A.8.20</strong></td>
+                                <td>Network Security</td>
+                                <td>Network monitoring, IDS/IPS</td>
+                            </tr>
+                            <tr>
+                                <td><strong>A.8.21</strong></td>
+                                <td>Security of Network Services</td>
+                                <td>Network service monitoring</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Key Controls Deep Dive</h2>
+
+                    <h3>A.8.15 Logging</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>A.8.15 Requirements</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>A.8.15 Logging
+Control: Logs that record activities, exceptions, faults and other 
+         relevant events shall be produced, stored, protected and analysed.
+
+Implementation Requirements:
+├── What to Log:
+│   ├── User activities (login, logout, access)
+│   ├── Exceptions and security events
+│   ├── Faults and errors
+│   ├── Changes to configurations
+│   └── Access to sensitive information
+│
+├── Log Content:
+│   ├── User IDs
+│   ├── Dates and times
+│   ├── Device identity
+│   ├── Event type
+│   └── Outcome (success/failure)
+│
+├── Log Protection:
+│   ├── Integrity protection
+│   ├── Access control
+│   ├── Retention per policy
+│   └── Capacity management
+│
+└── Log Analysis:
+    ├── Regular review
+    ├── Automated analysis
+    └── Correlation and alerting</code></pre>
+                    </div>
+
+                    <h3>A.8.16 Monitoring Activities</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>A.8.16 Requirements</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>A.8.16 Monitoring Activities
+Control: Networks, systems and applications shall be monitored for 
+         anomalous behaviour and appropriate actions taken.
+
+Detection Engineering Implementation:
+├── What to Monitor:
+│   ├── Network traffic patterns
+│   ├── System resource usage
+│   ├── Application behaviour
+│   ├── User activity patterns
+│   └── Security events
+│
+├── Anomaly Detection:
+│   ├── Baseline establishment
+│   ├── Threshold alerting
+│   ├── Behavioral analytics (UEBA)
+│   └── Machine learning models
+│
+├── Alert Management:
+│   ├── Severity classification
+│   ├── Notification procedures
+│   ├── Escalation paths
+│   └── False positive management
+│
+└── Evidence:
+    ├── Documented monitoring procedures
+    ├── Active SIEM analytics rules
+    ├── Alert response procedures
+    └── Monitoring metrics/reports</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Audit Evidence</h2>
+
+                    <div class="info-box tip">
+                        <h4>💡 ISO 27001 Audit Evidence for Detection</h4>
+                        <p>Auditors will request:</p>
+                        <ul>
+                            <li><strong>A.8.15:</strong> Log sources list, retention policy, sample logs, SIEM configuration</li>
+                            <li><strong>A.8.16:</strong> Detection rules documentation, alert procedures, monitoring dashboards</li>
+                            <li><strong>A.5.7:</strong> Threat intel sources, IOC feeds, threat reports</li>
+                            <li><strong>A.5.24-27:</strong> Incident response procedures, closed incident examples</li>
+                        </ul>
+                    </div>
+
+                    <h3>Sample Audit Questions</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Logging (A.8.15)</h4>
+                            <ul>
+                                <li>What systems generate security logs?</li>
+                                <li>How long are logs retained?</li>
+                                <li>How is log integrity protected?</li>
+                                <li>Who has access to modify logs?</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Monitoring (A.8.16)</h4>
+                            <ul>
+                                <li>How is anomalous behavior detected?</li>
+                                <li>What alerts are generated?</li>
+                                <li>How are alerts prioritized?</li>
+                                <li>Show a recent alert investigation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What ISO 27001 controls relate to detection engineering?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Primary controls:</strong></p>
+                            <ul>
+                                <li><strong>A.8.15 Logging:</strong> Foundational - what we collect</li>
+                                <li><strong>A.8.16 Monitoring:</strong> Core - how we detect</li>
+                                <li><strong>A.5.7 Threat Intelligence:</strong> Context for detection</li>
+                            </ul>
+                            <p><strong>Supporting controls:</strong></p>
+                            <ul>
+                                <li><strong>A.5.24-28:</strong> Incident management lifecycle</li>
+                                <li><strong>A.8.7:</strong> Malware protection</li>
+                                <li><strong>A.8.20:</strong> Network security monitoring</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How does ISO 27001:2022 differ from 2013?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Key changes:</strong></p>
+                            <ul>
+                                <li><strong>Structure:</strong> 4 themes instead of 14 domains</li>
+                                <li><strong>Controls:</strong> 93 controls (down from 114)</li>
+                                <li><strong>New controls:</strong> Threat intelligence (A.5.7), monitoring (A.8.16), secure coding, cloud security</li>
+                                <li><strong>Attributes:</strong> Control types, properties, concepts for filtering</li>
+                            </ul>
+                            <p>For detection: A.8.16 (Monitoring) is now explicit whereas 2013 had monitoring scattered across multiple controls.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="nist-800-53.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        NIST 800-53
+                    </a>
+                    <a href="gdpr.html" class="nav-link next">
+                        GDPR & Privacy
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

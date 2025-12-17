@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAP Compliance - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="sap-security">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                            <span>SAP Security</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="sap-overview.html" class="nav-item">SAP Overview</a>
+                        <a href="architecture.html" class="nav-item">Architecture</a>
+                        <a href="modules-services.html" class="nav-item">Modules & Services</a>
+                        <a href="security-fundamentals.html" class="nav-item">Security Fundamentals</a>
+                        <a href="log-types.html" class="nav-item">Log Types</a>
+                        <a href="threat-detection.html" class="nav-item">Threat Detection</a>
+                        <a href="siem-integration.html" class="nav-item">SIEM Integration</a>
+                        <a href="compliance.html" class="nav-item active">SAP Compliance</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="sap-overview.html">SAP Security</a>
+                    <span class="separator">/</span>
+                    <span class="current">SAP Compliance</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>SAP Compliance</h1>
+                    <p class="subtitle">Compliance requirements for SAP systems—SOX controls, GDPR considerations, audit evidence, and GRC integration.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Key Compliance Frameworks</h2>
+                    
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Framework</th>
+                                <th>SAP Relevance</th>
+                                <th>Key Controls</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>SOX</strong></td>
+                                <td>Financial reporting integrity</td>
+                                <td>SoD, change management, access controls</td>
+                            </tr>
+                            <tr>
+                                <td><strong>GDPR</strong></td>
+                                <td>Personal data in HR, CRM</td>
+                                <td>Data access logging, retention, erasure</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PCI DSS</strong></td>
+                                <td>Payment card data</td>
+                                <td>Access controls, logging, encryption</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ISO 27001</strong></td>
+                                <td>Information security</td>
+                                <td>Access management, logging, monitoring</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>SOX Controls for SAP</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Key SOX IT General Controls</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>SOX IT GENERAL CONTROLS (ITGCs) FOR SAP:
+
+ACCESS CONTROLS
+├── User provisioning/deprovisioning procedures
+├── Periodic access reviews (SU01D report)
+├── Privileged access management (SAP_ALL, Basis)
+├── Password policies (login/password parameters)
+└── SoD monitoring and remediation
+
+CHANGE MANAGEMENT
+├── Transport path controls (DEV → QAS → PRD)
+├── Segregation of development and production
+├── Change approval documentation
+├── Emergency change procedures ("firefighter")
+└── Transport release authorization
+
+COMPUTER OPERATIONS
+├── Batch job monitoring (SM37)
+├── System backup procedures
+├── Interface monitoring
+└── Error handling
+
+LOGGING AND MONITORING
+├── Security Audit Log enabled
+├── Log retention (typically 7 years)
+├── Monitoring of critical transactions
+└── Regular log review evidence</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Audit Evidence Queries</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - SOX Audit Evidence</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// 1. User Access Review Evidence
+SAPUserMasterData
+| where TimeGenerated > ago(90d)
+| summarize arg_max(TimeGenerated, *) by UserName
+| project UserName, UserType, Department, LastLogon, 
+          Roles = RoleAssignments, Status
+| where Status == "Active"
+
+// 2. Privileged Access Evidence
+SAPRoleAssignments
+| where RoleName has_any ("SAP_ALL", "SAP_NEW", "Z_ADMIN")
+| project UserName, RoleName, AssignedDate, AssignedBy
+| summarize PrivilegedUsers = make_set(UserName) by RoleName
+
+// 3. SoD Violation Report
+SAPSoDViolations
+| where TimeGenerated > ago(30d)
+| summarize ViolationCount = count() by UserName, ConflictType
+| order by ViolationCount desc
+
+// 4. Transport Approval Evidence
+SAPTransportLog
+| where TimeGenerated > ago(90d)
+| where TargetSystem == "PRD"
+| project TransportID, Description, ReleasedBy, ApprovedBy, 
+          ReleaseDate, ImportDate
+| where isnotempty(ApprovedBy)
+
+// 5. Critical Transaction Usage
+SAPSecurityAuditLog
+| where TimeGenerated > ago(30d)
+| where TransactionCode in ("SU01", "PFCG", "SE38", "STMS")
+| summarize ExecutionCount = count() by User, TransactionCode
+| order by ExecutionCount desc</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>SAP GRC Integration</h2>
+
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Access Control (AC)</h4>
+                            <ul>
+                                <li>SoD rule management</li>
+                                <li>Emergency access (firefighter)</li>
+                                <li>Access request workflow</li>
+                                <li>Periodic certification</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Process Control (PC)</h4>
+                            <ul>
+                                <li>Automated control monitoring</li>
+                                <li>Control testing</li>
+                                <li>Issue management</li>
+                                <li>Compliance dashboards</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Risk Management (RM)</h4>
+                            <ul>
+                                <li>Risk identification</li>
+                                <li>Risk assessment</li>
+                                <li>Mitigation tracking</li>
+                                <li>Reporting</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>GDPR for SAP</h2>
+
+                    <div class="info-box tip">
+                        <h4>💡 SAP GDPR Considerations</h4>
+                        <ul>
+                            <li><strong>Personal data locations:</strong> HR (PA* tables), CRM, SRM vendor contacts</li>
+                            <li><strong>Read Access Logging:</strong> Enable RAL for sensitive data access (transaction SRALMANAGER)</li>
+                            <li><strong>Data retention:</strong> Information Lifecycle Management (ILM)</li>
+                            <li><strong>Right to erasure:</strong> SAP ILM with data destruction</li>
+                            <li><strong>Consent management:</strong> Customer consent in CRM</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you ensure SOX compliance for SAP?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Key controls:</strong></p>
+                            <ol>
+                                <li><strong>Access controls:</strong> User provisioning procedures, periodic reviews, SoD monitoring</li>
+                                <li><strong>Change management:</strong> DEV→QAS→PRD transport path, approvals, segregation</li>
+                                <li><strong>Logging:</strong> Security Audit Log enabled, retained, reviewed</li>
+                                <li><strong>Privileged access:</strong> SAP_ALL usage monitored, firefighter procedures</li>
+                            </ol>
+                            <p><strong>Detection support:</strong> Generate evidence reports, monitor for control violations, alert on SoD conflicts.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="siem-integration.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        SIEM Integration
+                    </a>
+                    <a href="../detection-engineering/fundamentals.html" class="nav-link next">
+                        Detection Fundamentals
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

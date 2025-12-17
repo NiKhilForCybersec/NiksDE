@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCP Security - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span>Detection Engineering</span>
+                </a>
+                <button class="sidebar-toggle" aria-label="Toggle sidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="cloud">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+                            <span>Cloud Security</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item">Cloud Security Fundamentals</a>
+                        <a href="aws-security.html" class="nav-item">AWS Security</a>
+                        <a href="azure-security.html" class="nav-item">Azure Security</a>
+                        <a href="gcp-security.html" class="nav-item active">GCP Security</a>
+                        <a href="multi-cloud.html" class="nav-item">Multi-Cloud Strategy</a>
+                        <a href="cspm.html" class="nav-item">CSPM & CWPP</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="fundamentals.html">Cloud Security</a>
+                    <span class="separator">/</span>
+                    <span class="current">GCP Security</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>GCP Security</h1>
+                    <p class="subtitle">Comprehensive GCP security monitoring with Cloud Audit Logs, Security Command Center, and detection engineering for Google Cloud environments.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>GCP Security Architecture</h2>
+                    
+                    <div class="grid-2">
+                        <div class="info-box">
+                            <h4>📊 Detection & Monitoring</h4>
+                            <ul>
+                                <li><strong>Cloud Audit Logs</strong> - API activity logging</li>
+                                <li><strong>Cloud Logging</strong> - Centralized log management</li>
+                                <li><strong>Security Command Center</strong> - Threat detection</li>
+                                <li><strong>Chronicle SIEM</strong> - Google's security analytics</li>
+                                <li><strong>Event Threat Detection</strong> - Built-in detections</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4>🛡️ Preventive Controls</h4>
+                            <ul>
+                                <li><strong>Cloud IAM</strong> - Identity & access</li>
+                                <li><strong>Organization Policies</strong> - Guardrails</li>
+                                <li><strong>VPC Service Controls</strong> - Data exfiltration prevention</li>
+                                <li><strong>Cloud Armor</strong> - DDoS & WAF</li>
+                                <li><strong>Secret Manager</strong> - Secrets management</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>GCP Resource Hierarchy</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>GCP Resource Hierarchy</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                    Organization (domain.com)                     │
+│      Organization Policies | IAM Policies | Audit Config         │
+└────────────────────────────┬────────────────────────────────────┘
+                             │
+        ┌────────────────────┼────────────────────┐
+        ▼                    ▼                    ▼
+┌───────────────┐    ┌───────────────┐    ┌───────────────┐
+│    Folder     │    │    Folder     │    │    Folder     │
+│  (Production) │    │  (Staging)    │    │   (Shared)    │
+└───────┬───────┘    └───────┬───────┘    └───────┬───────┘
+        ▼                    ▼                    ▼
+┌───────────────┐    ┌───────────────┐    ┌───────────────┐
+│   Project     │    │   Project     │    │   Project     │
+│  (prod-app)   │    │  (stage-app)  │    │  (logging)    │
+│ GCE,GCS,SQL   │    │  GKE,Run      │    │ BigQuery,Sink │
+└───────────────┘    └───────────────┘    └───────────────┘</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Cloud Audit Logs Deep Dive</h2>
+                    
+                    <h3>Audit Log Types</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Log Type</th>
+                                <th>Contents</th>
+                                <th>Default</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Admin Activity</strong></td>
+                                <td>Resource configuration changes (create, delete, update)</td>
+                                <td>Always enabled, free</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Data Access</strong></td>
+                                <td>Data reads/writes (BigQuery queries, GCS access)</td>
+                                <td>Disabled by default, charged</td>
+                            </tr>
+                            <tr>
+                                <td><strong>System Event</strong></td>
+                                <td>GCP system actions (live migration, maintenance)</td>
+                                <td>Always enabled, free</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Policy Denied</strong></td>
+                                <td>VPC Service Control violations</td>
+                                <td>Always enabled when VPC-SC used</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Audit Log Structure</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Cloud Audit Log JSON</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>{
+    "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "authenticationInfo": {
+            "principalEmail": "admin@company.com"
+        },
+        "requestMetadata": {
+            "callerIp": "198.51.100.50",
+            "callerSuppliedUserAgent": "gcloud/450.0.0"
+        },
+        "serviceName": "iam.googleapis.com",
+        "methodName": "google.iam.admin.v1.CreateServiceAccountKey",
+        "authorizationInfo": [{
+            "permission": "iam.serviceAccountKeys.create",
+            "granted": true
+        }],
+        "resourceName": "projects/-/serviceAccounts/my-sa@project.iam.gserviceaccount.com"
+    },
+    "resource": {
+        "type": "service_account",
+        "labels": { "project_id": "my-project" }
+    },
+    "timestamp": "2024-01-15T10:30:00.000Z",
+    "severity": "NOTICE"
+}</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Critical GCP Detections</h2>
+
+                    <div class="info-box warning">
+                        <h4>⚠️ MITRE ATT&CK: T1078.004 - Valid Accounts: Cloud Accounts</h4>
+                        <p>Service account key theft and IAM privilege escalation are primary attack vectors in GCP.</p>
+                    </div>
+
+                    <h3>Detection: Service Account Key Creation</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>BigQuery SQL - SA Key Creation</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>SELECT
+    timestamp,
+    protopayload_auditlog.authenticationInfo.principalEmail AS actor,
+    protopayload_auditlog.requestMetadata.callerIp AS source_ip,
+    protopayload_auditlog.resourceName AS service_account,
+    resource.labels.project_id AS project
+FROM `project.dataset.cloudaudit_googleapis_com_activity_*`
+WHERE _TABLE_SUFFIX >= FORMAT_DATE('%Y%m%d', DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY))
+    AND protopayload_auditlog.methodName = 'google.iam.admin.v1.CreateServiceAccountKey'
+    -- Alert: Keys created by humans (not automation)
+    AND protopayload_auditlog.authenticationInfo.principalEmail NOT LIKE '%gserviceaccount.com'
+ORDER BY timestamp DESC</code></pre>
+                    </div>
+
+                    <h3>Detection: Privileged Role Grant</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>BigQuery SQL - High Privilege IAM Assignment</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>WITH privileged_roles AS (
+    SELECT role FROM UNNEST([
+        'roles/owner', 'roles/editor', 'roles/iam.securityAdmin',
+        'roles/iam.serviceAccountAdmin', 'roles/resourcemanager.organizationAdmin'
+    ]) AS role
+)
+SELECT
+    timestamp,
+    protopayload_auditlog.authenticationInfo.principalEmail AS granting_user,
+    JSON_EXTRACT_SCALAR(protopayload_auditlog.serviceData, 
+        '$.policyDelta.bindingDeltas[0].member') AS target_member,
+    JSON_EXTRACT_SCALAR(protopayload_auditlog.serviceData, 
+        '$.policyDelta.bindingDeltas[0].role') AS granted_role,
+    resource.labels.project_id AS target_project
+FROM `project.dataset.cloudaudit_googleapis_com_activity_*`
+WHERE _TABLE_SUFFIX >= FORMAT_DATE('%Y%m%d', DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY))
+    AND protopayload_auditlog.methodName = 'SetIamPolicy'
+    AND JSON_EXTRACT_SCALAR(protopayload_auditlog.serviceData, 
+        '$.policyDelta.bindingDeltas[0].action') = 'ADD'
+    AND JSON_EXTRACT_SCALAR(protopayload_auditlog.serviceData, 
+        '$.policyDelta.bindingDeltas[0].role') IN (SELECT role FROM privileged_roles)</code></pre>
+                    </div>
+
+                    <h3>Detection: Logging Configuration Tampering</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>BigQuery SQL - Log Sink Deletion</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>SELECT
+    timestamp,
+    protopayload_auditlog.authenticationInfo.principalEmail AS actor,
+    protopayload_auditlog.methodName AS action,
+    protopayload_auditlog.resourceName AS target_resource,
+    resource.labels.project_id AS project
+FROM `project.dataset.cloudaudit_googleapis_com_activity_*`
+WHERE _TABLE_SUFFIX >= FORMAT_DATE('%Y%m%d', DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY))
+    AND protopayload_auditlog.serviceName = 'logging.googleapis.com'
+    AND protopayload_auditlog.methodName IN (
+        'google.logging.v2.ConfigServiceV2.DeleteSink',
+        'google.logging.v2.ConfigServiceV2.CreateExclusion'
+    )
+-- MITRE: T1562.008 - Impair Defenses: Disable Cloud Logs</code></pre>
+                    </div>
+
+                    <h3>Detection: GCS Bucket Made Public</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>BigQuery SQL - Public Storage Access</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>SELECT
+    timestamp,
+    protopayload_auditlog.authenticationInfo.principalEmail AS actor,
+    protopayload_auditlog.resourceName AS bucket,
+    JSON_EXTRACT_SCALAR(protopayload_auditlog.serviceData, 
+        '$.policyDelta.bindingDeltas[0].member') AS granted_to,
+    resource.labels.project_id AS project
+FROM `project.dataset.cloudaudit_googleapis_com_activity_*`
+WHERE _TABLE_SUFFIX >= FORMAT_DATE('%Y%m%d', DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY))
+    AND protopayload_auditlog.serviceName = 'storage.googleapis.com'
+    AND protopayload_auditlog.methodName = 'storage.setIamPermissions'
+    AND (
+        JSON_EXTRACT_SCALAR(protopayload_auditlog.serviceData, 
+            '$.policyDelta.bindingDeltas[0].member') = 'allUsers'
+        OR JSON_EXTRACT_SCALAR(protopayload_auditlog.serviceData, 
+            '$.policyDelta.bindingDeltas[0].member') = 'allAuthenticatedUsers'
+    )
+-- MITRE: T1530 - Data from Cloud Storage Object</code></pre>
+                    </div>
+
+                    <h3>Detection: Firewall Rules 0.0.0.0/0</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>BigQuery SQL - Unrestricted Firewall</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>SELECT
+    timestamp,
+    protopayload_auditlog.authenticationInfo.principalEmail AS actor,
+    JSON_EXTRACT_SCALAR(protopayload_auditlog.request, '$.name') AS firewall_rule,
+    JSON_EXTRACT(protopayload_auditlog.request, '$.sourceRanges') AS source_ranges,
+    JSON_EXTRACT(protopayload_auditlog.request, '$.allowed') AS allowed_ports,
+    resource.labels.project_id AS project
+FROM `project.dataset.cloudaudit_googleapis_com_activity_*`
+WHERE _TABLE_SUFFIX >= FORMAT_DATE('%Y%m%d', DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY))
+    AND protopayload_auditlog.serviceName = 'compute.googleapis.com'
+    AND protopayload_auditlog.methodName IN (
+        'v1.compute.firewalls.insert', 'v1.compute.firewalls.update'
+    )
+    AND JSON_EXTRACT(protopayload_auditlog.request, '$.sourceRanges') LIKE '%0.0.0.0/0%'</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Security Command Center</h2>
+
+                    <h3>SCC Capabilities</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Standard</th>
+                                <th>Premium</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Security Health Analytics</strong></td>
+                                <td>Basic misconfigs</td>
+                                <td>Full detection</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Event Threat Detection</strong></td>
+                                <td>✗</td>
+                                <td>✓ Real-time threats</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Container Threat Detection</strong></td>
+                                <td>✗</td>
+                                <td>✓ GKE runtime</td>
+                            </tr>
+                            <tr>
+                                <td><strong>VM Threat Detection</strong></td>
+                                <td>✗</td>
+                                <td>✓ Cryptomining</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Compliance</strong></td>
+                                <td>Limited</td>
+                                <td>CIS, PCI, ISO</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="info-box danger">
+                        <h4>🚨 Critical SCC Findings</h4>
+                        <ul>
+                            <li><strong>CRYPTOMINING_RUNNING_PROCESS</strong> - Active cryptominer</li>
+                            <li><strong>MALWARE_DETECTED</strong> - Malicious software</li>
+                            <li><strong>EXFILTRATION_TO_EXTERNAL_STORAGE</strong> - Data leaving org</li>
+                            <li><strong>ANOMALOUS_SERVICE_ACCOUNT_ACCESS</strong> - Unusual SA activity</li>
+                            <li><strong>PUBLIC_BUCKET_ACL</strong> - Storage exposed</li>
+                        </ul>
+                    </div>
+
+                    <h3>Python - Query SCC Findings</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>SCC API Integration</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>from google.cloud import securitycenter_v1
+from datetime import datetime, timedelta
+
+def list_high_severity_findings(organization_id: str, hours: int = 24):
+    client = securitycenter_v1.SecurityCenterClient()
+    parent = f"organizations/{organization_id}/sources/-"
+    
+    start_time = datetime.utcnow() - timedelta(hours=hours)
+    finding_filter = f'''
+        (severity = "HIGH" OR severity = "CRITICAL") 
+        AND state = "ACTIVE"
+        AND event_time >= "{start_time.isoformat()}Z"
+    '''
+    
+    findings = client.list_findings(
+        request={"parent": parent, "filter": finding_filter}
+    )
+    
+    for result in findings:
+        f = result.finding
+        print(f"{f.category} - {f.severity.name}")
+        print(f"  Resource: {f.resource_name}")
+        print(f"  Time: {f.event_time}")</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>GCP Detection Best Practices</h2>
+
+                    <div class="info-box tip">
+                        <h4>💡 Logging Configuration Checklist</h4>
+                        <ul>
+                            <li>Enable Data Access logs for sensitive services (BigQuery, GCS, Secret Manager)</li>
+                            <li>Create organization-level log sinks to centralized project</li>
+                            <li>Export logs to BigQuery for long-term analysis</li>
+                            <li>Enable Security Command Center Premium</li>
+                            <li>Configure VPC Flow Logs for network visibility</li>
+                        </ul>
+                    </div>
+
+                    <h3>Detection Coverage Matrix</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Must-Have Detections</h4>
+                            <ul>
+                                <li>✅ SA key creation</li>
+                                <li>✅ Privileged role grants</li>
+                                <li>✅ Public bucket/object ACLs</li>
+                                <li>✅ Firewall 0.0.0.0/0</li>
+                                <li>✅ Log sink deletion</li>
+                                <li>✅ SCC critical findings</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Advanced Detections</h4>
+                            <ul>
+                                <li>🔍 SA token external usage</li>
+                                <li>🔍 Cross-project access</li>
+                                <li>🔍 Cloud Function backdoors</li>
+                                <li>🔍 BigQuery data export</li>
+                                <li>🔍 GKE privileged containers</li>
+                                <li>🔍 Secret Manager anomalies</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What's the difference between Admin Activity and Data Access logs?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Admin Activity logs</strong> capture control plane operations that modify configuration. Creating a VM, changing IAM, modifying buckets—always on, free, cannot disable.</p>
+                            <p><strong>Data Access logs</strong> capture data plane operations reading/writing user data. GCS reads, BigQuery queries—disabled by default, incur costs due to volume.</p>
+                            <p><strong>Detection:</strong> Admin Activity is essential for security monitoring. Enable Data Access selectively for sensitive resources (critical GCS, BigQuery with PII, Secret Manager).</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How would you detect compromised service account keys?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Detection indicators:</strong></p>
+                            <ul>
+                                <li>API calls from external IPs (not GCP internal)</li>
+                                <li>Activity from unexpected regions</li>
+                                <li>Unusual API methods for that SA's purpose</li>
+                                <li>High volume of reconnaissance calls</li>
+                                <li>SCC findings for anomalous SA activity</li>
+                            </ul>
+                            <p><strong>Response:</strong> Disable key (don't delete), review all Admin Activity logs, check for persistence (new keys, IAM changes), assess data access, consider migrating to workload identity.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: What is VPC Service Controls and why important for detection?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>VPC Service Controls</strong> creates security perimeters preventing data exfiltration even with valid credentials. Restricts access based on IP, device state, identity.</p>
+                            <p><strong>Detection value:</strong> Policy Denied logs capture blocked attempts. Repeated violations may indicate compromise. VPC-SC is preventive, but its logs detect attack attempts that would otherwise succeed.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="azure-security.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        Azure Security
+                    </a>
+                    <a href="multi-cloud.html" class="nav-link next">
+                        Multi-Cloud Strategy
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

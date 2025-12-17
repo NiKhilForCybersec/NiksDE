@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAP Architecture - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="sap-security">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                            <span>SAP Security</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="sap-overview.html" class="nav-item">SAP Overview</a>
+                        <a href="architecture.html" class="nav-item active">Architecture</a>
+                        <a href="modules-services.html" class="nav-item">Modules & Services</a>
+                        <a href="security-fundamentals.html" class="nav-item">Security Fundamentals</a>
+                        <a href="log-types.html" class="nav-item">Log Types</a>
+                        <a href="threat-detection.html" class="nav-item">Threat Detection</a>
+                        <a href="siem-integration.html" class="nav-item">SIEM Integration</a>
+                        <a href="compliance.html" class="nav-item">SAP Compliance</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="sap-overview.html">SAP Security</a>
+                    <span class="separator">/</span>
+                    <span class="current">Architecture</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>SAP Architecture</h1>
+                    <p class="subtitle">Understanding SAP system architecture—three-tier model, system landscape, and security-relevant components for detection engineering.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>Three-Tier Architecture</h2>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>SAP System Architecture</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                    SAP Three-Tier Architecture                   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │                  PRESENTATION TIER                       │    │
+│  │  ┌───────────┐  ┌───────────┐  ┌───────────┐           │    │
+│  │  │  SAP GUI  │  │  Browser  │  │  Mobile   │           │    │
+│  │  │ (Windows) │  │  (Fiori)  │  │   Apps    │           │    │
+│  │  └─────┬─────┘  └─────┬─────┘  └─────┬─────┘           │    │
+│  └────────┼──────────────┼──────────────┼──────────────────┘    │
+│           │              │              │                        │
+│           ▼              ▼              ▼                        │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │                   APPLICATION TIER                       │    │
+│  │  ┌─────────────────────────────────────────────────┐   │    │
+│  │  │              SAP NetWeaver AS ABAP               │   │    │
+│  │  │  ┌──────────┐  ┌──────────┐  ┌──────────┐      │   │    │
+│  │  │  │ Dispatcher│  │ Work     │  │  ICM     │      │   │    │
+│  │  │  │          │  │ Processes │  │ (Web)    │      │   │    │
+│  │  │  └──────────┘  └──────────┘  └──────────┘      │   │    │
+│  │  └─────────────────────────────────────────────────┘   │    │
+│  │                         │                               │    │
+│  │  ┌─────────────────────────────────────────────────┐   │    │
+│  │  │              SAP NetWeaver AS Java               │   │    │
+│  │  │  (Portal, Process Integration, etc.)            │   │    │
+│  │  └─────────────────────────────────────────────────┘   │    │
+│  └────────────────────────────┬────────────────────────────┘    │
+│                               │                                  │
+│                               ▼                                  │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │                    DATABASE TIER                         │    │
+│  │  ┌───────────┐  ┌───────────┐  ┌───────────┐           │    │
+│  │  │ SAP HANA  │  │   Oracle  │  │ SQL Server│           │    │
+│  │  └───────────┘  └───────────┘  └───────────┘           │    │
+│  └─────────────────────────────────────────────────────────┘    │
+│                                                                   │
+└─────────────────────────────────────────────────────────────────┘</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>System Landscape</h2>
+
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>System</th>
+                                <th>Purpose</th>
+                                <th>Security Consideration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>DEV</strong></td>
+                                <td>Development environment</td>
+                                <td>Code changes, debug access, less restrictive</td>
+                            </tr>
+                            <tr>
+                                <td><strong>QAS</strong></td>
+                                <td>Quality assurance/testing</td>
+                                <td>Test data, transport testing</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PRD</strong></td>
+                                <td>Production environment</td>
+                                <td>Real data, strictest controls, primary target</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SBX</strong></td>
+                                <td>Sandbox for experiments</td>
+                                <td>Often overlooked, may have production copies</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="info-box warning">
+                        <h4>⚠️ Security Focus: Transport System</h4>
+                        <p>Changes move through the landscape via transports (DEV → QAS → PRD). Compromised transport path can deploy malicious code to production.</p>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Key Components for Detection</h2>
+
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Message Server</h4>
+                            <ul>
+                                <li>Load balancing</li>
+                                <li>Logon groups</li>
+                                <li>Port 36XX (internal)</li>
+                                <li>Target for system discovery</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Dispatcher</h4>
+                            <ul>
+                                <li>Manages work processes</li>
+                                <li>Port 32XX (SAP GUI)</li>
+                                <li>Port 33XX (RFC)</li>
+                                <li>Authentication entry point</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Internet Communication Manager</h4>
+                            <ul>
+                                <li>HTTP/HTTPS handling</li>
+                                <li>Port 443 (HTTPS)</li>
+                                <li>Fiori, Web services</li>
+                                <li>External attack surface</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Network Ports</h2>
+
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Port Range</th>
+                                <th>Service</th>
+                                <th>Detection Relevance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>32XX</td>
+                                <td>SAP GUI (Dispatcher)</td>
+                                <td>User authentication, RFC calls</td>
+                            </tr>
+                            <tr>
+                                <td>33XX</td>
+                                <td>RFC Gateway</td>
+                                <td>Remote function calls, integration</td>
+                            </tr>
+                            <tr>
+                                <td>36XX</td>
+                                <td>Message Server</td>
+                                <td>System discovery, internal comms</td>
+                            </tr>
+                            <tr>
+                                <td>443/80XX</td>
+                                <td>ICM (Web)</td>
+                                <td>Web attacks, Fiori access</td>
+                            </tr>
+                            <tr>
+                                <td>50013/50014</td>
+                                <td>SAP Start Service</td>
+                                <td>Management, should be restricted</td>
+                            </tr>
+                            <tr>
+                                <td>30015</td>
+                                <td>HANA SQL</td>
+                                <td>Database access</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Explain SAP's three-tier architecture.</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Presentation tier:</strong> SAP GUI, Fiori (browser), mobile apps - where users interact</p>
+                            <p><strong>Application tier:</strong> NetWeaver Application Server - business logic, ABAP/Java runtime</p>
+                            <p><strong>Database tier:</strong> HANA, Oracle, SQL Server - data storage</p>
+                            <p><strong>Security relevance:</strong> Each tier has different attack vectors. Web tier faces internet threats, application tier handles authorization, database tier contains sensitive data.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="sap-overview.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        SAP Overview
+                    </a>
+                    <a href="modules-services.html" class="nav-link next">
+                        Modules & Services
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

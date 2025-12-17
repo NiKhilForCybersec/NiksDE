@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detection Fundamentals | Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <div class="logo-icon">DE</div>
+                    <span class="logo-text">Detection Engineering</span>
+                </div>
+                <button class="sidebar-toggle" aria-label="Toggle Sidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="sidebar-search">
+                <input type="text" class="search-input" placeholder="Search topics...">
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section" data-section="home">
+                    <a href="../../index.html" class="nav-section-header" style="text-decoration: none;">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                            <span>Home</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="nav-section active expanded" data-section="detection">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                            <span>Detection Engineering</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="fundamentals.html" class="nav-item active">Detection Fundamentals</a>
+                        <a href="sentinel-deep-dive.html" class="nav-item">Microsoft Sentinel Deep Dive</a>
+                        <a href="splunk-comparison.html" class="nav-item">Splunk Comparison</a>
+                        <a href="detection-logic.html" class="nav-item">Detection Logic Design</a>
+                        <a href="mitre-attack.html" class="nav-item">MITRE ATT&CK Mapping</a>
+                        <a href="use-case-framework.html" class="nav-item">Use Case Framework</a>
+                        <a href="metrics.html" class="nav-item">Metrics & Optimization</a>
+                    </div>
+                </div>
+
+                <div class="nav-section" data-section="logs">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                            <span>Log Analysis & Data</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../log-analysis/fundamentals.html" class="nav-item">Log Fundamentals</a>
+                        <a href="../log-analysis/network-logs.html" class="nav-item">Network Log Sources</a>
+                        <a href="../log-analysis/endpoint-logs.html" class="nav-item">Endpoint Log Sources</a>
+                        <a href="../log-analysis/cloud-logs.html" class="nav-item">Cloud Log Sources</a>
+                        <a href="../log-analysis/regex.html" class="nav-item">Regex Mastery</a>
+                    </div>
+                </div>
+
+                <div class="nav-section" data-section="sap">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            <span>SAP Security</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../sap-security/sap-overview.html" class="nav-item">What is SAP?</a>
+                        <a href="../sap-security/architecture.html" class="nav-item">SAP Architecture</a>
+                        <a href="../sap-security/threat-detection.html" class="nav-item">Threat Detection</a>
+                    </div>
+                </div>
+
+                <div class="nav-section" data-section="reference">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                            <span>Quick Reference</span>
+                        </div>
+                        <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="nav-items">
+                        <a href="../references/kql-cheatsheet.html" class="nav-item">KQL Cheat Sheet</a>
+                        <a href="../references/spl-cheatsheet.html" class="nav-item">SPL Cheat Sheet</a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="breadcrumb">
+                    <a href="../../index.html" class="breadcrumb-item">Home</a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-item">Detection Engineering</span>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-item active">Fundamentals</span>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <h1>Detection Engineering Fundamentals</h1>
+                <p style="font-size: 1.125rem; color: var(--text-secondary); max-width: 800px;">
+                    Master the core concepts of detection engineering - from understanding the detection lifecycle to 
+                    building effective rules that minimize false positives while catching real threats.
+                </p>
+
+                <h2>What is Detection Engineering?</h2>
+
+                <p>Detection Engineering is the discipline of designing, building, testing, and maintaining security detection capabilities. It sits at the intersection of threat intelligence, security operations, and software engineering. A detection engineer transforms knowledge about adversary tactics, techniques, and procedures (TTPs) into actionable alerts that enable SOC analysts to identify and respond to threats.</p>
+
+                <div class="info-box info">
+                    <div class="info-box-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        Key Distinction
+                    </div>
+                    <p>Detection engineers don't just write queries - they design <strong>detection strategies</strong>. A good detection considers the data available, the threat landscape, false positive rates, analyst workload, and how the detection fits into the broader security program.</p>
+                </div>
+
+                <h2>The Detection Lifecycle</h2>
+
+                <p>Effective detection engineering follows a structured lifecycle:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Detection Lifecycle</span>
+                    </div>
+                    <pre><code>┌─────────────────────────────────────────────────────────────────────┐
+│                    DETECTION ENGINEERING LIFECYCLE                   │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    │
+│   │ IDENTIFY │───▶│  DESIGN  │───▶│   TEST   │───▶│  DEPLOY  │    │
+│   │          │    │          │    │          │    │          │    │
+│   │ • Threat │    │ • Logic  │    │ • Unit   │    │ • Stage  │    │
+│   │   Intel  │    │ • Data   │    │ • Attack │    │ • Prod   │    │
+│   │ • Gaps   │    │ • Tuning │    │   Sim    │    │ • Enable │    │
+│   └──────────┘    └──────────┘    └──────────┘    └──────────┘    │
+│        │                                               │           │
+│        │              ┌──────────┐                    │           │
+│        │              │  REVIEW  │                    │           │
+│        └──────────────│          │◀───────────────────┘           │
+│                       │ • Metrics│                                │
+│                       │ • Tune   │                                │
+│                       │ • Retire │                                │
+│                       └──────────┘                                │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘</code></pre>
+                </div>
+
+                <h3>1. Identify: Understanding the Threat</h3>
+
+                <p>Before writing a single line of KQL or SPL, understand what you're trying to detect:</p>
+
+                <ul>
+                    <li><strong>Threat Intelligence:</strong> What TTPs are relevant to your organization?</li>
+                    <li><strong>Coverage Gaps:</strong> What attacks can't you currently detect?</li>
+                    <li><strong>Business Risk:</strong> What assets need protection?</li>
+                    <li><strong>Data Availability:</strong> What logs do you have that could reveal this attack?</li>
+                </ul>
+
+                <h3>2. Design: Building the Detection</h3>
+
+                <p>The design phase involves selecting the right approach and writing the detection logic:</p>
+
+                <div class="comparison-grid">
+                    <div class="comparison-block sentinel">
+                        <div class="comparison-header">
+                            <div class="comparison-logo">MS</div>
+                            <h4 class="comparison-title mt-0 mb-0">Microsoft Sentinel Approach</h4>
+                        </div>
+                        <p>Sentinel uses <strong>KQL (Kusto Query Language)</strong> for detections. Key components:</p>
+                        <ul>
+                            <li><strong>Analytics Rules:</strong> Scheduled, NRT, or Fusion rules</li>
+                            <li><strong>ASIM:</strong> Advanced Security Information Model for normalization</li>
+                            <li><strong>Watchlists:</strong> Reference data for enrichment</li>
+                            <li><strong>Entity Mapping:</strong> Connect alerts to accounts, hosts, IPs</li>
+                        </ul>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// Sentinel Analytics Rule Example
+SecurityEvent
+| where EventID == 4625
+| where TimeGenerated > ago(15m)
+| summarize FailedAttempts = count() 
+    by TargetAccount, IpAddress, Computer
+| where FailedAttempts > 10
+| extend AccountEntity = TargetAccount
+| extend IPEntity = IpAddress
+| extend HostEntity = Computer</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-block splunk">
+                        <div class="comparison-header">
+                            <div class="comparison-logo">SP</div>
+                            <h4 class="comparison-title mt-0 mb-0">Splunk Approach</h4>
+                        </div>
+                        <p>Splunk uses <strong>SPL (Search Processing Language)</strong>. Key components:</p>
+                        <ul>
+                            <li><strong>Correlation Searches:</strong> Scheduled searches that create notables</li>
+                            <li><strong>CIM:</strong> Common Information Model for normalization</li>
+                            <li><strong>Lookups:</strong> Reference data for enrichment</li>
+                            <li><strong>Risk-Based Alerting:</strong> Aggregate risk scores</li>
+                        </ul>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">SPL</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>| tstats count as FailedAttempts 
+    from datamodel=Authentication 
+    where Authentication.action=failure 
+    by Authentication.user, 
+       Authentication.src, 
+       Authentication.dest 
+    span=15m
+| rename Authentication.* as *
+| where FailedAttempts > 10
+| eval risk_score=if(FailedAttempts>50,80,40)
+| collect index=risk</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>3. Test: Validating the Detection</h3>
+
+                <div class="info-box warning">
+                    <div class="info-box-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        </svg>
+                        Never Deploy Untested Detections
+                    </div>
+                    <p>A detection that generates false positives will be disabled or ignored. A detection that misses real attacks provides false confidence. Testing is non-negotiable.</p>
+                </div>
+
+                <p>Testing approaches include:</p>
+
+                <ul>
+                    <li><strong>Unit Testing:</strong> Run the query against historical data with known events</li>
+                    <li><strong>Attack Simulation:</strong> Use Atomic Red Team, MITRE Caldera, or manual testing</li>
+                    <li><strong>False Positive Validation:</strong> Run against production data to identify noise</li>
+                    <li><strong>Threshold Tuning:</strong> Adjust counts, timeframes, and exclusions</li>
+                </ul>
+
+                <h3>4. Deploy: Promoting to Production</h3>
+
+                <p>Deployment should follow change management processes:</p>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Stage</th>
+                                <th>Sentinel</th>
+                                <th>Splunk</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Development</td>
+                                <td>Create in dev workspace, test with hunting queries</td>
+                                <td>Create in dev app, test as ad-hoc search</td>
+                            </tr>
+                            <tr>
+                                <td>Staging</td>
+                                <td>Enable rule in "Informational only" mode</td>
+                                <td>Enable correlation search with suppression</td>
+                            </tr>
+                            <tr>
+                                <td>Production</td>
+                                <td>Promote via ARM templates or Repositories</td>
+                                <td>Deploy via Deployment Server or app</td>
+                            </tr>
+                            <tr>
+                                <td>Monitoring</td>
+                                <td>Check Analytics health, incident volume</td>
+                                <td>Review ES Notable Audit, triggered alerts</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>5. Review: Continuous Improvement</h3>
+
+                <p>Detections are living entities that require ongoing maintenance:</p>
+
+                <ul>
+                    <li><strong>Effectiveness Metrics:</strong> True positive rate, false positive rate, MTTD</li>
+                    <li><strong>Tuning:</strong> Adjust thresholds based on operational feedback</li>
+                    <li><strong>Retirement:</strong> Disable detections that no longer provide value</li>
+                    <li><strong>Documentation:</strong> Update runbooks based on analyst feedback</li>
+                </ul>
+
+                <h2>Detection Types</h2>
+
+                <p>Different threats require different detection approaches:</p>
+
+                <h3>Signature-Based Detection</h3>
+
+                <p>Looks for known patterns, hashes, or specific indicators. High confidence but easily evaded.</p>
+
+                <div class="comparison-grid">
+                    <div class="comparison-block sentinel">
+                        <div class="comparison-header">
+                            <div class="comparison-logo">MS</div>
+                            <h4 class="comparison-title mt-0 mb-0">Sentinel Example</h4>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// Detect Mimikatz by known hash
+DeviceFileEvents
+| where SHA256 in (
+    "31eb1de7e840a342fd468e558e5ab627bcb4c542a8fe01aec4d5ba01d539a0fc",
+    "d35d1d2a9a7cf2b6c23e11e11c91c3f76e0a3c2e56c7b80e5a4a4b6c8d9f0e1a"
+)
+| project TimeGenerated, DeviceName, 
+    FileName, FolderPath, SHA256, 
+    InitiatingProcessAccountName</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-block splunk">
+                        <div class="comparison-header">
+                            <div class="comparison-logo">SP</div>
+                            <h4 class="comparison-title mt-0 mb-0">Splunk Example</h4>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">SPL</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>index=endpoint sourcetype=sysmon EventCode=1
+| lookup known_malware_hashes.csv SHA256 
+    as Hashes OUTPUT Malware_Family
+| where isnotnull(Malware_Family)
+| table _time, host, Image, Hashes, 
+    User, Malware_Family</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Behavioral Detection</h3>
+
+                <p>Identifies patterns of activity that indicate malicious behavior, regardless of specific tools used.</p>
+
+                <div class="comparison-grid">
+                    <div class="comparison-block sentinel">
+                        <div class="comparison-header">
+                            <div class="comparison-logo">MS</div>
+                            <h4 class="comparison-title mt-0 mb-0">Sentinel - Credential Dumping Behavior</h4>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// Detect LSASS access regardless of tool
+DeviceProcessEvents
+| where TimeGenerated > ago(1h)
+| where FileName =~ "lsass.exe"
+| join kind=inner (
+    DeviceProcessEvents
+    | where ProcessCommandLine has_any (
+        "sekurlsa", "minidump", "comsvcs.dll",
+        "procdump", "sqldumper")
+) on DeviceId, TimeGenerated
+| project TimeGenerated, DeviceName, 
+    AccountName, InitiatingProcessFileName,
+    ProcessCommandLine
+| extend AlertSeverity = "High"</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-block splunk">
+                        <div class="comparison-header">
+                            <div class="comparison-logo">SP</div>
+                            <h4 class="comparison-title mt-0 mb-0">Splunk - Credential Dumping Behavior</h4>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">SPL</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>index=endpoint sourcetype=sysmon EventCode=10
+TargetImage="*lsass.exe" 
+GrantedAccess IN (0x1010, 0x1038, 0x1fffff)
+| eval risk_message="LSASS memory access detected"
+| eval risk_object=SourceImage
+| eval risk_object_type="process"
+| eval risk_score=80
+| table _time, host, SourceImage, 
+    TargetImage, GrantedAccess, User</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Anomaly-Based Detection</h3>
+
+                <p>Uses baselines and statistical analysis to identify deviations from normal behavior.</p>
+
+                <div class="comparison-grid">
+                    <div class="comparison-block sentinel">
+                        <div class="comparison-header">
+                            <div class="comparison-logo">MS</div>
+                            <h4 class="comparison-title mt-0 mb-0">Sentinel - Anomalous Sign-in Volume</h4>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">KQL</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>// Detect unusual authentication volume
+let baseline = SigninLogs
+| where TimeGenerated between (ago(30d) .. ago(1d))
+| summarize AvgLogins = avg(todouble(count())) 
+    by UserPrincipalName, bin(TimeGenerated, 1h);
+SigninLogs
+| where TimeGenerated > ago(1h)
+| summarize CurrentLogins = count() 
+    by UserPrincipalName
+| join kind=inner baseline on UserPrincipalName
+| where CurrentLogins > AvgLogins * 3
+| extend AnomalyScore = CurrentLogins / AvgLogins
+| where AnomalyScore > 3
+| project UserPrincipalName, CurrentLogins, 
+    AvgLogins, AnomalyScore</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-block splunk">
+                        <div class="comparison-header">
+                            <div class="comparison-logo">SP</div>
+                            <h4 class="comparison-title mt-0 mb-0">Splunk - Anomalous Sign-in Volume</h4>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">SPL</span>
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <pre><code>| tstats count as login_count 
+    from datamodel=Authentication 
+    by Authentication.user _time span=1h
+| rename Authentication.user as user
+| eventstats avg(login_count) as avg_logins,
+    stdev(login_count) as stdev_logins by user
+| eval zscore = (login_count - avg_logins) / stdev_logins
+| where zscore > 3
+| table _time, user, login_count, 
+    avg_logins, zscore</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h2>Data Requirements for Detection</h2>
+
+                <p>The effectiveness of your detections depends entirely on the data available:</p>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Detection Goal</th>
+                                <th>Required Data</th>
+                                <th>Sentinel Table</th>
+                                <th>Splunk Data Model</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Brute Force</td>
+                                <td>Authentication logs with failures</td>
+                                <td>SigninLogs, SecurityEvent (4625)</td>
+                                <td>Authentication</td>
+                            </tr>
+                            <tr>
+                                <td>Malware Execution</td>
+                                <td>Process creation with command lines</td>
+                                <td>DeviceProcessEvents, SecurityEvent (4688)</td>
+                                <td>Endpoint.Processes</td>
+                            </tr>
+                            <tr>
+                                <td>Lateral Movement</td>
+                                <td>Network connections, auth events</td>
+                                <td>DeviceNetworkEvents, SecurityEvent (4624)</td>
+                                <td>Network_Traffic, Authentication</td>
+                            </tr>
+                            <tr>
+                                <td>Data Exfiltration</td>
+                                <td>Network traffic, file events</td>
+                                <td>CommonSecurityLog, DeviceFileEvents</td>
+                                <td>Network_Traffic, Endpoint.Filesystem</td>
+                            </tr>
+                            <tr>
+                                <td>Privilege Escalation</td>
+                                <td>Privilege changes, group membership</td>
+                                <td>SecurityEvent (4672, 4728)</td>
+                                <td>Change.Account_Management</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2>Detection Engineering Best Practices</h2>
+
+                <div class="card">
+                    <h3 class="mt-0">Writing Effective Detections</h3>
+                    
+                    <h4>1. Start with the Threat, Not the Tool</h4>
+                    <p>Don't write "Mimikatz detection" - write "credential dumping detection" that catches Mimikatz and all its variants.</p>
+
+                    <h4>2. Use Multiple Detection Layers</h4>
+                    <p>Combine signature, behavioral, and anomaly detections for defense in depth. An attacker might evade one layer but not all three.</p>
+
+                    <h4>3. Document Everything</h4>
+                    <p>Every detection should include: description, MITRE ATT&CK mapping, data sources, false positive guidance, response playbook reference.</p>
+
+                    <h4>4. Design for Triage</h4>
+                    <p>Include all context needed for triage in the alert: user, host, IP, command line, parent process, timestamps.</p>
+
+                    <h4>5. Consider Performance</h4>
+                    <p>Complex queries on large datasets can cause timeouts or resource exhaustion. Use summarize, time bounds, and efficient joins.</p>
+                </div>
+
+                <h2>Common Detection Pitfalls</h2>
+
+                <div class="info-box danger">
+                    <div class="info-box-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                        </svg>
+                        Avoid These Mistakes
+                    </div>
+                    <ul>
+                        <li><strong>Alert Fatigue:</strong> Too many false positives = analysts ignore alerts</li>
+                        <li><strong>Exact Match Only:</strong> Attackers use variations; use regex and wildcards</li>
+                        <li><strong>Missing Context:</strong> Alerts without context waste analyst time</li>
+                        <li><strong>No Testing:</strong> Untested detections fail silently</li>
+                        <li><strong>Static Thresholds:</strong> What's normal changes; baselines should adapt</li>
+                        <li><strong>Ignoring Data Gaps:</strong> Can't detect what you can't see</li>
+                    </ul>
+                </div>
+
+                <h2>Interview Preparation: Detection Fundamentals</h2>
+
+                <div class="card">
+                    <h3 class="mt-0">Common Interview Questions</h3>
+                    
+                    <div class="expandable">
+                        <div class="expandable-header">
+                            <span class="expandable-title">Q: How do you approach building a new detection?</span>
+                            <svg class="expandable-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="expandable-content">
+                            <p><strong>Answer:</strong> I follow a structured lifecycle: First, I understand the threat - what TTP am I detecting, what does the attack look like, and what data would reveal it. Then I verify data availability - do we have the logs needed, are they parsed correctly, what's the retention? Next, I design the detection logic considering both detection accuracy and false positive rates. I test against historical data with known events and simulate the attack in a lab environment. Before production deployment, I run in "informational" mode to measure false positive rates. Finally, I document the detection with MITRE mapping, triage guidance, and response playbook references, then monitor effectiveness metrics over time.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <div class="expandable-header">
+                            <span class="expandable-title">Q: How do you reduce false positives while maintaining detection coverage?</span>
+                            <svg class="expandable-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="expandable-content">
+                            <p><strong>Answer:</strong> I use several techniques: First, whitelisting known-good behavior using watchlists or lookups - but I'm careful to whitelist specific combinations (user + action + target) rather than broad exclusions. Second, I add contextual filters - for example, excluding IT admin accounts from admin tool usage detections but only during business hours and from expected source IPs. Third, I use correlation - a single event might be noise, but multiple related events are more likely malicious. Fourth, I implement risk-based alerting where events contribute to risk scores and only alert when a threshold is crossed. Finally, I continuously tune based on SOC feedback, tracking which alerts are dismissed and why.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <div class="expandable-header">
+                            <span class="expandable-title">Q: What's the difference between signature and behavioral detection?</span>
+                            <svg class="expandable-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="expandable-content">
+                            <p><strong>Answer:</strong> Signature-based detection looks for specific, known indicators - file hashes, exact command strings, known IP addresses. It's high-confidence when it matches but easily evaded by changing the tool. Behavioral detection looks for patterns of activity that indicate malicious intent regardless of specific tools. For example, instead of detecting Mimikatz by hash, I'd detect any process accessing LSASS memory with suspicious access rights. Behavioral detection is more resilient to evasion but may have higher false positive rates. In practice, I use both: signatures for quick wins on known threats, behavior for broader coverage. The best detections combine both - match the behavior AND correlate with threat intelligence.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="page-footer">
+                    <div class="footer-nav">
+                        <a href="../../index.html" class="footer-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                <polyline points="12 19 5 12 12 5"></polyline>
+                            </svg>
+                            Home
+                        </a>
+                        <a href="sentinel-deep-dive.html" class="footer-link">
+                            Sentinel Deep Dive
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </a>
+                    </div>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

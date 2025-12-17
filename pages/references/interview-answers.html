@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Answers - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="references">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                            <span>References</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="kql-cheatsheet.html" class="nav-item">KQL Cheatsheet</a>
+                        <a href="spl-cheatsheet.html" class="nav-item">SPL Cheatsheet</a>
+                        <a href="regex-mastery.html" class="nav-item">Regex Reference</a>
+                        <a href="windows-events.html" class="nav-item">Windows Events</a>
+                        <a href="mitre-quick-ref.html" class="nav-item">MITRE Quick Ref</a>
+                        <a href="interview-prep.html" class="nav-item">Interview Prep</a>
+                        <a href="interview-answers.html" class="nav-item active">My Interview Answers</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="interview-prep.html">References</a>
+                    <span class="separator">/</span>
+                    <span class="current">My Interview Answers</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>Customized Interview Answers</h1>
+                    <p class="subtitle">Tailored responses for security engineering interviews—covering detection engineering, SIEM migration, automation, compliance, and more.</p>
+                </header>
+
+                <!-- Section 1: Security Control Improvement -->
+                <section class="content-section">
+                    <h2>1. Security Control Improvement & Automation</h2>
+                    
+                    <div class="info-box tip">
+                        <h4>💡 Context</h4>
+                        <p>This answer demonstrates problem-solving, proposing better solutions than initially suggested, and implementing governance at scale using Azure-native tools.</p>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Tell me about a time you improved a security control or process.</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Full Answer:</strong></p>
+                            <p>"In our organization, we came across a situation where multiple business units were hosting <strong>public static pages</strong> using Azure Storage. For those use cases, the storage accounts or containers needed to be publicly accessible.</p>
+                            
+                            <p>However, our <strong>baseline security policy</strong> was that no storage account should be publicly exposed by default. So this created a conflict between business requirements and security controls.</p>
+                            
+                            <p>Initially, my manager suggested writing a script to identify public storage accounts and then split it into two parts—one to detect and another to automatically remediate after verification. While that would work for a one-time check, I felt it wasn't ideal for long-term governance.</p>
+                            
+                            <p>So I proposed an alternative approach. We used <strong>Azure Policy</strong> to continuously detect storage accounts with public access enabled and restrict it by default. For approved use cases, we used <strong>policy exemptions</strong>. Then we enabled <strong>diagnostic and activity logs</strong> and sent everything to <strong>Log Analytics</strong>.</p>
+                            
+                            <p>On top of that, I wrote <strong>KQL queries and built a centralized dashboard</strong> to show:</p>
+                            <ul>
+                                <li>Which storage accounts are public</li>
+                                <li>Which ones are approved exceptions</li>
+                                <li>Who made the change and when</li>
+                            </ul>
+                            
+                            <p>This gave us continuous visibility instead of manual script runs. The process is now automated, governed, and still allows manual approval where public access is genuinely required. That solution is currently in use."</p>
+                            
+                            <div class="info-box warning">
+                                <h4>Key Talking Points</h4>
+                                <ul>
+                                    <li><strong>Problem identification:</strong> Conflict between security baseline and business needs</li>
+                                    <li><strong>Initiative:</strong> Proposed better solution than manager's initial suggestion</li>
+                                    <li><strong>Technical implementation:</strong> Azure Policy + exemptions + Log Analytics + KQL</li>
+                                    <li><strong>Outcome:</strong> Continuous governance vs. one-time scripts</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2: Detection Engineering Experience -->
+                <section class="content-section">
+                    <h2>2. Detection Engineering & SIEM Migration</h2>
+
+                    <div class="info-box tip">
+                        <h4>💡 Context</h4>
+                        <p>RSA NetWitness is network-first (packets, sessions, meta-keys). Sentinel is cloud-first, entity-centric (identity, endpoint, control-plane). Detection logic—not just syntax—must be re-engineered.</p>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Describe your detection engineering experience. (Full 2-3 min)</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p>"My primary responsibility was around Microsoft Defender for Endpoint rollout, where I focused on endpoint onboarding, agent health, coverage validation, and telemetry quality. The goal there was to ensure we had reliable endpoint data before building or migrating detections. In parallel, I worked on detection engineering during our SIEM migration from RSA NetWitness to Microsoft Sentinel as part of a cloud-first strategy."</p>
+                            
+                            <p>"In my scope, I worked hands-on with understanding existing detection logic from RSA NetWitness rather than doing direct rule translations. We built a detection translation catalog where we first documented the intent of each legacy detection—what behavior it was meant to catch, the associated risk, and the expected signal. This helped us avoid carrying over legacy noise and focus on preserving detection value."</p>
+                            
+                            <p>"Based on that, we categorized detections into three buckets:</p>
+                            <ol>
+                                <li>Those already covered by Sentinel built-in analytics</li>
+                                <li>Those requiring minor logic adjustments</li>
+                                <li>A smaller set of custom detections written from scratch</li>
+                            </ol>
+                            <p>My involvement was primarily in the second and third categories, focusing on endpoint, identity, DLP, and vulnerability-related detections where Microsoft telemetry was the source of truth."</p>
+                            
+                            <p>"For detections in my scope, I worked on mapping RSA meta-keys to Sentinel fields, translating conditions and thresholds into an intermediate Sigma-based format, and then re-implementing the logic in Sentinel-native KQL. Overall, I directly contributed to translating and implementing roughly <strong>200+ detections</strong>, mostly using data from Microsoft Defender for Endpoint, Entra ID, Purview DLP, Defender TVM, and Qualys."</p>
+                            
+                            <p>"Once implemented, we deployed these rules in audit mode and validated them using historical telemetry and controlled simulations, including Atomic Red Team for endpoint-focused scenarios. I was involved in reviewing alert volume, tuning thresholds to reduce false positives, and validating detection parity with the legacy platform where applicable. After that, the detections were moved into enforcement with appropriate alerting and runbook alignment."</p>
+                            
+                            <p>"Overall, my focus was on making sure Microsoft security telemetry was properly onboarded and usable, and that Sentinel detections were behavior-driven and reliable rather than one-to-one translations of legacy rules. This approach helped us maintain detection quality while transitioning to a cloud-first SIEM model."</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Describe your detection engineering experience. (Short 30-sec)</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p>"My primary responsibility was leading the Microsoft Defender for Endpoint rollout, ensuring endpoint coverage, agent health, and telemetry quality so detections were reliable. In parallel, I worked on detection engineering as part of our SIEM migration from RSA NetWitness to Microsoft Sentinel under a cloud-first strategy."</p>
+                            
+                            <p>"In my scope, I worked hands-on with understanding existing RSA detection logic and re-implementing that logic into Sentinel-native KQL rather than doing direct rule conversions. We first documented the intent of each detection and categorized them into three buckets: those covered by Sentinel built-in analytics, those requiring minor logic adjustments, and a smaller set of custom detections."</p>
+                            
+                            <p>"I was directly involved in translating and implementing roughly <strong>200+ detections</strong> in my scope, primarily focused on endpoint, identity, DLP, and vulnerability-related use cases using telemetry from MDE, Entra ID, Purview DLP, Defender TVM, and Qualys."</p>
+                            
+                            <p>"These rules were initially deployed in audit mode, validated using historical data and Atomic Red Team simulations, tuned to reduce false positives, and then moved into enforcement once the detection quality and parity were confirmed."</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you approach building a detection program?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p>"I start by using the <strong>14 MITRE ATT&CK tactics</strong> as a structural foundation to ensure full attack lifecycle coverage. For each tactic, I design environment-specific attack scenarios based on our assets and architecture. I then map those scenarios to available security controls and telemetry and build high-signal atomic detections. As the program matures, I introduce correlation rules to detect multi-stage attacks and continuously feed threat hunting and threat intelligence findings back into the detection backlog."</p>
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Detection Engineering Flow (What I Worked On)</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>1. Defined detection intent from legacy RSA NetWitness rules
+2. Categorized detections into three buckets:
+   - Built-in Sentinel rules (replace)
+   - Minor modifications
+   - Custom rules (limited scope)
+3. Identified source of truth (EDR, IAM, DLP, TVM, Qualys)
+4. Mapped RSA meta-keys to Sentinel fields
+5. Translated logic into an intermediate Sigma model
+6. Converted Sigma logic into Sentinel-native KQL
+7. Deployed rules in audit mode
+8. Validated using historical data and Atomic Red Team simulations
+9. Tuned for false positives and checked parity
+10. Moved validated rules to enforcement</code></pre>
+                    </div>
+                </section>
+
+                <!-- Section 3: Log Analysis -->
+                <section class="content-section">
+                    <h2>3. Log Analysis & Data Management</h2>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Describe your experience with log analysis. (45-60 sec)</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p>"In my role, I worked closely with security telemetry from multiple sources such as endpoint, identity, cloud, and custom security tools, mainly to ensure the data was usable for detections and investigations in Microsoft Sentinel."</p>
+                            
+                            <p>"Since Sentinel relies on query-time parsing, I worked on custom log ingestion by writing KQL-based parser functions rather than static ingestion-time parsers. I primarily used operators like <code>parse</code>, <code>parse_json</code>, and <code>parse kind=regex</code> with named capture groups to extract and normalize fields in a consistent way."</p>
+                            
+                            <p>"While I prefer <code>parse kind=regex</code> for readability and maintainability, I'm fully comfortable writing complex regex expressions when dealing with unstructured or inconsistent data. Overall, my focus was making sure the telemetry feeding Sentinel was reliable and could be effectively used for detection engineering and threat hunting."</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Describe your experience with log analysis. (2-3 min)</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p>"My experience involved working hands-on with security telemetry from various sources, including endpoint, identity, cloud platforms, and custom security or infrastructure tools, with the goal of making that data usable for detections, investigations, and hunting in Microsoft Sentinel."</p>
+                            
+                            <p>"Because Sentinel uses query-time parsing, I worked on custom ingestion scenarios by creating KQL parser functions instead of relying on fixed parsers at ingestion. This allowed us to dynamically extract and normalize important fields across different log formats while keeping the pipeline flexible."</p>
+                            
+                            <p>"For field extraction, I primarily used Sentinel's built-in operators such as <code>parse</code>, <code>parse_json</code>, and <code>parse kind=regex</code>. Using <code>parse kind=regex</code> with named capture groups made the queries easier to read and maintain, especially as detection logic evolved. At the same time, I'm fully comfortable writing complex regex expressions when required for highly unstructured or edge-case data."</p>
+                            
+                            <p>"I also worked on aligning extracted fields to consistent entities like user, device, IP, and action so that detections and hunting queries behaved consistently across data sources."</p>
+                            
+                            <p>"Overall, my focus was on ensuring that the telemetry flowing into Sentinel was accurate, well-structured at query time, and reliable for building detections and supporting security operations, rather than on application-specific logging ownership."</p>
+                        </div>
+                    </div>
+
+                    <div class="info-box tip">
+                        <h4>💡 Technical Note on KQL Parsing</h4>
+                        <p><code>parse kind=regex</code> applies regex-based parsing automatically at query time. KQL compiles the pattern internally and extracts fields without requiring explicit regex functions. The parsed fields exist only in the query result unless the logic is moved into a DCR transform. We usually encapsulate this parsing in a KQL function so all detections and hunts reuse the same parser.</p>
+                    </div>
+                </section>
+
+                <!-- Section 4: Threat Intel & Hunting -->
+                <section class="content-section">
+                    <h2>4. Threat Intelligence & Hunting</h2>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Describe your threat intel and hunting experience. (45-60 sec)</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p>"My involvement with threat intelligence was mainly on the engineering side rather than leading threat hunts or incident response. I worked on integrating and operationalizing threat intelligence to enrich detections and prioritization workflows in Microsoft Sentinel."</p>
+                            
+                            <p>"Specifically, I supported correlation and enrichment use cases where Sentinel detections were enhanced with real-time threat intelligence and risk context. I also worked on workflow automation around vulnerability prioritization by integrating Qualys VMDR and Microsoft Defender TVM data, enriching it with EPSS scores, CISA KEV, and CMDB asset criticality."</p>
+                            
+                            <p>"The outcome was a risk-based prioritization model where vulnerabilities were scored based on exploitability, exposure, and business impact. This enriched data became the source of truth for validation, patch feasibility checks, and false-positive review before remediation decisions were taken."</p>
+                            
+                            <p>"Overall, my focus was on engineering threat-intel enrichment and risk-based correlation logic rather than running standalone threat hunts."</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Have you done threat hunting?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p>"My primary role has been in security engineering, but I was sometimes involved in threat-hunting activities when there were specific incidents or high-risk vulnerabilities that required deeper investigation. In those cases, my focus was less on writing standalone hunting rules and more on validating exposure and looking for real signs of exploitation."</p>
+                            
+                            <p>"For example, during the recent Ivanti VPN vulnerability that was actively exploited, I was involved in defining investigation and hunting steps—reviewing VPN and network logs for abnormal access patterns, checking for unexpected behavior on the VPN appliance, and helping document a response runbook so the SOC could consistently assess whether there was any compromise. While threat hunting wasn't my day-to-day responsibility, I contributed to it in a practical, incident-driven way."</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 5: Automation -->
+                <section class="content-section">
+                    <h2>5. Automation Using Python & PowerShell</h2>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you use automation in your security work? (45-60 sec)</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p>"In an Azure-centric environment, for detection, enrichment, and response processes, I primarily leverage Azure-native services like <strong>Logic Apps</strong> and <strong>Azure Functions</strong>. They handle most of the orchestration, integrations, and response workflows in a more streamlined and scalable way compared to standalone scripts."</p>
+                            
+                            <p>"Logic Apps are typically used for workflow orchestration—triggering on Sentinel alerts, calling external systems, and managing response steps—while Azure Functions are used when custom logic or processing is required, such as enrichment or risk scoring."</p>
+                            
+                            <p>"That said, I'm fully comfortable scripting in both Python and PowerShell, and I use them within Azure Functions or automation workflows whenever custom logic is needed."</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Explain the Python logic you used for EPSS integration.</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>45-60 second version:</strong></p>
+                            <p>"Inside Azure Functions, the Python logic is straightforward: it's a scheduled timer-triggered function that runs daily, calls the FIRST EPSS API for the current date, handles pagination, normalizes the response into a consistent schema, and then writes the output to storage and/or pushes it into Log Analytics for Sentinel to consume."</p>
+                            
+                            <p>"Concretely, I used <code>requests</code> to call the EPSS endpoint with parameters like the date and thresholds, added basic retry and timeout handling, and used pagination with limit/offset if needed. I then transformed the API JSON into a structured format—CVE, EPSS score, percentile, date—and wrote it to Blob as the raw daily snapshot for traceability. From there, we ingested a filtered or delta dataset into Sentinel so KQL could join EPSS with TVM or Qualys vulnerability data for risk-based prioritization."</p>
+                            
+                            <p>"The key design point is keeping the function idempotent, storing raw snapshots for reprocessing, and ingesting only what we actually need to control volume and cost."</p>
+                            
+                            <hr style="margin: 1.5rem 0; border-color: var(--border-color);">
+                            
+                            <p><strong>2-3 minute version:</strong></p>
+                            <p>"The Python code in Azure Functions was built around a simple daily enrichment pipeline. We used a timer trigger so it runs once per day, and the function computes the 'as-of' date in UTC to avoid timezone inconsistencies."</p>
+                            
+                            <p>"Step one is calling the FIRST EPSS API using Python requests. We pass parameters like <code>date=YYYY-MM-DD</code>, and optionally a threshold like <code>epss-gt</code> if we only want high-risk scores to reduce ingestion. The function uses timeouts, retries, and basic error handling so a transient failure doesn't break the pipeline."</p>
+                            
+                            <p>"If the response is large, we handle pagination using limit and offset. For each page, we parse the JSON payload and normalize it into a consistent internal structure—at minimum CVE, EPSS score, percentile, and the date. We also add a few operational fields like ingestion timestamp and source so the dataset is easy to track."</p>
+                            
+                            <p>"Next, we write the raw output to Blob Storage as a daily snapshot. That gives us auditability and an easy rollback or re-run path if we need to fix parsing or rerun ingestion. After that, we either ingest the same dataset into Log Analytics or derive a smaller delta—today versus yesterday—so we only store changes or only store high-risk CVEs."</p>
+                            
+                            <p>"Finally, Sentinel uses KQL to join that EPSS dataset with vulnerability sources like Defender TVM or Qualys—plus CMDB asset criticality—so vulnerabilities are prioritized based on exploitability and business impact. In short, the function handles collection, normalization, and controlled ingestion; Sentinel handles the detection logic and correlation."</p>
+                        </div>
+                    </div>
+
+                    <div class="info-box tip">
+                        <h4>💡 One-Line Safe Answer</h4>
+                        <p>"In an Azure-centric setup, I rely mainly on Logic Apps and Azure Functions for detection enrichment and response automation, while using Python or PowerShell when custom scripting is required."</p>
+                    </div>
+                </section>
+
+                <!-- Section 6: Compliance & Governance -->
+                <section class="content-section">
+                    <h2>6. Compliance & Governance</h2>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you approach compliance and governance? (45-60 sec)</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p>"I approach compliance and governance from a technical control perspective rather than a policy perspective. I start with the security controls I actually work on—like Sentinel detections, Defender for Endpoint alerts, vulnerability management workflows, DLP detections, and response automation."</p>
+                            
+                            <p>"Once those controls are clear, I map them at a high level to frameworks like ISO 27001, NIST CSF, and GDPR, mainly to show how our monitoring, detection, and response capabilities already meet those requirements."</p>
+                            
+                            <p>"When I work on detections or vulnerability prioritization, I make sure the intent, risk, and expected response are clearly documented. I focus on technical documentation—detection logic, data sources, validation steps, and workflows—rather than compliance language."</p>
+                            
+                            <p>"For audits or reviews, we rely on evidence that already exists in the tools, such as Sentinel alerts, incidents, and automation history. The idea is to keep compliance embedded into daily security operations instead of treating it as a separate exercise."</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you approach compliance and governance? (Full)</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p>"The way I approach compliance and governance is very practical and control-driven. I don't start by reading compliance frameworks line by line—I start with the security controls I actually work on day to day."</p>
+                            
+                            <p>"For example, I look at things like Sentinel detections, Defender for Endpoint alerts, vulnerability management through Qualys and Defender TVM, DLP detections, and our response automation. These are the real implementations of compliance, even if they're not labeled that way."</p>
+                            
+                            <p>"Once the controls are clear, I map them at a high level to frameworks like ISO 27001, NIST CSF, or GDPR. I'm not trying to rewrite policies—I'm simply showing how our technical controls already satisfy requirements like monitoring, detection, incident response, risk management, and data protection."</p>
+                            
+                            <p>"When I work on detections or vulnerability workflows, I make sure the intent is clear—what risk it addresses, what behavior we're trying to catch, and what the expected response is. For example, endpoint and identity detections clearly support incident detection requirements, while our risk-based vulnerability prioritization supports risk management expectations rather than treating everything as equal priority."</p>
+                            
+                            <p>"From a documentation perspective, I focus on technical documentation rather than compliance language. That means documenting detection logic, data sources, thresholds, validation steps, and response workflows. For vulnerability management, I document how data is enriched with EPSS, CISA KEV, and asset criticality, and how remediation or risk acceptance decisions are made."</p>
+                            
+                            <p>"For audits or reviews, we don't create separate manual reports. We rely on evidence that already exists in the tools—Sentinel alerts, incidents, automation history, and change logs. If someone asks how we meet a requirement, we can show an alert, a response action, and the associated workflow."</p>
+                            
+                            <p>"Overall, my goal is to keep compliance embedded into how we operate security rather than treating it as a separate exercise. If detections are meaningful, workflows are consistent, and decisions are traceable, compliance becomes a natural outcome instead of extra work."</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 7: SAP Experience -->
+                <section class="content-section">
+                    <h2>7. SAP Security Experience</h2>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Do you have SAP security experience? (45-60 sec)</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p>"I didn't get a direct chance to work hands-on with SAP applications themselves, but I've worked extensively on onboarding and operationalizing logs from multiple custom applications into the SIEM."</p>
+                            
+                            <p>"From a SIEM perspective, the core process is the same regardless of the platform—understanding the log sources, ingesting them correctly, parsing the right fields, and then building detection and correlation logic on top of that data."</p>
+                            
+                            <p>"In fact, SAP is often more straightforward from an ingestion standpoint because it usually comes with supported data connectors and standardized log formats, which can actually be easier than dealing with completely custom applications."</p>
+                            
+                            <p>"Given my experience with custom log ingestion, query-time parsing, and detection engineering in Sentinel, I'm confident I can apply the same approach to SAP logs and quickly ramp up on SAP-specific threats and compliance requirements with vendor documentation and support."</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Do you have SAP security experience? (2-3 min)</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p>"I want to be transparent here—I didn't get a direct opportunity to work hands-on with SAP applications themselves. However, I've worked quite a bit on onboarding and operationalizing logs from multiple custom applications and platforms into SIEM environments."</p>
+                            
+                            <p>"From my experience, the SIEM integration process is largely platform-agnostic. Whether it's SAP or a custom-built application, the fundamentals remain the same: understanding what logs are available, how they're generated, how they're ingested into the SIEM, and how the fields need to be parsed and normalized for detections and investigations."</p>
+                            
+                            <p>"In many cases, custom applications are actually more challenging than SAP because they lack standardized formats or supported connectors. With SAP, you usually have vendor-supported data connectors and well-documented log sources, which simplifies ingestion and reduces a lot of the guesswork."</p>
+                            
+                            <p>"Based on my work with custom log ingestion in Sentinel, I'm comfortable handling the full process—validating ingestion, using query-time parsing to extract relevant fields, and building detection and correlation rules once the data is reliable."</p>
+                            
+                            <p>"From a detection standpoint, the approach would be the same as well. Once the logs are in and normalized, I'd focus on identifying SAP-relevant security and compliance use cases, mapping them to detections, and validating those detections against real activity."</p>
+                            
+                            <p>"So while my experience isn't SAP-specific yet, the underlying skills around SIEM onboarding, parsing, detection engineering, and working with vendor documentation are directly transferable. I'm confident I can pick up SAP security quickly and execute effectively with the support of SAP teams and vendor guidance."</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Quick Reference Summary -->
+                <section class="content-section">
+                    <h2>Quick Reference: Key Numbers & Facts</h2>
+
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Topic</th>
+                                <th>Key Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Detections Migrated</strong></td>
+                                <td>200+ detections (endpoint, identity, DLP, vulnerability)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SIEM Migration</strong></td>
+                                <td>RSA NetWitness → Microsoft Sentinel (cloud-first strategy)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Primary Data Sources</strong></td>
+                                <td>MDE, Entra ID, Purview DLP, Defender TVM, Qualys</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Validation Approach</strong></td>
+                                <td>Audit mode → Historical data + Atomic Red Team → Enforcement</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Detection Categories</strong></td>
+                                <td>Built-in (replace), Minor mods, Custom (limited scope)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Automation Stack</strong></td>
+                                <td>Logic Apps (orchestration) + Azure Functions (custom logic)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>VM Enrichment</strong></td>
+                                <td>EPSS + CISA KEV + CMDB asset criticality</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Framework Mapping</strong></td>
+                                <td>14 MITRE ATT&CK tactics as foundation</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="interview-prep.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        Interview Prep (General)
+                    </a>
+                    <a href="../detection-engineering/fundamentals.html" class="nav-link next">
+                        Detection Fundamentals
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

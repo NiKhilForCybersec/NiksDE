@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIST 800-53 - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="../../index.html" class="logo">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>Detection Engineering</span>
+                </a>
+            </div>
+            <div class="nav-sections">
+                <div class="nav-section expanded" data-section="compliance">
+                    <div class="nav-section-header">
+                        <div class="nav-section-title">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                            <span>Compliance & Frameworks</span>
+                        </div>
+                    </div>
+                    <div class="nav-items">
+                        <a href="framework-overview.html" class="nav-item">Framework Overview</a>
+                        <a href="nist-csf.html" class="nav-item">NIST CSF</a>
+                        <a href="nist-800-53.html" class="nav-item active">NIST 800-53</a>
+                        <a href="iso-27001.html" class="nav-item">ISO 27001</a>
+                        <a href="gdpr.html" class="nav-item">GDPR & Privacy</a>
+                        <a href="other-frameworks.html" class="nav-item">PCI-DSS, SOC 2, HIPAA</a>
+                        <a href="documentation.html" class="nav-item">Security Documentation</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content">
+                <nav class="breadcrumb">
+                    <a href="../../index.html">Home</a>
+                    <span class="separator">/</span>
+                    <a href="framework-overview.html">Compliance</a>
+                    <span class="separator">/</span>
+                    <span class="current">NIST 800-53</span>
+                </nav>
+
+                <header class="page-header">
+                    <h1>NIST 800-53 Security Controls</h1>
+                    <p class="subtitle">Detailed security and privacy controls relevant to detection engineering, with focus on Audit and Accountability (AU), Incident Response (IR), and System and Information Integrity (SI) families.</p>
+                </header>
+
+                <section class="content-section">
+                    <h2>NIST 800-53 Overview</h2>
+                    
+                    <p>NIST SP 800-53 Rev. 5 provides a catalog of security and privacy controls for federal information systems. It contains over 1,000 controls organized into 20 families. Detection engineers primarily work with AU, IR, SI, and CA control families.</p>
+
+                    <h3>Control Families Relevant to Detection</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Family</th>
+                                <th>ID</th>
+                                <th>Detection Relevance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Audit and Accountability</strong></td>
+                                <td>AU</td>
+                                <td>★★★★★ Core - Logging, monitoring, analysis</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Incident Response</strong></td>
+                                <td>IR</td>
+                                <td>★★★★★ Core - Incident handling, reporting</td>
+                            </tr>
+                            <tr>
+                                <td><strong>System & Info Integrity</strong></td>
+                                <td>SI</td>
+                                <td>★★★★☆ High - Malware, monitoring, alerting</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Assessment & Authorization</strong></td>
+                                <td>CA</td>
+                                <td>★★★☆☆ Medium - Continuous monitoring</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Access Control</strong></td>
+                                <td>AC</td>
+                                <td>★★★☆☆ Medium - Access violations</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Identification & Auth</strong></td>
+                                <td>IA</td>
+                                <td>★★☆☆☆ Support - Auth failures</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="content-section">
+                    <h2>AU - Audit and Accountability</h2>
+
+                    <p>The AU family directly governs logging and monitoring capabilities. These controls are the foundation of detection engineering.</p>
+
+                    <h3>Key AU Controls</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Control</th>
+                                <th>Name</th>
+                                <th>Detection Implementation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>AU-2</strong></td>
+                                <td>Event Logging</td>
+                                <td>Define auditable events, configure logging sources</td>
+                            </tr>
+                            <tr>
+                                <td><strong>AU-3</strong></td>
+                                <td>Content of Audit Records</td>
+                                <td>Ensure logs contain who, what, when, where, outcome</td>
+                            </tr>
+                            <tr>
+                                <td><strong>AU-4</strong></td>
+                                <td>Audit Log Storage</td>
+                                <td>SIEM storage capacity, retention policies</td>
+                            </tr>
+                            <tr>
+                                <td><strong>AU-5</strong></td>
+                                <td>Response to Failures</td>
+                                <td>Alert on logging failures, failover mechanisms</td>
+                            </tr>
+                            <tr>
+                                <td><strong>AU-6</strong></td>
+                                <td>Audit Review, Analysis</td>
+                                <td>★ SIEM rules, correlation, hunting</td>
+                            </tr>
+                            <tr>
+                                <td><strong>AU-7</strong></td>
+                                <td>Audit Record Reduction</td>
+                                <td>Search, filter, summarize capabilities</td>
+                            </tr>
+                            <tr>
+                                <td><strong>AU-9</strong></td>
+                                <td>Protection of Audit Info</td>
+                                <td>Log integrity, access control to SIEM</td>
+                            </tr>
+                            <tr>
+                                <td><strong>AU-12</strong></td>
+                                <td>Audit Record Generation</td>
+                                <td>Log collection agents, syslog, API ingestion</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>AU-6 Deep Dive: Audit Review, Analysis, and Reporting</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>AU-6 Control Enhancements</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>AU-6: Audit Review, Analysis, and Reporting
+├── AU-6(1): Automated Process Integration
+│   → SIEM automation, SOAR playbooks
+│   → Detection rules trigger automated response
+│
+├── AU-6(3): Correlate Audit Record Repositories
+│   → Cross-source correlation (AD + EDR + Cloud)
+│   → Unified timeline generation
+│
+├── AU-6(4): Central Review and Analysis
+│   → Centralized SIEM platform
+│   → Aggregation from all environments
+│
+├── AU-6(5): Integrated Analysis
+│   → Combine vulnerability, config, and audit data
+│   → Risk-based alerting
+│
+├── AU-6(6): Correlation with Physical Access
+│   → Badge reader + login correlation
+│   → Insider threat detection
+│
+└── AU-6(8): Full Text Analysis
+    → Search across unstructured log data
+    → Hunting queries, IOC searches</code></pre>
+                    </div>
+
+                    <h3>Evidence: AU Control Implementation</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Sentinel KQL - AU-6 Compliance Evidence</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>// AU-6: Demonstrate audit review and analysis
+// Generate evidence of automated audit analysis
+
+// 1. Show active analytics rules (automated analysis)
+let AnalyticsRuleCount = SecurityAlert
+| where TimeGenerated > ago(30d)
+| summarize UniqueRules = dcount(AlertName);
+
+// 2. Show audit record review (alerts investigated)
+let ReviewedAlerts = SecurityIncident
+| where TimeGenerated > ago(30d)
+| where Status in ("Closed", "Resolved")
+| summarize ReviewedCount = count();
+
+// 3. Show correlation capability (multi-source incidents)
+let CorrelatedIncidents = SecurityIncident
+| where TimeGenerated > ago(30d)
+| mv-expand AlertIds
+| summarize AlertCount = count() by IncidentNumber
+| where AlertCount > 1
+| count;
+
+// Compliance summary
+print 
+    Control = "AU-6",
+    ControlName = "Audit Review, Analysis, and Reporting",
+    ActiveDetectionRules = toscalar(AnalyticsRuleCount),
+    AlertsReviewed30Days = toscalar(ReviewedAlerts),
+    CorrelatedIncidents = toscalar(CorrelatedIncidents),
+    Status = "Implemented"</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>IR - Incident Response</h2>
+
+                    <h3>Key IR Controls</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Control</th>
+                                <th>Name</th>
+                                <th>Detection Implementation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>IR-4</strong></td>
+                                <td>Incident Handling</td>
+                                <td>Incident workflow, SOAR playbooks</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IR-5</strong></td>
+                                <td>Incident Monitoring</td>
+                                <td>Track incidents, trends, patterns</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IR-6</strong></td>
+                                <td>Incident Reporting</td>
+                                <td>Automated notifications, dashboards</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IR-8</strong></td>
+                                <td>Incident Response Plan</td>
+                                <td>Documented playbooks, procedures</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="info-box tip">
+                        <h4>💡 IR-4 Incident Handling Evidence</h4>
+                        <p>Detection engineering supports IR-4 by providing:</p>
+                        <ul>
+                            <li>Automated incident creation from alerts</li>
+                            <li>Severity classification and prioritization</li>
+                            <li>Enrichment data for investigation</li>
+                            <li>Response action automation (SOAR)</li>
+                            <li>Incident metrics and reporting</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>SI - System and Information Integrity</h2>
+
+                    <h3>Key SI Controls</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Control</th>
+                                <th>Name</th>
+                                <th>Detection Implementation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>SI-3</strong></td>
+                                <td>Malicious Code Protection</td>
+                                <td>EDR/AV alerts, malware detection rules</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SI-4</strong></td>
+                                <td>System Monitoring</td>
+                                <td>★ Core detection - IDS, SIEM, behavior monitoring</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SI-5</strong></td>
+                                <td>Security Alerts & Advisories</td>
+                                <td>Threat intel integration, CVE monitoring</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SI-7</strong></td>
+                                <td>Software & Info Integrity</td>
+                                <td>File integrity monitoring, hash validation</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>SI-4 Deep Dive: System Monitoring</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>SI-4 Control Requirements</span>
+                            <button class="copy-btn">Copy</button>
+                        </div>
+                        <pre><code>SI-4: System Monitoring
+├── Base: Monitor system for attacks, unauthorized connections,
+│         unauthorized local/network/remote access
+│
+├── SI-4(1): System-Wide Intrusion Detection
+│   → Network IDS/IPS deployment
+│   → Host-based detection (EDR)
+│
+├── SI-4(2): Automated Tools for Real-Time Analysis
+│   → SIEM real-time correlation
+│   → Streaming analytics
+│
+├── SI-4(4): Inbound and Outbound Communications
+│   → Network traffic monitoring
+│   → Firewall log analysis
+│   → Data exfiltration detection
+│
+├── SI-4(5): System-Generated Alerts
+│   → Automated alerting pipeline
+│   → Threshold-based notifications
+│
+├── SI-4(12): Automated Organization-Generated Alerts
+│   → Custom detection rules
+│   → Business-specific monitoring
+│
+└── SI-4(16): Correlate Monitoring Information
+    → Cross-source correlation
+    → Attack chain detection</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Control Baselines</h2>
+
+                    <p>NIST 800-53 defines three baselines (Low, Moderate, High) based on system impact level.</p>
+
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Control</th>
+                                <th>Low</th>
+                                <th>Moderate</th>
+                                <th>High</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>AU-2 Event Logging</strong></td>
+                                <td>✓</td>
+                                <td>✓</td>
+                                <td>✓</td>
+                            </tr>
+                            <tr>
+                                <td><strong>AU-6 Audit Review</strong></td>
+                                <td>✓</td>
+                                <td>✓ + (1)(3)</td>
+                                <td>✓ + (1)(3)(5)(6)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IR-4 Incident Handling</strong></td>
+                                <td>✓</td>
+                                <td>✓ + (1)</td>
+                                <td>✓ + (1)(4)(11)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SI-4 System Monitoring</strong></td>
+                                <td>✓</td>
+                                <td>✓ + (2)(4)(5)</td>
+                                <td>✓ + (2)(4)(5)(12)(16)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="info-box warning">
+                        <h4>⚠️ FedRAMP Considerations</h4>
+                        <p>FedRAMP builds on NIST 800-53 with additional requirements:</p>
+                        <ul>
+                            <li>More stringent logging requirements (AU-2 additional events)</li>
+                            <li>Continuous monitoring (CA-7) with specific frequencies</li>
+                            <li>Incident reporting timelines (IR-6 within 1 hour for high)</li>
+                            <li>Third-party assessment requirements</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Interview Preparation</h2>
+                    
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: Which NIST 800-53 controls are most relevant to detection engineering?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Primary controls:</strong></p>
+                            <ul>
+                                <li><strong>AU-6 (Audit Review):</strong> Core requirement for SIEM analysis</li>
+                                <li><strong>SI-4 (System Monitoring):</strong> IDS, behavioral monitoring, alerting</li>
+                                <li><strong>IR-4 (Incident Handling):</strong> Detection-to-response workflow</li>
+                            </ul>
+                            <p><strong>Supporting controls:</strong></p>
+                            <ul>
+                                <li><strong>AU-2:</strong> What events to log</li>
+                                <li><strong>AU-3:</strong> What fields to capture</li>
+                                <li><strong>AU-12:</strong> How to collect logs</li>
+                                <li><strong>SI-3:</strong> Malware detection</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="expandable">
+                        <button class="expandable-header">
+                            <span>Q: How do you demonstrate AU-6 compliance?</span>
+                            <span class="expand-icon">+</span>
+                        </button>
+                        <div class="expandable-content">
+                            <p><strong>Evidence to provide:</strong></p>
+                            <ul>
+                                <li>SIEM analytics rules documentation</li>
+                                <li>Alert review procedures and SLAs</li>
+                                <li>Correlation rule examples</li>
+                                <li>Metrics: alerts reviewed, MTTD, MTTR</li>
+                                <li>Hunting program documentation</li>
+                                <li>Audit log showing analyst activity</li>
+                            </ul>
+                            <p><strong>For enhancements:</strong> Show automated integration (AU-6(1)), cross-source correlation (AU-6(3)), centralized SIEM (AU-6(4)).</p>
+                        </div>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="nist-csf.html" class="nav-link prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        NIST CSF
+                    </a>
+                    <a href="iso-27001.html" class="nav-link next">
+                        ISO 27001
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </nav>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

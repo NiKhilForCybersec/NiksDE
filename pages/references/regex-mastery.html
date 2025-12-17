@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regex Mastery - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar" id="sidebar"></nav>
+        <div class="main-wrapper">
+            <header class="top-bar">
+                <button class="menu-toggle" id="menuToggle">☰</button>
+                <div class="breadcrumb">References / Regex Mastery</div>
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search documentation...">
+                </div>
+            </header>
+            <main class="content">
+                <div class="content-header">
+                    <h1>Regex Mastery for Security</h1>
+                    <p class="subtitle">Essential regular expressions for log parsing, field extraction, and detection rule development</p>
+                </div>
+
+                <!-- Regex Fundamentals -->
+                <section class="doc-section">
+                    <h2>Regex Fundamentals</h2>
+                    <p>Regular expressions are essential for parsing unstructured logs, extracting fields, and building flexible detection patterns.</p>
+                    
+                    <h3>Core Metacharacters</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Character</th>
+                                    <th>Meaning</th>
+                                    <th>Example</th>
+                                    <th>Matches</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>.</code></td>
+                                    <td>Any single character</td>
+                                    <td><code>a.c</code></td>
+                                    <td>abc, a1c, a@c</td>
+                                </tr>
+                                <tr>
+                                    <td><code>^</code></td>
+                                    <td>Start of string/line</td>
+                                    <td><code>^Error</code></td>
+                                    <td>"Error at line 1"</td>
+                                </tr>
+                                <tr>
+                                    <td><code>$</code></td>
+                                    <td>End of string/line</td>
+                                    <td><code>\.exe$</code></td>
+                                    <td>"malware.exe"</td>
+                                </tr>
+                                <tr>
+                                    <td><code>*</code></td>
+                                    <td>Zero or more</td>
+                                    <td><code>ab*c</code></td>
+                                    <td>ac, abc, abbc</td>
+                                </tr>
+                                <tr>
+                                    <td><code>+</code></td>
+                                    <td>One or more</td>
+                                    <td><code>ab+c</code></td>
+                                    <td>abc, abbc (not ac)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>?</code></td>
+                                    <td>Zero or one</td>
+                                    <td><code>https?</code></td>
+                                    <td>http, https</td>
+                                </tr>
+                                <tr>
+                                    <td><code>\</code></td>
+                                    <td>Escape special char</td>
+                                    <td><code>\.</code></td>
+                                    <td>Literal period</td>
+                                </tr>
+                                <tr>
+                                    <td><code>|</code></td>
+                                    <td>OR operator</td>
+                                    <td><code>cat|dog</code></td>
+                                    <td>cat or dog</td>
+                                </tr>
+                                <tr>
+                                    <td><code>[ ]</code></td>
+                                    <td>Character class</td>
+                                    <td><code>[abc]</code></td>
+                                    <td>a, b, or c</td>
+                                </tr>
+                                <tr>
+                                    <td><code>[^ ]</code></td>
+                                    <td>Negated class</td>
+                                    <td><code>[^0-9]</code></td>
+                                    <td>Non-digit</td>
+                                </tr>
+                                <tr>
+                                    <td><code>( )</code></td>
+                                    <td>Capture group</td>
+                                    <td><code>(ab)+</code></td>
+                                    <td>ab, abab, ababab</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Quantifiers</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Quantifier</th>
+                                    <th>Meaning</th>
+                                    <th>Example</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>{n}</code></td>
+                                    <td>Exactly n times</td>
+                                    <td><code>\d{4}</code> - exactly 4 digits</td>
+                                </tr>
+                                <tr>
+                                    <td><code>{n,}</code></td>
+                                    <td>n or more times</td>
+                                    <td><code>\w{8,}</code> - 8+ word chars</td>
+                                </tr>
+                                <tr>
+                                    <td><code>{n,m}</code></td>
+                                    <td>Between n and m times</td>
+                                    <td><code>[a-z]{2,4}</code> - 2 to 4 letters</td>
+                                </tr>
+                                <tr>
+                                    <td><code>*?</code></td>
+                                    <td>Non-greedy zero or more</td>
+                                    <td><code>&lt;.*?&gt;</code> - minimal match</td>
+                                </tr>
+                                <tr>
+                                    <td><code>+?</code></td>
+                                    <td>Non-greedy one or more</td>
+                                    <td><code>".+?"</code> - shortest quoted</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Character Classes</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Class</th>
+                                    <th>Equivalent</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>\d</code></td>
+                                    <td><code>[0-9]</code></td>
+                                    <td>Digit</td>
+                                </tr>
+                                <tr>
+                                    <td><code>\D</code></td>
+                                    <td><code>[^0-9]</code></td>
+                                    <td>Non-digit</td>
+                                </tr>
+                                <tr>
+                                    <td><code>\w</code></td>
+                                    <td><code>[a-zA-Z0-9_]</code></td>
+                                    <td>Word character</td>
+                                </tr>
+                                <tr>
+                                    <td><code>\W</code></td>
+                                    <td><code>[^a-zA-Z0-9_]</code></td>
+                                    <td>Non-word character</td>
+                                </tr>
+                                <tr>
+                                    <td><code>\s</code></td>
+                                    <td><code>[ \t\n\r\f]</code></td>
+                                    <td>Whitespace</td>
+                                </tr>
+                                <tr>
+                                    <td><code>\S</code></td>
+                                    <td><code>[^ \t\n\r\f]</code></td>
+                                    <td>Non-whitespace</td>
+                                </tr>
+                                <tr>
+                                    <td><code>\b</code></td>
+                                    <td>Word boundary</td>
+                                    <td>Between \w and \W</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- IP Address Patterns -->
+                <section class="doc-section">
+                    <h2>IP Address & Network Patterns</h2>
+                    
+                    <h3>IPv4 Address Extraction</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Regex - IPv4 Patterns</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code># Basic IPv4 (fast, allows invalid octets like 999)
+\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}
+
+# Strict IPv4 (validates 0-255 range)
+\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b
+
+# IPv4 with port
+(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{1,5})
+
+# Private IP ranges
+(^10\.|^172\.(1[6-9]|2[0-9]|3[01])\.|^192\.168\.)
+
+# CIDR notation
+\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}</code></pre>
+                    </div>
+
+                    <h3>IPv6 Address Extraction</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Regex - IPv6 Patterns</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code># Basic IPv6 (simplified)
+([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}
+
+# IPv6 with zero compression (::)
+(([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|::([0-9a-fA-F]{1,4}:){0,5}[0-9a-fA-F]{1,4})
+
+# IPv6 in brackets (URLs)
+\[([0-9a-fA-F:]+)\]</code></pre>
+                    </div>
+
+                    <h3>MAC Address</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Regex - MAC Address Patterns</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code># Colon-separated (Unix)
+([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}
+
+# Hyphen-separated (Windows)
+([0-9A-Fa-f]{2}-){5}[0-9A-Fa-f]{2}
+
+# Dot-separated (Cisco)
+([0-9A-Fa-f]{4}\.){2}[0-9A-Fa-f]{4}
+
+# Any format
+([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}|([0-9A-Fa-f]{4}\.){2}[0-9A-Fa-f]{4}</code></pre>
+                    </div>
+                </section>
+
+                <!-- Security Log Patterns -->
+                <section class="doc-section">
+                    <h2>Security Log Parsing Patterns</h2>
+                    
+                    <h3>Windows Security Event Parsing</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Regex - Windows Event Log Extraction</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code># Account Name from event
+Account Name:\s*(\S+)
+
+# Account Domain
+Account Domain:\s*(\S+)
+
+# Logon Type
+Logon Type:\s*(\d+)
+
+# Source Network Address
+Source Network Address:\s*(\S+)
+
+# Process Name (full path)
+Process Name:\s*(.+)$
+
+# New Process Name (4688)
+New Process Name:\s*(.+)$
+
+# Process Command Line
+Process Command Line:\s*(.+)$
+
+# Target Server Name
+Target Server Name:\s*(\S+)
+
+# Service Name
+Service Name:\s*(.+)$
+
+# Workstation Name
+Workstation Name:\s*(\S+)</code></pre>
+                    </div>
+
+                    <h3>Syslog Parsing</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Regex - Syslog Format Extraction</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code># RFC 3164 Syslog header
+^<(\d+)>(\w{3}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2})\s+(\S+)\s+(\S+):\s*(.*)$
+# Groups: priority, timestamp, hostname, program, message
+
+# RFC 5424 Syslog header  
+^<(\d+)>(\d+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(.*)$
+# Groups: priority, version, timestamp, hostname, app, procid, msgid, msg
+
+# Priority to facility/severity
+# Facility = priority // 8, Severity = priority % 8
+
+# SSH auth failure from auth.log
+sshd\[\d+\]:\s+Failed password for (?:invalid user )?(\S+) from (\S+) port (\d+)
+
+# SSH successful login
+sshd\[\d+\]:\s+Accepted (?:password|publickey) for (\S+) from (\S+) port (\d+)
+
+# Sudo command
+sudo:\s+(\S+)\s+:\s+.*COMMAND=(.+)$</code></pre>
+                    </div>
+
+                    <h3>Apache/Nginx Access Logs</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Regex - Web Server Log Parsing</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code># Apache Combined Log Format
+^(\S+) (\S+) (\S+) \[([^\]]+)\] "(\S+) ([^"]+) HTTP/[\d.]+" (\d+) (\d+|-) "([^"]*)" "([^"]*)"$
+# Groups: ip, identd, user, timestamp, method, path, status, bytes, referer, useragent
+
+# Nginx default format
+^(\S+) - (\S+) \[([^\]]+)\] "([^"]+)" (\d+) (\d+) "([^"]*)" "([^"]*)"$
+
+# Extract request path and query string
+^(\S+)\s+([^?\s]+)\??(\S*)\s+HTTP
+# Groups: method, path, query_string
+
+# Detect SQL injection in URL
+(?:union\s+select|or\s+1=1|and\s+1=1|'\s*or\s*'|select\s+.*\s+from|insert\s+into|update\s+.*\s+set|delete\s+from)
+
+# Detect XSS attempts
+(?:<script|javascript:|on\w+\s*=|<img[^>]+onerror)</code></pre>
+                    </div>
+
+                    <h3>Firewall Log Patterns</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Regex - Firewall Log Extraction</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code># iptables log format
+SRC=(\d+\.\d+\.\d+\.\d+).*DST=(\d+\.\d+\.\d+\.\d+).*PROTO=(\w+)(?:.*SPT=(\d+))?(?:.*DPT=(\d+))?
+
+# Windows Firewall
+(?:Source Address|SRC):\s*(\S+).*(?:Destination Address|DST):\s*(\S+).*(?:Source Port|SPT):\s*(\d+).*(?:Destination Port|DPT):\s*(\d+)
+
+# Palo Alto traffic log (CSV)
+# Split by comma, then key fields: src, dst, dport, action, app
+^[^,]*,([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),
+
+# Cisco ASA
+%ASA-\d-(\d+):\s+(.*)
+# Group 1: message ID, Group 2: message
+
+# ASA connection events
+Built (?:inbound|outbound) (\w+) connection (\d+) for (\S+):(\S+)/(\d+).*to (\S+):(\S+)/(\d+)</code></pre>
+                    </div>
+                </section>
+
+                <!-- Malicious Pattern Detection -->
+                <section class="doc-section">
+                    <h2>Malicious Pattern Detection</h2>
+                    
+                    <h3>PowerShell Obfuscation Detection</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Regex - PowerShell Suspicious Patterns</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code># Base64 encoded command
+(?:-enc(?:odedcommand)?|-ec|-e)\s+([A-Za-z0-9+/=]{20,})
+
+# Invoke-Expression variations
+(?i)(?:iex|invoke-expression|\.invoke\(|&\s*\()
+
+# Download cradle patterns
+(?i)(?:downloadstring|downloadfile|webclient|webrequest|bitstransfer|curl|wget)
+
+# Character concatenation obfuscation
+(?:'\s*\+\s*'){3,}|(?:"\s*\+\s*"){3,}
+
+# Tick obfuscation (e.g., I`nv`oke)
+\w+(?:`\w+)+
+
+# Caret obfuscation (cmd)
+\w+(?:\^\w+)+
+
+# Environment variable obfuscation
+\$env:\w+
+
+# Hidden window
+(?i)-(?:w(?:indowstyle)?)\s*(?:h(?:idden)?|1)
+
+# Bypass execution policy
+(?i)-(?:ep|executionpolicy)\s*(?:bypass|unrestricted)
+
+# Compressed/encoded blocks
+(?i)(?:frombase64string|decompress|gunzip|inflate)</code></pre>
+                    </div>
+
+                    <h3>Command Line Attack Patterns</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Regex - Suspicious Command Lines</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code># LOLBAS execution patterns
+(?i)(?:certutil|bitsadmin|mshta|regsvr32|rundll32|msiexec).*(?:http|ftp|\\\\)
+
+# Certutil download/decode
+(?i)certutil.*(?:-urlcache|-decode|-split)
+
+# Bitsadmin download
+(?i)bitsadmin.*(?:/transfer|/download)
+
+# Regsvr32 script execution
+(?i)regsvr32.*(?:/s|/u|/i:).*(?:http|scrobj)
+
+# Mshta execution
+(?i)mshta.*(?:javascript|vbscript|http)
+
+# PsExec remote execution
+(?i)psexec.*(?:\\\\|cmd|powershell)
+
+# WMI execution
+(?i)(?:wmic|wmiprvse).*(?:process\s+call|create)
+
+# Scheduled task creation
+(?i)schtasks.*(?:/create|/change).*(?:/tr|/ru)
+
+# Service creation/modification
+(?i)sc\s+(?:create|config|start)
+
+# Shadow copy deletion (ransomware)
+(?i)(?:vssadmin|wmic).*(?:delete\s+shadows|shadowcopy\s+delete)</code></pre>
+                    </div>
+
+                    <h3>File Path & Hash Patterns</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Regex - File and Hash Extraction</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code># Windows file path
+[A-Za-z]:\\(?:[^\\/:*?"<>|\r\n]+\\)*[^\\/:*?"<>|\r\n]*
+
+# UNC path
+\\\\[^\\/:*?"<>|\r\n]+\\[^\\/:*?"<>|\r\n]+(?:\\[^\\/:*?"<>|\r\n]+)*
+
+# Linux/Unix file path
+(?:/[^/\0\n]+)+
+
+# Suspicious Windows paths (temp, appdata)
+(?i)(?:%temp%|%appdata%|\\temp\\|\\appdata\\|\\programdata\\)
+
+# MD5 hash
+\b[a-fA-F0-9]{32}\b
+
+# SHA1 hash
+\b[a-fA-F0-9]{40}\b
+
+# SHA256 hash
+\b[a-fA-F0-9]{64}\b
+
+# Executable extensions
+\.(?:exe|dll|bat|cmd|ps1|vbs|js|hta|scr|pif|com|msi|jar)$</code></pre>
+                    </div>
+
+                    <h3>URL and Domain Patterns</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Regex - URL/Domain Extraction</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code># Full URL extraction
+https?://[^\s<>"{}|\\^`\[\]]+
+
+# Domain extraction from URL
+https?://([^/:]+)
+
+# Extract just the domain (no subdomain)
+(?:https?://)?(?:[^/]+\.)?([^./]+\.[^./]+)(?:/|$)
+
+# Suspicious TLDs
+\.(?:tk|ml|ga|cf|gq|xyz|top|work|click|loan|racing|date|download|stream)$
+
+# Defanged URL (hxxp, [.])
+hxxps?://[^\s]+|\[[.\]]+\]
+
+# Re-fang defanged URL (for processing)
+# Replace hxxp -> http, [.] -> .
+
+# Punycode domain (IDN homograph)
+xn--[a-z0-9]+\.
+
+# Base64 in URL parameter
+[?&]\w+=([A-Za-z0-9+/]{20,}={0,2})</code></pre>
+                    </div>
+                </section>
+
+                <!-- KQL Regex Functions -->
+                <section class="doc-section">
+                    <h2>KQL Regex Functions</h2>
+                    
+                    <h3>extract() Function</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - extract() Examples</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Basic extraction - single capture group
+SecurityEvent
+| extend Username = extract(@"Account Name:\s*(\S+)", 1, EventData)
+
+// Extract with default value
+| extend ProcessName = extract(@"Process Name:\s*(.+)", 1, EventData, typeof(string))
+
+// Extract IP from any position
+| extend IPAddress = extract(@"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", 1, Message)
+
+// Extract multiple values (call multiple times)
+| extend 
+    SrcIP = extract(@"SRC=(\S+)", 1, RawData),
+    DstIP = extract(@"DST=(\S+)", 1, RawData),
+    DstPort = extract(@"DPT=(\d+)", 1, RawData)
+
+// Extract with typeof for numeric conversion
+| extend Port = toint(extract(@"port\s+(\d+)", 1, Message))</code></pre>
+                    </div>
+
+                    <h3>extract_all() Function</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - extract_all() Examples</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Extract all IP addresses from a field
+SecurityEvent
+| extend AllIPs = extract_all(@"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", Message)
+| mv-expand IP = AllIPs
+
+// Extract all URLs
+| extend URLs = extract_all(@"(https?://[^\s]+)", Message)
+
+// Extract key-value pairs
+| extend KeyValues = extract_all(@"(\w+)=([^\s,]+)", dynamic([1,2]), RawData)
+| mv-expand KeyValue = KeyValues
+| extend 
+    Key = tostring(KeyValue[0]),
+    Value = tostring(KeyValue[1])</code></pre>
+                    </div>
+
+                    <h3>matches regex Operator</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - matches regex Examples</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Filter with regex match
+DeviceProcessEvents
+| where ProcessCommandLine matches regex @"(?i)-enc\s+[A-Za-z0-9+/=]{50,}"
+
+// Multiple conditions
+| where ProcessCommandLine matches regex @"(?i)(invoke-expression|iex|downloadstring)"
+    or ProcessCommandLine matches regex @"(?i)-w\s*(hidden|1)"
+
+// NOT matching pattern
+| where not(ProcessCommandLine matches regex @"^C:\\Windows\\System32\\")
+
+// Case-insensitive matching (use (?i) flag)
+| where Message matches regex @"(?i)failed\s+login"
+
+// Combining with other operators
+| where CommandLine matches regex @"\.exe$" 
+    and CommandLine !contains "Windows"</code></pre>
+                    </div>
+
+                    <h3>parse Operator</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>KQL - parse Operator Examples</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Simple parsing (faster than regex for structured data)
+Syslog
+| parse SyslogMessage with * "SRC=" SrcIP " " * "DST=" DstIP " " *
+
+// Parse with specific patterns
+SecurityEvent
+| parse EventData with * "Account Name:" AccountName "\r\n" *
+
+// Parse-where for conditional extraction
+| parse-where SyslogMessage with * "user=" Username " " * where isnotempty(Username)
+
+// Parse with regex (when structure varies)
+| parse kind=regex Message with * @"user[=:\s]+(?<Username>\S+)" *
+
+// Multiple parse statements
+| parse Message with * "src=" SrcIP:string " " * 
+| parse Message with * "dst=" DstIP:string " " *
+| parse Message with * "proto=" Protocol:string " " *</code></pre>
+                    </div>
+                </section>
+
+                <!-- Splunk Regex -->
+                <section class="doc-section">
+                    <h2>Splunk Regex Functions</h2>
+                    
+                    <h3>rex Command</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>SPL - rex Command Examples</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Extract named field
+index=security sourcetype=WinEventLog:Security
+| rex field=Message "Account Name:\s+(?<AccountName>\S+)"
+
+// Extract multiple fields
+| rex field=_raw "SRC=(?<src_ip>\S+).*DST=(?<dst_ip>\S+).*DPT=(?<dst_port>\d+)"
+
+// Extract with mode=sed (replacement)
+| rex mode=sed field=url "s/\?.*//"  // Remove query string
+
+// Extract all matches
+| rex max_match=0 field=Message "(?<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"
+
+// Case-insensitive extraction
+| rex field=Message "(?i)user[=:\s]+(?<username>\S+)"</code></pre>
+                    </div>
+
+                    <h3>regex Command</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>SPL - regex Command Examples</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Filter events matching pattern
+index=security 
+| regex _raw="(?i)failed\s+password"
+
+// Negative match (exclude)
+| regex _raw!="^#"  // Exclude comment lines
+
+// Filter specific field
+| regex src_ip="^10\."  // Only RFC1918 10.x.x.x
+
+// Complex pattern matching
+| regex CommandLine="(?i)(invoke-expression|downloadstring|webclient)"</code></pre>
+                    </div>
+
+                    <h3>replace Function</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>SPL - replace() Examples</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// Mask sensitive data
+| eval masked_email = replace(email, "(\w{2})\w+@", "\1***@")
+
+// Normalize paths
+| eval normalized_path = replace(file_path, "\\\\", "/")
+
+// Remove parameters from URL
+| eval base_url = replace(url, "\?.*", "")
+
+// De-fang URL for safe display
+| eval defanged = replace(replace(url, "http", "hxxp"), "\.", "[.]")</code></pre>
+                    </div>
+                </section>
+
+                <!-- Performance Tips -->
+                <section class="doc-section">
+                    <h2>Regex Performance Tips</h2>
+                    
+                    <div class="info-box tip">
+                        <h4>Optimization Best Practices</h4>
+                        <ul>
+                            <li><strong>Anchor when possible</strong> - Use ^ and $ to limit search scope</li>
+                            <li><strong>Be specific</strong> - <code>\d{1,3}</code> is faster than <code>\d+</code></li>
+                            <li><strong>Avoid catastrophic backtracking</strong> - Don't nest quantifiers like <code>(a+)+</code></li>
+                            <li><strong>Use non-greedy when appropriate</strong> - <code>.*?</code> vs <code>.*</code></li>
+                            <li><strong>Pre-filter before regex</strong> - Use simpler string contains first</li>
+                            <li><strong>Compile patterns</strong> - Reuse compiled regex in scripts</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box warning">
+                        <h4>Common Regex Mistakes</h4>
+                        <ul>
+                            <li><strong>Unescaped dots</strong> - <code>192.168.1.1</code> matches 19201680101 too</li>
+                            <li><strong>Greedy matching</strong> - <code>".*"</code> matches from first to LAST quote</li>
+                            <li><strong>Missing anchors</strong> - <code>\d{4}</code> matches 12345 (finds 1234)</li>
+                            <li><strong>Case sensitivity</strong> - Remember to add (?i) for case-insensitive</li>
+                            <li><strong>Platform differences</strong> - Different regex engines have quirks</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Interview Questions -->
+                <section class="doc-section">
+                    <h2>Interview Questions & Answers</h2>
+                    
+                    <div class="qa-accordion">
+                        <div class="qa-item">
+                            <button class="qa-question">Write a regex to extract encoded PowerShell commands from command lines.</button>
+                            <div class="qa-answer">
+                                <p><strong>Answer:</strong></p>
+                                <pre><code>// Pattern to match -enc/-encodedcommand followed by base64
+(?i)-e(?:nc(?:odedcommand)?|c)?\s+([A-Za-z0-9+/=]{40,})
+
+// Breakdown:
+// (?i)                    - Case insensitive
+// -e                      - Matches -e
+// (?:nc(?:odedcommand)?)? - Optionally matches nc or ncodedcommand
+// |c                      - Or just -ec
+// \s+                     - Whitespace
+// ([A-Za-z0-9+/=]{40,})   - Capture base64 (40+ chars)</code></pre>
+                                <p>In KQL:</p>
+                                <pre><code>DeviceProcessEvents
+| where ProcessCommandLine matches regex @"(?i)-e(nc(odedcommand)?|c)?\s+[A-Za-z0-9+/=]{40,}"
+| extend EncodedCmd = extract(@"(?i)-e(?:nc(?:odedcommand)?|c)?\s+([A-Za-z0-9+/=]+)", 1, ProcessCommandLine)</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="qa-item">
+                            <button class="qa-question">What's the difference between greedy and non-greedy matching?</button>
+                            <div class="qa-answer">
+                                <p><strong>Answer:</strong></p>
+                                <p>Greedy quantifiers (<code>*</code>, <code>+</code>, <code>?</code>) match as much as possible, then backtrack if needed. Non-greedy (<code>*?</code>, <code>+?</code>, <code>??</code>) match as little as possible.</p>
+                                <p><strong>Example string:</strong> <code>&lt;tag&gt;content&lt;/tag&gt;&lt;tag&gt;more&lt;/tag&gt;</code></p>
+                                <ul>
+                                    <li><strong>Greedy</strong> <code>&lt;.*&gt;</code> matches: <code>&lt;tag&gt;content&lt;/tag&gt;&lt;tag&gt;more&lt;/tag&gt;</code> (entire string)</li>
+                                    <li><strong>Non-greedy</strong> <code>&lt;.*?&gt;</code> matches: <code>&lt;tag&gt;</code> (first tag only)</li>
+                                </ul>
+                                <p>In security, non-greedy is often better for extracting individual elements like URLs, file paths, or quoted strings from logs.</p>
+                            </div>
+                        </div>
+
+                        <div class="qa-item">
+                            <button class="qa-question">How would you detect DNS tunneling using regex?</button>
+                            <div class="qa-answer">
+                                <p><strong>Answer:</strong> DNS tunneling indicators I'd regex for:</p>
+                                <pre><code>// Long subdomain (data encoded in subdomain)
+^([a-zA-Z0-9-]{30,})\.  // Subdomain > 30 chars
+
+// High entropy / random-looking subdomain
+^[a-z0-9]{15,}\.        // Many alphanumeric chars
+
+// Multiple labels (deep nesting)
+^([^.]+\.){5,}          // More than 5 labels
+
+// Base64-like patterns in subdomain
+^[A-Za-z0-9+/=]{20,}\.  // Base64 characters
+
+// Hex-encoded data
+^[0-9a-f]{32,}\.        // Long hex strings</code></pre>
+                                <p>I'd combine regex detection with volumetric analysis - high query counts to the same base domain with varying subdomains is a strong tunneling indicator.</p>
+                            </div>
+                        </div>
+
+                        <div class="qa-item">
+                            <button class="qa-question">What's catastrophic backtracking and how do you avoid it?</button>
+                            <div class="qa-answer">
+                                <p><strong>Answer:</strong> Catastrophic backtracking occurs when a regex engine tries exponentially many combinations before failing. It's caused by nested quantifiers on overlapping patterns.</p>
+                                <p><strong>Dangerous pattern:</strong> <code>(a+)+$</code> on string "aaaaaaaaaaaaaaaaaX"</p>
+                                <p>The engine tries: a+a+a+...X, aa+a+...X, aaa+a+...X, etc., leading to 2^n combinations.</p>
+                                <p><strong>Prevention:</strong></p>
+                                <ul>
+                                    <li>Avoid nested quantifiers: <code>(a+)+</code> → <code>a+</code></li>
+                                    <li>Use atomic groups: <code>(?&gt;a+)+</code> (if supported)</li>
+                                    <li>Use possessive quantifiers: <code>a++</code> (if supported)</li>
+                                    <li>Make patterns more specific: <code>[^,]+</code> instead of <code>.*</code></li>
+                                    <li>Set timeout limits in code</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Navigation -->
+                <div class="doc-navigation">
+                    <a href="windows-events.html" class="nav-link prev">
+                        <span class="arrow">←</span>
+                        <span>Windows Event IDs</span>
+                    </a>
+                    <a href="splunk-cheatsheet.html" class="nav-link next">
+                        <span>Splunk Cheat Sheet</span>
+                        <span class="arrow">→</span>
+                    </a>
+                </div>
+            </main>
+            <footer class="footer">
+                <p>Detection Engineering Mastery © 2024 | Building world-class detection capabilities</p>
+            </footer>
+        </div>
+    </div>
+    <script src="../../js/sidebar.js"></script>
+    <script>
+        document.querySelectorAll('.qa-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const isOpen = answer.style.maxHeight;
+                document.querySelectorAll('.qa-answer').forEach(a => a.style.maxHeight = null);
+                document.querySelectorAll('.qa-question').forEach(q => q.classList.remove('active'));
+                if (!isOpen) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    button.classList.add('active');
+                }
+            });
+        });
+        function copyCode(btn) {
+            const code = btn.parentElement.nextElementSibling.querySelector('code').innerText;
+            navigator.clipboard.writeText(code);
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = 'Copy', 2000);
+        }
+    </script>
+</body>
+</html>

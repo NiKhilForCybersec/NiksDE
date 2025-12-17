@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threat Hunting - Detection Engineering Mastery</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar" id="sidebar"></nav>
+        <main class="content">
+            <div class="content-header">
+                <div class="breadcrumb">
+                    <a href="../../index.html">Home</a> / 
+                    <a href="fundamentals.html">Threat Intelligence</a> / 
+                    <span>Threat Hunting</span>
+                </div>
+                <h1>🎯 Threat Hunting</h1>
+                <p class="subtitle">Proactive hypothesis-driven threat detection and adversary pursuit</p>
+            </div>
+
+            <section class="section">
+                <h2>What is Threat Hunting?</h2>
+                <p>Threat hunting is the proactive, iterative search through networks and datasets to detect and isolate advanced threats that evade existing automated security solutions. Unlike reactive incident response, hunting assumes the adversary is already present and actively searches for evidence of compromise.</p>
+
+                <div class="grid-container">
+                    <div class="grid-item">
+                        <h3>🎯 Reactive Security</h3>
+                        <ul>
+                            <li>Wait for alerts to fire</li>
+                            <li>Respond to known signatures</li>
+                            <li>Relies on automated detection</li>
+                            <li>Detects known threats</li>
+                            <li>Rule-based approach</li>
+                        </ul>
+                    </div>
+                    <div class="grid-item highlight">
+                        <h3>🔍 Threat Hunting</h3>
+                        <ul>
+                            <li>Proactively search for threats</li>
+                            <li>Hypothesis-driven investigation</li>
+                            <li>Human-led analysis</li>
+                            <li>Finds unknown threats</li>
+                            <li>Behavior-based approach</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="info-box tip">
+                    <strong>💡 Hunting Mindset:</strong> Assume breach. Your job isn't to prove you're secure—it's to find evidence that you've been compromised. Start every hunt with the question: "If an attacker was in our environment right now, what would they be doing?"
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Hunting Maturity Model (HMM)</h2>
+                <p>The Hunting Maturity Model helps organizations assess and improve their threat hunting capabilities across five levels:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Name</th>
+                            <th>Characteristics</th>
+                            <th>Data Requirements</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="severity-low">HM0</span></td>
+                            <td>Initial</td>
+                            <td>Rely primarily on automated alerting; minimal or no routine data collection</td>
+                            <td>Basic logs only</td>
+                        </tr>
+                        <tr>
+                            <td><span class="severity-low">HM1</span></td>
+                            <td>Minimal</td>
+                            <td>Some routine data collection; can apply IOC searches from threat intel</td>
+                            <td>Centralized logging</td>
+                        </tr>
+                        <tr>
+                            <td><span class="severity-medium">HM2</span></td>
+                            <td>Procedural</td>
+                            <td>Follow hunting procedures developed by others; use tools to search data</td>
+                            <td>SIEM + EDR data</td>
+                        </tr>
+                        <tr>
+                            <td><span class="severity-high">HM3</span></td>
+                            <td>Innovative</td>
+                            <td>Create new hunting procedures; understand data analysis techniques</td>
+                            <td>Comprehensive telemetry</td>
+                        </tr>
+                        <tr>
+                            <td><span class="severity-critical">HM4</span></td>
+                            <td>Leading</td>
+                            <td>Automate successful hunts; contribute to community; continuous improvement</td>
+                            <td>Full visibility + automation</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section">
+                <h2>Hunting Methodologies</h2>
+
+                <h3>1. Hypothesis-Driven Hunting</h3>
+                <p>Start with a specific hypothesis about adversary behavior, then systematically search for evidence supporting or refuting it.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Hypothesis Framework</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>// Hypothesis Structure Template
+{
+    "hypothesis_id": "HUNT-2024-042",
+    "title": "Adversaries using LOLBins for lateral movement",
+    "hypothesis": "Threat actors are using Windows Management Instrumentation (WMI) 
+                  to execute commands on remote systems for lateral movement",
+    
+    "mitre_mapping": {
+        "tactic": "Lateral Movement",
+        "technique": "T1021.006 - Remote Services: Windows Remote Management",
+        "sub_technique": "T1047 - Windows Management Instrumentation"
+    },
+    
+    "indicators": [
+        "wmic.exe /node: command executions",
+        "WmiPrvSE.exe spawning unexpected child processes",
+        "Event ID 4648 - Explicit credential logon",
+        "Network connections to port 135 (RPC) followed by high ports"
+    ],
+    
+    "data_sources": [
+        "Windows Security Events (4624, 4648, 4672)",
+        "Sysmon Events (1, 3, 20, 21)",
+        "EDR process telemetry",
+        "Network flow data"
+    ],
+    
+    "success_criteria": "Identify any WMI-based remote execution not associated 
+                        with known administrative tools or approved automation",
+    
+    "false_positive_sources": [
+        "SCCM deployments",
+        "Vulnerability scanners",
+        "IT administrative scripts"
+    ]
+}</code></pre>
+                </div>
+
+                <h3>2. Intelligence-Driven Hunting</h3>
+                <p>Use threat intelligence about specific adversary groups, campaigns, or TTPs to guide hunting activities.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>KQL - Hunt Based on APT29 TTPs</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>// APT29 (Cozy Bear) TTP-Based Hunt
+// Focus: Credential access via LSASS and cloud token theft
+
+// Hunt 1: LSASS Access (Mimikatz-style)
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("procdump.exe", "procdump64.exe", "sqldumper.exe", 
+                       "rundll32.exe", "comsvcs.dll")
+| where ProcessCommandLine has_any ("lsass", "-ma", "MiniDump", "#24")
+| project Timestamp, DeviceName, InitiatingProcessFileName, 
+          FileName, ProcessCommandLine, AccountName
+| extend HuntTag = "APT29_LSASS_Access"
+
+// Hunt 2: Suspicious Azure/O365 Token Operations
+let SuspiciousApps = dynamic(["Azure AD PowerShell", "Microsoft Azure CLI"]);
+SigninLogs
+| where TimeGenerated > ago(30d)
+| where AppDisplayName in (SuspiciousApps)
+| where ResultType == 0  // Successful
+| summarize 
+    LoginCount = count(),
+    UniqueIPs = dcount(IPAddress),
+    Countries = make_set(LocationDetails.countryOrRegion)
+    by UserPrincipalName, AppDisplayName
+| where UniqueIPs > 3 or array_length(Countries) > 2
+| extend HuntTag = "APT29_Token_Theft"
+
+// Hunt 3: WellMess/WellMail C2 Patterns
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemotePort in (443, 8443, 8080)
+| where InitiatingProcessFileName in~ ("powershell.exe", "cmd.exe", "rundll32.exe")
+| summarize 
+    ConnectionCount = count(),
+    BytesSent = sum(SentBytes),
+    BytesReceived = sum(ReceivedBytes),
+    UniqueDestinations = dcount(RemoteIP)
+    by DeviceName, InitiatingProcessFileName, bin(Timestamp, 1h)
+| where ConnectionCount > 50 or UniqueDestinations > 10
+| extend HuntTag = "APT29_C2_Pattern"</code></pre>
+                </div>
+
+                <h3>3. Baseline-Driven Hunting</h3>
+                <p>Establish normal behavior baselines and hunt for statistical anomalies that deviate from the norm.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>KQL - Baseline Anomaly Detection</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>// Establish baseline for PowerShell execution per user
+let Baseline = DeviceProcessEvents
+| where Timestamp between (ago(60d) .. ago(7d))
+| where FileName =~ "powershell.exe"
+| summarize 
+    AvgDailyExecutions = count() / 53.0,  // 53 days baseline
+    StdDev = stdev(1)
+    by AccountName
+| where AvgDailyExecutions > 1;  // Only users with regular PS usage
+
+// Current period analysis
+let CurrentPeriod = DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "powershell.exe"
+| summarize CurrentExecutions = count() by AccountName;
+
+// Compare and find anomalies
+Baseline
+| join kind=inner CurrentPeriod on AccountName
+| extend DailyAvgCurrent = CurrentExecutions / 7.0
+| extend ZScore = (DailyAvgCurrent - AvgDailyExecutions) / AvgDailyExecutions
+| where ZScore > 3  // More than 3x normal activity
+| project AccountName, AvgDailyExecutions, DailyAvgCurrent, 
+          ZScore, AnomalyLevel = case(
+              ZScore > 10, "Critical",
+              ZScore > 5, "High",
+              ZScore > 3, "Medium",
+              "Low"
+          )
+| order by ZScore desc</code></pre>
+                </div>
+
+                <h3>4. Situational Awareness Hunting</h3>
+                <p>Hunt based on environmental changes, new vulnerabilities, or emerging threat landscape shifts.</p>
+
+                <div class="info-box warning">
+                    <strong>⚠️ Trigger Events for Situational Hunts:</strong>
+                    <ul>
+                        <li>New critical CVE affecting your technology stack</li>
+                        <li>Industry-specific threat actor campaign reported</li>
+                        <li>M&A activity or organizational changes</li>
+                        <li>New cloud services or infrastructure deployed</li>
+                        <li>Geopolitical events affecting your sector</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>The Hunting Loop</h2>
+                <p>Effective threat hunting follows an iterative process that continuously improves detection capabilities:</p>
+
+                <div class="process-flow">
+                    <div class="process-step">
+                        <h4>1. Generate Hypothesis</h4>
+                        <p>Create testable hypothesis based on intel, TTPs, or anomalies</p>
+                    </div>
+                    <div class="process-arrow">→</div>
+                    <div class="process-step">
+                        <h4>2. Investigate</h4>
+                        <p>Query data sources, analyze results, pivot on findings</p>
+                    </div>
+                    <div class="process-arrow">→</div>
+                    <div class="process-step">
+                        <h4>3. Resolve</h4>
+                        <p>Validate findings, escalate true positives, document FPs</p>
+                    </div>
+                    <div class="process-arrow">→</div>
+                    <div class="process-step">
+                        <h4>4. Enrich</h4>
+                        <p>Convert successful hunts to automated detections</p>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Hunt Documentation Template</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>## Hunt Report: HUNT-2024-042
+
+### Executive Summary
+- **Hunt Name:** WMI Lateral Movement Detection
+- **Date Range:** 2024-03-01 to 2024-03-15
+- **Hunter:** Security Analyst Team
+- **Status:** Completed - Detection Rule Created
+
+### Hypothesis
+Adversaries are using WMI for lateral movement within the environment, 
+bypassing traditional detection mechanisms.
+
+### Data Sources Analyzed
+| Source | Events Analyzed | Time Range |
+|--------|----------------|------------|
+| Windows Security | 2.4M events | 14 days |
+| Sysmon | 8.1M events | 14 days |
+| EDR Telemetry | 12.3M events | 14 days |
+| Network Flow | 45.2M flows | 14 days |
+
+### Findings
+
+#### True Positives (3)
+1. **Finding 1:** YOURDOM\svc_deploy executing WMI remotely to 47 hosts
+   - Risk: Medium (authorized but poorly monitored service account)
+   - Action: Added to monitoring, credential rotation scheduled
+
+2. **Finding 2:** Suspicious WMI execution from YOURDOM\jsmith to 3 hosts
+   - Risk: High (no business justification)
+   - Action: Escalated to IR team, user account disabled
+
+3. **Finding 3:** Unknown binary executed via WMI on SERVER-FIN-01
+   - Risk: Critical (potential compromise)
+   - Action: Immediate IR engagement, host isolated
+
+#### False Positives Identified
+- SCCM client health checks (filtered by source process)
+- Vulnerability scanner Qualys (filtered by source IP)
+- IT automation scripts (documented and baselined)
+
+### Detection Rule Created
+```kql
+// WMI Lateral Movement Detection - Production Rule
+DeviceProcessEvents
+| where InitiatingProcessFileName =~ "wmiprvse.exe"
+| where FileName !in~ ("wmiprvse.exe", "wmiapsrv.exe", "mofcomp.exe")
+| where InitiatingProcessCommandLine !contains "ccmexec"  // SCCM FP
+| where not(InitiatingProcessAccountName has_any ("sccm", "scom", "qualys"))
+| project Timestamp, DeviceName, FileName, ProcessCommandLine, 
+          AccountName, InitiatingProcessCommandLine
+```
+
+### Recommendations
+1. Implement detection rule in production (SIEM-DET-2024-089)
+2. Add WMI logging to all tier-0 assets
+3. Review service account permissions for svc_deploy
+4. Conduct follow-up hunt on PowerShell remoting
+
+### Metrics
+- **Hunt Duration:** 24 hours analyst time
+- **True Positive Rate:** 0.0001% (3/2.4M events)
+- **Detection Gap Closed:** Yes - new rule deployed
+- **MITRE Coverage Added:** T1047, T1021.006</code></pre>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Hunting Techniques by Attack Phase</h2>
+
+                <h3>Initial Access Hunting</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>KQL - Phishing & Initial Access Indicators</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>// Hunt: Suspicious Office macro execution
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("winword.exe", "excel.exe", "powerpnt.exe")
+| where FileName in~ ("powershell.exe", "cmd.exe", "wscript.exe", 
+                       "cscript.exe", "mshta.exe", "certutil.exe")
+| project Timestamp, DeviceName, AccountName, 
+          InitiatingProcessFileName, FileName, ProcessCommandLine
+| extend RiskScore = case(
+    ProcessCommandLine contains "http", 80,
+    ProcessCommandLine contains "base64", 70,
+    ProcessCommandLine contains "-enc", 90,
+    ProcessCommandLine contains "bypass", 85,
+    50
+)
+| where RiskScore >= 50
+| order by RiskScore desc
+
+// Hunt: ISO/IMG file mounting followed by execution
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where FileName endswith ".iso" or FileName endswith ".img"
+| where ActionType == "FileCreated"
+| join kind=inner (
+    DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where InitiatingProcessFileName =~ "explorer.exe"
+    | where FolderPath matches regex @"[D-Z]:\\" // Mounted drive letters
+) on DeviceName
+| where Timestamp1 between (Timestamp .. (Timestamp + 5m))
+| project Timestamp, DeviceName, ISOFile = FileName, 
+          ExecutedFile = FileName1, ProcessCommandLine</code></pre>
+                </div>
+
+                <h3>Persistence Hunting</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>KQL - Registry Persistence Mechanisms</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>// Hunt: Registry Run Key Modifications
+DeviceRegistryEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("RegistryValueSet", "RegistryKeyCreated")
+| where RegistryKey has_any (
+    @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run",
+    @"SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce",
+    @"SOFTWARE\Microsoft\Windows\CurrentVersion\RunServices",
+    @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon",
+    @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders",
+    @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
+)
+| where InitiatingProcessFileName !in~ ("msiexec.exe", "setup.exe", "chrome.exe", "teams.exe")
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, 
+          RegistryValueData, InitiatingProcessFileName, AccountName
+| extend Suspicious = case(
+    RegistryValueData contains "powershell", true,
+    RegistryValueData contains "cmd.exe", true,
+    RegistryValueData contains "wscript", true,
+    RegistryValueData contains "mshta", true,
+    RegistryValueData matches regex @"\\AppData\\", true,
+    RegistryValueData matches regex @"\\Temp\\", true,
+    false
+)
+| where Suspicious == true
+
+// Hunt: Scheduled Task Creation
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "schtasks.exe"
+| where ProcessCommandLine has "/create"
+| parse ProcessCommandLine with * "/tn" TaskName "/tr" TaskCommand *
+| where TaskCommand has_any ("powershell", "cmd", "wscript", "mshta", "http", "\\Temp\\")
+| project Timestamp, DeviceName, AccountName, TaskName, TaskCommand, ProcessCommandLine
+
+// Hunt: WMI Event Subscriptions (Persistence)
+DeviceEvents
+| where Timestamp > ago(7d)
+| where ActionType == "WmiBindEventConsumer"
+| project Timestamp, DeviceName, AdditionalFields
+| extend Consumer = tostring(AdditionalFields.Consumer)
+| extend Filter = tostring(AdditionalFields.Filter)
+| where Consumer !has "SCM Event Log Consumer"  // Known good</code></pre>
+                </div>
+
+                <h3>Lateral Movement Hunting</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>KQL - Lateral Movement Patterns</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>// Hunt: PSExec/Remote Service Installation
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "psexesvc.exe" or 
+        (FileName =~ "services.exe" and 
+         ProcessCommandLine has_any ("psexec", "paexec", "remcom"))
+| project Timestamp, DeviceName, FileName, ProcessCommandLine, 
+          InitiatingProcessFileName, AccountName
+
+// Hunt: Pass-the-Hash Detection
+SecurityEvent
+| where TimeGenerated > ago(7d)
+| where EventID == 4624
+| where LogonType == 3  // Network logon
+| where AuthenticationPackageName == "NTLM"
+| where TargetUserName !endswith "$"  // Not machine accounts
+| summarize 
+    HostsAccessed = make_set(Computer),
+    HostCount = dcount(Computer),
+    FirstSeen = min(TimeGenerated),
+    LastSeen = max(TimeGenerated)
+    by TargetUserName, IpAddress
+| where HostCount > 5  // Accessing many hosts
+| where array_length(HostsAccessed) > 5
+
+// Hunt: RDP Lateral Movement Chain
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemotePort == 3389
+| where ActionType == "ConnectionSuccess"
+| summarize 
+    DestinationHosts = make_set(RemoteIP),
+    ConnectionCount = count()
+    by DeviceName, LocalIP, bin(Timestamp, 1h)
+| where ConnectionCount > 3  // Multiple RDP sessions
+| mv-expand DestinationHosts
+| extend DestinationHost = tostring(DestinationHosts)
+// Find chains: A -> B -> C
+| join kind=inner (
+    DeviceNetworkEvents
+    | where RemotePort == 3389
+    | where ActionType == "ConnectionSuccess"
+    | project Timestamp, SourceDevice = DeviceName, SourceIP = LocalIP, 
+              HopDestination = RemoteIP
+) on $left.DestinationHost == $right.SourceIP
+| project Timestamp, FirstHop = DeviceName, SecondHop = SourceDevice, 
+          ThirdHop = HopDestination</code></pre>
+                </div>
+
+                <h3>Data Exfiltration Hunting</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>KQL - Exfiltration Indicators</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>// Hunt: Large data transfers to external IPs
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where ActionType == "ConnectionSuccess"
+| where RemoteIPType == "Public"
+| where SentBytes > 100000000  // > 100MB
+| where RemotePort in (443, 80, 22, 21, 8080)
+| project Timestamp, DeviceName, AccountName, RemoteIP, RemotePort,
+          SentBytesMB = SentBytes / 1000000.0, 
+          InitiatingProcessFileName
+| join kind=leftouter (
+    // Enrich with GeoIP
+    externaldata (ip:string, country:string, org:string) 
+    [@"https://your-geoip-lookup"]
+) on $left.RemoteIP == $right.ip
+| where country !in ("United States", "Canada")  // Adjust for your org
+| order by SentBytesMB desc
+
+// Hunt: Archive file creation followed by network upload
+let ArchiveCreation = DeviceFileEvents
+| where Timestamp > ago(7d)
+| where FileName endswith_any (".zip", ".7z", ".rar", ".tar", ".gz")
+| where ActionType == "FileCreated"
+| where FolderPath has_any ("Documents", "Desktop", "Downloads", "Temp")
+| project ArchiveTime = Timestamp, DeviceName, ArchiveFile = FileName, 
+          FilePath = FolderPath, FileSize = FileSize;
+
+let NetworkUploads = DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where SentBytes > 10000000  // > 10MB
+| where RemoteIPType == "Public"
+| project UploadTime = Timestamp, DeviceName, RemoteIP, 
+          SentBytes, InitiatingProcessFileName;
+
+ArchiveCreation
+| join kind=inner NetworkUploads on DeviceName
+| where UploadTime between (ArchiveTime .. (ArchiveTime + 30m))
+| project ArchiveTime, UploadTime, DeviceName, ArchiveFile, 
+          RemoteIP, SentBytesMB = SentBytes / 1000000.0
+
+// Hunt: DNS tunneling indicators
+DeviceNetworkEvents  
+| where Timestamp > ago(7d)
+| where RemotePort == 53
+| summarize 
+    QueryCount = count(),
+    UniqueSubdomains = dcount(RemoteUrl),
+    AvgQueryLength = avg(strlen(RemoteUrl))
+    by DeviceName, RemoteIP, bin(Timestamp, 1h)
+| where QueryCount > 500 or UniqueSubdomains > 100 or AvgQueryLength > 50
+| extend Suspicion = case(
+    QueryCount > 1000 and UniqueSubdomains > 200, "High - Likely DNS Tunnel",
+    AvgQueryLength > 60, "High - Long subdomains",
+    QueryCount > 500, "Medium - High query volume",
+    "Low"
+)</code></pre>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Hunting Tools & Data Sources</h2>
+
+                <h3>Essential Data Sources for Hunting</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data Source</th>
+                            <th>Key Fields</th>
+                            <th>Hunting Value</th>
+                            <th>Retention</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>EDR Telemetry</strong></td>
+                            <td>Process, file, registry, network events</td>
+                            <td>Critical - Full execution chain visibility</td>
+                            <td>90-180 days</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Windows Security</strong></td>
+                            <td>Logon, privilege use, object access</td>
+                            <td>High - Authentication and authorization</td>
+                            <td>90-365 days</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sysmon</strong></td>
+                            <td>Process creation, network, file hashes</td>
+                            <td>Critical - Detailed process telemetry</td>
+                            <td>90-180 days</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DNS Logs</strong></td>
+                            <td>Query, response, client IP</td>
+                            <td>High - C2 and exfil detection</td>
+                            <td>30-90 days</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Proxy/Web Logs</strong></td>
+                            <td>URL, user agent, bytes, response</td>
+                            <td>High - Web-based threats</td>
+                            <td>30-90 days</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Firewall Logs</strong></td>
+                            <td>Source, destination, port, action</td>
+                            <td>Medium - Network boundary visibility</td>
+                            <td>30-90 days</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cloud Audit Logs</strong></td>
+                            <td>API calls, identity, resources</td>
+                            <td>Critical - Cloud activity visibility</td>
+                            <td>90-365 days</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Hunting Tool Stack</h3>
+                <div class="grid-container">
+                    <div class="grid-item">
+                        <h4>🔍 Query & Analysis</h4>
+                        <ul>
+                            <li><strong>Microsoft Sentinel</strong> - KQL hunting queries</li>
+                            <li><strong>Splunk</strong> - SPL for large-scale search</li>
+                            <li><strong>Elastic</strong> - EQL for event correlation</li>
+                            <li><strong>Jupyter Notebooks</strong> - Python analysis</li>
+                        </ul>
+                    </div>
+                    <div class="grid-item">
+                        <h4>🎯 EDR Platforms</h4>
+                        <ul>
+                            <li><strong>Microsoft Defender</strong> - Advanced hunting</li>
+                            <li><strong>CrowdStrike</strong> - Falcon OverWatch</li>
+                            <li><strong>Cortex XDR</strong> - Investigation queries</li>
+                            <li><strong>Carbon Black</strong> - Process search</li>
+                        </ul>
+                    </div>
+                    <div class="grid-item">
+                        <h4>📊 Enrichment</h4>
+                        <ul>
+                            <li><strong>VirusTotal</strong> - Hash/IP/URL reputation</li>
+                            <li><strong>Shodan</strong> - External asset intelligence</li>
+                            <li><strong>GreyNoise</strong> - Internet scanner identification</li>
+                            <li><strong>AbuseIPDB</strong> - IP reputation</li>
+                        </ul>
+                    </div>
+                    <div class="grid-item">
+                        <h4>🧪 Forensics</h4>
+                        <ul>
+                            <li><strong>Velociraptor</strong> - Endpoint collection</li>
+                            <li><strong>KAPE</strong> - Artifact collection</li>
+                            <li><strong>Volatility</strong> - Memory analysis</li>
+                            <li><strong>Chainsaw</strong> - Log analysis</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Python Hunting Automation</h2>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Python - Automated Hunt Execution Framework</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>#!/usr/bin/env python3
+"""
+Threat Hunting Automation Framework
+Executes hunting queries and generates reports
+"""
+
+import json
+import logging
+from datetime import datetime, timedelta
+from dataclasses import dataclass
+from typing import List, Dict, Optional
+from azure.identity import DefaultAzureCredential
+from azure.monitor.query import LogsQueryClient
+import pandas as pd
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+@dataclass
+class HuntHypothesis:
+    """Represents a hunting hypothesis"""
+    id: str
+    name: str
+    description: str
+    mitre_techniques: List[str]
+    query: str
+    data_sources: List[str]
+    severity: str
+    false_positive_guidance: str
+
+
+@dataclass
+class HuntResult:
+    """Results from a hunt execution"""
+    hypothesis_id: str
+    execution_time: datetime
+    record_count: int
+    findings: List[Dict]
+    status: str
+    notes: str
+
+
+class ThreatHunter:
+    """Automated threat hunting framework"""
+    
+    def __init__(self, workspace_id: str):
+        self.workspace_id = workspace_id
+        self.credential = DefaultAzureCredential()
+        self.client = LogsQueryClient(self.credential)
+        self.hypotheses: List[HuntHypothesis] = []
+        self.results: List[HuntResult] = []
+    
+    def load_hypotheses(self, filepath: str) -> None:
+        """Load hunting hypotheses from JSON file"""
+        with open(filepath, 'r') as f:
+            data = json.load(f)
+        
+        for h in data['hypotheses']:
+            self.hypotheses.append(HuntHypothesis(
+                id=h['id'],
+                name=h['name'],
+                description=h['description'],
+                mitre_techniques=h['mitre_techniques'],
+                query=h['query'],
+                data_sources=h['data_sources'],
+                severity=h['severity'],
+                false_positive_guidance=h['false_positive_guidance']
+            ))
+        
+        logger.info(f"Loaded {len(self.hypotheses)} hunting hypotheses")
+    
+    def execute_hunt(self, hypothesis: HuntHypothesis, 
+                     days_back: int = 7) -> HuntResult:
+        """Execute a single hunting hypothesis"""
+        logger.info(f"Executing hunt: {hypothesis.name}")
+        
+        try:
+            response = self.client.query_workspace(
+                workspace_id=self.workspace_id,
+                query=hypothesis.query,
+                timespan=timedelta(days=days_back)
+            )
+            
+            findings = []
+            if response.tables:
+                for table in response.tables:
+                    for row in table.rows:
+                        finding = dict(zip(
+                            [col.name for col in table.columns], 
+                            row
+                        ))
+                        findings.append(finding)
+            
+            result = HuntResult(
+                hypothesis_id=hypothesis.id,
+                execution_time=datetime.utcnow(),
+                record_count=len(findings),
+                findings=findings,
+                status="completed",
+                notes=""
+            )
+            
+            if findings:
+                logger.warning(
+                    f"Hunt {hypothesis.id} found {len(findings)} results!"
+                )
+            else:
+                logger.info(f"Hunt {hypothesis.id} - no findings")
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Hunt {hypothesis.id} failed: {str(e)}")
+            return HuntResult(
+                hypothesis_id=hypothesis.id,
+                execution_time=datetime.utcnow(),
+                record_count=0,
+                findings=[],
+                status="failed",
+                notes=str(e)
+            )
+    
+    def run_all_hunts(self, days_back: int = 7) -> List[HuntResult]:
+        """Execute all loaded hypotheses"""
+        results = []
+        
+        for hypothesis in self.hypotheses:
+            result = self.execute_hunt(hypothesis, days_back)
+            results.append(result)
+            self.results.append(result)
+        
+        return results
+    
+    def generate_report(self, output_path: str) -> None:
+        """Generate hunting report"""
+        report = {
+            "report_date": datetime.utcnow().isoformat(),
+            "total_hunts": len(self.results),
+            "hunts_with_findings": sum(
+                1 for r in self.results if r.record_count > 0
+            ),
+            "total_findings": sum(r.record_count for r in self.results),
+            "results": []
+        }
+        
+        for result in self.results:
+            hypothesis = next(
+                (h for h in self.hypotheses if h.id == result.hypothesis_id), 
+                None
+            )
+            
+            report["results"].append({
+                "hypothesis_id": result.hypothesis_id,
+                "hypothesis_name": hypothesis.name if hypothesis else "Unknown",
+                "severity": hypothesis.severity if hypothesis else "Unknown",
+                "mitre_techniques": hypothesis.mitre_techniques if hypothesis else [],
+                "execution_time": result.execution_time.isoformat(),
+                "record_count": result.record_count,
+                "status": result.status,
+                "findings_sample": result.findings[:10]  # First 10 findings
+            })
+        
+        with open(output_path, 'w') as f:
+            json.dump(report, f, indent=2, default=str)
+        
+        logger.info(f"Report generated: {output_path}")
+    
+    def prioritize_findings(self) -> pd.DataFrame:
+        """Prioritize findings by severity and volume"""
+        rows = []
+        
+        for result in self.results:
+            if result.record_count > 0:
+                hypothesis = next(
+                    (h for h in self.hypotheses 
+                     if h.id == result.hypothesis_id), 
+                    None
+                )
+                
+                severity_score = {
+                    "critical": 4,
+                    "high": 3,
+                    "medium": 2,
+                    "low": 1
+                }.get(hypothesis.severity.lower(), 1)
+                
+                rows.append({
+                    "hypothesis_id": result.hypothesis_id,
+                    "name": hypothesis.name if hypothesis else "Unknown",
+                    "severity": hypothesis.severity if hypothesis else "Unknown",
+                    "finding_count": result.record_count,
+                    "priority_score": severity_score * min(result.record_count, 10)
+                })
+        
+        df = pd.DataFrame(rows)
+        return df.sort_values("priority_score", ascending=False)
+
+
+# Example usage
+if __name__ == "__main__":
+    # Initialize hunter
+    hunter = ThreatHunter(workspace_id="your-workspace-id")
+    
+    # Load hypotheses from file
+    hunter.load_hypotheses("hunting_hypotheses.json")
+    
+    # Run all hunts
+    results = hunter.run_all_hunts(days_back=14)
+    
+    # Generate report
+    hunter.generate_report("hunt_report.json")
+    
+    # Get prioritized findings
+    priorities = hunter.prioritize_findings()
+    print("\nPrioritized Findings:")
+    print(priorities.to_string())</code></pre>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Hunting Metrics & KPIs</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Description</th>
+                            <th>Target</th>
+                            <th>Calculation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Hunt Coverage</strong></td>
+                            <td>MITRE techniques covered by hunts</td>
+                            <td>&gt;60% of relevant TTPs</td>
+                            <td>Techniques hunted / Total techniques</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hunt Frequency</strong></td>
+                            <td>How often hunts are executed</td>
+                            <td>Weekly for priority areas</td>
+                            <td>Hunts executed / Time period</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Detection Conversion</strong></td>
+                            <td>Hunts converted to automated rules</td>
+                            <td>&gt;30% of successful hunts</td>
+                            <td>Rules created / Hunts with findings</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mean Time to Hunt</strong></td>
+                            <td>Time from intel to hunt execution</td>
+                            <td>&lt;24 hours for critical</td>
+                            <td>Hunt start - Intel received</td>
+                        </tr>
+                        <tr>
+                            <td><strong>True Positive Rate</strong></td>
+                            <td>Accuracy of hunt findings</td>
+                            <td>&gt;20% true positives</td>
+                            <td>True positives / Total findings</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Dwell Time Reduction</strong></td>
+                            <td>Time threats go undetected</td>
+                            <td>Decreasing trend</td>
+                            <td>Discovery date - Initial compromise</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section interview-prep">
+                <h2>Interview Preparation</h2>
+                
+                <div class="qa-item">
+                    <h4>Q: Walk me through your threat hunting methodology.</h4>
+                    <div class="answer">
+                        <p>"I follow a hypothesis-driven approach using the hunting loop:</p>
+                        <ol>
+                            <li><strong>Hypothesis Generation:</strong> I start with threat intelligence, MITRE ATT&CK techniques relevant to our industry, or anomalies from security tools. For example, 'APT groups targeting our sector use WMI for lateral movement.'</li>
+                            <li><strong>Data Identification:</strong> I identify required data sources—Sysmon for process events, Windows Security for authentication, EDR for full telemetry.</li>
+                            <li><strong>Query Development:</strong> I write targeted queries in KQL or SPL that look for specific behaviors, not just IOCs. For WMI, I'd look for wmiprvse.exe spawning unexpected child processes.</li>
+                            <li><strong>Investigation:</strong> I analyze results, pivot on interesting findings, enrich with threat intel, and determine true vs. false positives.</li>
+                            <li><strong>Documentation:</strong> I document findings, update detection rules for true positives, and note false positive patterns for future hunts.</li>
+                            <li><strong>Automation:</strong> Successful hunts become automated detection rules, closing detection gaps."</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="qa-item">
+                    <h4>Q: How do you prioritize what to hunt for?</h4>
+                    <div class="answer">
+                        <p>"I prioritize hunts based on several factors:</p>
+                        <ul>
+                            <li><strong>Threat Intelligence:</strong> Active campaigns targeting our industry or technology stack take highest priority</li>
+                            <li><strong>Detection Gaps:</strong> I map our detections to MITRE ATT&CK and prioritize techniques we can't detect</li>
+                            <li><strong>Business Risk:</strong> Focus on threats to crown jewels—what would cause most damage if compromised</li>
+                            <li><strong>Recent Incidents:</strong> Similar attacks in our sector or past incidents in our environment</li>
+                            <li><strong>Vulnerability Exposure:</strong> New critical CVEs affecting our systems warrant immediate hunting</li>
+                        </ul>
+                        <p>I maintain a hunting backlog prioritized by these factors and execute high-priority hunts weekly."</p>
+                    </div>
+                </div>
+
+                <div class="qa-item">
+                    <h4>Q: Describe a successful threat hunt you conducted.</h4>
+                    <div class="answer">
+                        <p>"In my previous role, I conducted a hunt for Kerberoasting activity after seeing increased reports of this technique:</p>
+                        <ul>
+                            <li><strong>Hypothesis:</strong> Attackers may be requesting service tickets with weak encryption to crack offline</li>
+                            <li><strong>Data:</strong> Windows Security Event 4769 (Kerberos Service Ticket Operations)</li>
+                            <li><strong>Query:</strong> Looked for RC4 encryption (0x17) requests to service accounts, excluding known service-to-service requests</li>
+                            <li><strong>Finding:</strong> Discovered a compromised service account requesting tickets for 47 SPNs in 10 minutes—far beyond normal behavior</li>
+                            <li><strong>Response:</strong> Engaged IR, reset affected accounts, identified the initial compromise vector (phishing email)</li>
+                            <li><strong>Outcome:</strong> Created automated detection rule, reduced service account privileges, implemented AES-only Kerberos policy</li>
+                        </ul>
+                        <p>This hunt caught an attack that bypassed our existing detections and led to significant security improvements."</p>
+                    </div>
+                </div>
+
+                <div class="qa-item">
+                    <h4>Q: How do you handle false positives in threat hunting?</h4>
+                    <div class="answer">
+                        <p>"False positives are expected in hunting and provide value:</p>
+                        <ul>
+                            <li><strong>Documentation:</strong> I document every false positive pattern—what triggered it, why it's benign, how to filter it</li>
+                            <li><strong>Baseline Building:</strong> FPs help build baselines of normal activity, improving future hunts</li>
+                            <li><strong>Query Refinement:</strong> I iteratively refine queries to reduce noise while maintaining detection capability</li>
+                            <li><strong>Whitelist Management:</strong> Create dynamic whitelists based on source (e.g., vulnerability scanners, SCCM) rather than static exclusions</li>
+                            <li><strong>Context Addition:</strong> Add enrichment to help analysts quickly triage—is this a known admin, expected automation, or legitimate tool?</li>
+                        </ul>
+                        <p>The goal isn't zero false positives—it's maintaining a manageable true-to-false positive ratio while not missing real threats."</p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="nav-links">
+                <a href="ioc-management.html" class="nav-prev">← IOC Management</a>
+                <a href="mitre-operationalization.html" class="nav-next">MITRE Operationalization →</a>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/sidebar.js"></script>
+    <script>
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block').querySelector('code');
+            navigator.clipboard.writeText(codeBlock.textContent);
+            button.textContent = 'Copied!';
+            setTimeout(() => button.textContent = 'Copy', 2000);
+        }
+    </script>
+</body>
+</html>
